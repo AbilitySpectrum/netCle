@@ -169,9 +169,8 @@ public class Model {
         grp.add( new Sensor(11, MRes.getStr("GYROX"), -15000, 15000, true) );
         grp.add( new Sensor(12, MRes.getStr("GYROY"), -15000, 15000, true) );
         grp.add( new Sensor(13, MRes.getStr("GYROZ"), -15000, 15000, true) );
-        if (versionID >= 401) {
-            grp.add( new Sensor(14, MRes.getStr("GYRO_ANY"), 0, 13000, true) );            
-        }
+        grp.add( new Sensor(14, MRes.getStr("GYRO_ANY"), 0, 13000, true) );            
+        
         sensorGroups.add(grp);
 
         grp = new SensorGroup(GroupID.USB_PORT);
@@ -193,13 +192,8 @@ public class Model {
         actionMap = new EnumMap<>(ActionType.class);
         
         actionList.add(new SaAction(ActionType.NONE,    0, ActionUI.NONE, null));
-        if (versionID >= 403) {
-            actionList.add(new SaAction(ActionType.RELAY_A, 0, ActionUI.RELAY_OPTION, null));            
-            actionList.add(new SaAction(ActionType.RELAY_B, 0, ActionUI.RELAY_OPTION, null));
-        } else {
-            actionList.add(new SaAction(ActionType.RELAY_A, 0, ActionUI.NONE, null));
-            actionList.add(new SaAction(ActionType.RELAY_B, 0, ActionUI.NONE, null));
-        }
+        actionList.add(new SaAction(ActionType.RELAY_A, 0, ActionUI.RELAY_OPTION, null));            
+        actionList.add(new SaAction(ActionType.RELAY_B, 0, ActionUI.RELAY_OPTION, null));
         
         actionList.add(new SaAction(ActionType.BT_KEYBOARD, 65, ActionUI.KEY_OPTION, (p) -> p >= 32));
         actionList.add(new SaAction(ActionType.BT_SPECIAL,  10, ActionUI.BT_SPECIAL, (p) -> p <  32));
@@ -209,28 +203,24 @@ public class Model {
                 (p) -> (((p & 0x80000000) == 0) && !((0x100 > p) && (p > 0x7f))) ) );
         actionList.add(new SaAction(ActionType.HID_SPECIAL, 0xB0,  ActionUI.HID_SPECIAL, 
                 (p) ->  ((0xfe > p) && (p > 0x7f))));
-        if (versionID >= 404) {
-            actionList.add(new SaAction(ActionType.HID_KEYPRESS, 0xFF000061,  ActionUI.HID_KEYPRESS, 
+        
+        actionList.add(new SaAction(ActionType.HID_KEYPRESS, 0xFF000061,  ActionUI.HID_KEYPRESS, 
                 (p) ->  ((p & 0xff000000) == KEY_PRESS)));
-            actionList.add(new SaAction(ActionType.HID_KEYRELEASE, 0xFE000061,  ActionUI.HID_KEYRELEASE, 
+        actionList.add(new SaAction(ActionType.HID_KEYRELEASE, 0xFE000061,  ActionUI.HID_KEYRELEASE, 
                 (p) ->  ((p & 0xff000000) == KEY_RELEASE)));
-        }
+        
         actionList.add(new SaAction(ActionType.HID_MOUSE, MOUSE_UP,       ActionUI.MOUSE_OPTION, null));
         actionList.add(new SaAction(ActionType.BUZZER, (400 << 16) + 250, ActionUI.BUZZER,       null));
-        actionList.add(new SaAction(ActionType.IR, TV_ON_OFF,  ActionUI.IR_OPTION,    null));
-        if (versionID >= 400) {
-            actionList.add(new SaAction(ActionType.SERIAL, 65, ActionUI.KEY_OPTION, null));
-        }
+        actionList.add(new SaAction(ActionType.IR, TV_ON_OFF,  ActionUI.IR_OPTION,    null));       
+        actionList.add(new SaAction(ActionType.SERIAL, 65, ActionUI.KEY_OPTION, null));
+        
         actionList.add(new SaAction(ActionType.SET_STATE, 0x101, ActionUI.SET_STATE, null));
         
-        if (versionID >= 402) {
-            actionList.add(new SaAction(ActionType.LIGHT_BOX, 0, ActionUI.LIGHT_BOX, null));
-        }
-        
-        if (versionID >= 407) {
-            actionList.add(new SaAction(ActionType.LCD_DISPLAY, LD_UP_ARROW, ActionUI.LCD_DISPLAY, null));
-        }
-        
+        actionList.add(new SaAction(ActionType.LIGHT_BOX, 0, ActionUI.LIGHT_BOX, null));
+             
+        // Leave out LCD display for now. Spet 2019
+        // actionList.add(new SaAction(ActionType.LCD_DISPLAY, LD_UP_ARROW, ActionUI.LCD_DISPLAY, null));
+               
         // Create a map of actions for lookup-by-name
         for (SaAction a: actionList) {
             actionMap.put(a.getType(), a);

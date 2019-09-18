@@ -62,7 +62,7 @@ public class Main {
         SolutionRegister.init();
         
         SwingUtilities.invokeLater(() -> {
-            new MainFrame(conn.getVersionString());
+            new MainFrame();
         });
     }
 
