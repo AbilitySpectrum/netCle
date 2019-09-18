@@ -1,7 +1,5 @@
 package lyricom.netCleConfig.model;
 
-import lyricom.netCleConfig.model.Trigger;
-import lyricom.netCleConfig.model.OutStream;
 import java.util.List;
 import org.junit.*;
 import static org.junit.Assert.*;

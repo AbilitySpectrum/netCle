@@ -5,14 +5,6 @@
  */
 package lyricom.netCleConfig.model;
 
-import lyricom.netCleConfig.model.Trigger;
-import lyricom.netCleConfig.model.Model;
-import lyricom.netCleConfig.model.IOError;
-import lyricom.netCleConfig.model.OutStream;
-import lyricom.netCleConfig.model.Sensor;
-import lyricom.netCleConfig.model.ActionType;
-import lyricom.netCleConfig.model.SaAction;
-import lyricom.netCleConfig.model.InStream;
 import java.util.List;
 import java.util.zip.DataFormatException;
 import org.junit.*;

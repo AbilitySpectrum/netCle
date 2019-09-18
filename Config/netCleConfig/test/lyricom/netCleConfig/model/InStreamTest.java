@@ -1,8 +1,5 @@
 package lyricom.netCleConfig.model;
 
-import lyricom.netCleConfig.model.Trigger;
-import lyricom.netCleConfig.model.IOError;
-import lyricom.netCleConfig.model.InStream;
 import org.junit.*;
 import static org.junit.Assert.*;
 
