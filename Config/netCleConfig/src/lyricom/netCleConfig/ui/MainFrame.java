@@ -62,7 +62,7 @@ public class MainFrame extends JFrame implements TriggerCallback {
 
     private final List<SensorGroupPanel> sensorGroups = new ArrayList<>();
     
-    public MainFrame(String version) {
+    public MainFrame() {
         setTitle(RES.getString("PROGRAM_NAME"));
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
@@ -80,9 +80,8 @@ public class MainFrame extends JFrame implements TriggerCallback {
         
         setLayout(new BorderLayout());
 
-        JComponent vLabel = versionLabel(version);
         JComponent tc = triggerCount();
-        add(buttonPanel(vLabel, tc), BorderLayout.WEST); 
+        add(buttonPanel(tc), BorderLayout.WEST); 
 
         add(tabbedPanes(), BorderLayout.CENTER);
         pack();
@@ -102,13 +101,6 @@ public class MainFrame extends JFrame implements TriggerCallback {
     }
     
     private static final int BTN_SPACING = 10;
-    
-    private JComponent versionLabel(String version) {
-        JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 5));
-        JLabel l = new JLabel("V" + version);
-        p.add(l);
-        return p;
-    }
     
     private JLabel triggerCnt;
     private JComponent triggerCount() {
@@ -142,17 +134,17 @@ public class MainFrame extends JFrame implements TriggerCallback {
     private JButton idleBtn;
     private JButton importBtn;
     private JButton exportBtn;
+    private JButton aboutBtn;
     private JButton exitBtn;
 //    private JButton testBtn;
     
-    private JComponent buttonPanel(JComponent vLabel, JComponent tc) {
+    private JComponent buttonPanel(JComponent tc) {
         JPanel p = new JPanel();
         Border boarder = new LineBorder(Color.BLACK, 2);
         Border margin = new EmptyBorder(0, 10, 10, 10);
         p.setBorder(new CompoundBorder(boarder, margin));
         
         Box vb = Box.createVerticalBox();
-        vb.add(vLabel);
         vb.add(tc);
         vb.add(Box.createVerticalStrut(15));
         
@@ -199,6 +191,8 @@ public class MainFrame extends JFrame implements TriggerCallback {
         vb.add(Box.createVerticalStrut(BTN_SPACING));
         vb.add(new JSeparator(JSeparator.HORIZONTAL));
         vb.add(Box.createVerticalStrut(BTN_SPACING));
+        vb.add(aboutBtn);
+        vb.add(Box.createVerticalStrut(BTN_SPACING));
         vb.add(exitBtn);        
                      
         p.add(vb);
@@ -213,6 +207,7 @@ public class MainFrame extends JFrame implements TriggerCallback {
         idleBtn = newBtn(RES.getString("BTN_IDLE"));
         importBtn = newBtn(RES.getString("BTN_IMPORT"));
         exportBtn = newBtn(RES.getString("BTN_EXPORT"));
+        aboutBtn = newBtn(RES.getString("BTN_ABOUT"));
         exitBtn = newBtn(RES.getString("BTN_EXIT"));
         
         getBtn.setToolTipText(RES.getString("BTN_GET_TTT"));
@@ -235,6 +230,9 @@ public class MainFrame extends JFrame implements TriggerCallback {
         idleBtn.addActionListener(e -> Serial.getInstance().writeByte(Model.CMD_VERSION));
         importBtn.addActionListener(e -> doImport());
         exportBtn.addActionListener(e -> doExport());
+        aboutBtn.addActionListener(e -> {
+            new AboutDlg();
+        });
         exitBtn.addActionListener(e -> {
             if (inSyncCheck()) {
                 System.exit(0);
@@ -252,6 +250,7 @@ public class MainFrame extends JFrame implements TriggerCallback {
             idleBtn,
             importBtn,
             exportBtn,
+            aboutBtn,
 //            testBtn,
             exitBtn
         };

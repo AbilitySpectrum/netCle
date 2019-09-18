@@ -19,7 +19,6 @@ package lyricom.netCleConfig.ui;
 
 import lyricom.netCleConfig.widgets.WT_StateSpinner;
 import lyricom.netCleConfig.widgets.W_Composite;
-import lyricom.netCleConfig.widgets.WT_LightBox;
 import lyricom.netCleConfig.widgets.WT_Repeat;
 import lyricom.netCleConfig.widgets.W_Base;
 import lyricom.netCleConfig.widgets.WT_Frequency;
@@ -322,10 +321,23 @@ public class ActionUI {
          }
     }
     
+    ValueLabelPair[] LightBoxOptions = {
+        new ValueLabelPair(  1, RES.getString("LB_LIGHT") + " 1"),
+        new ValueLabelPair(  2, RES.getString("LB_LIGHT") + " 2"),
+        new ValueLabelPair(  4, RES.getString("LB_LIGHT") + " 3"),
+        new ValueLabelPair(  8, RES.getString("LB_LIGHT") + " 4"),
+        new ValueLabelPair( 16, RES.getString("LB_LIGHT") + " 5"),
+        new ValueLabelPair( 32, RES.getString("LB_LIGHT") + " 6"),
+        new ValueLabelPair( 64, RES.getString("LB_LIGHT") + " 7"),
+        new ValueLabelPair(128, RES.getString("LB_LIGHT") + " 8"),
+        new ValueLabelPair(0, RES.getString("LB_OFF"))
+    };
+    
     public static class LightBoxUI extends ActionUI {
         @Override
         public W_Base createUI(Trigger t) {
-            return new WT_LightBox(RES.getString("ACT_VALUE_LABEL"), t);
+            return new WT_ValueLabelOption(
+                 RES.getString("ACT_VALUE_LABEL"), t, LightBoxOptions, false); 
         }
     }
 
