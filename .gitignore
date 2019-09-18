@@ -1,0 +1,9 @@
+*.pyc
+*.class
+build
+private.xml
+
+
+/Config/netCleConfig/dist/
+/Config/SerialFeedback/nbproject/private/
+/Config/SerialFeedback/dist/

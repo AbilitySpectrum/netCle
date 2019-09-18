@@ -1,0 +1,38 @@
+
+#
+# Port should be 'Leonardo' if the port will be labelled that
+# way - as it is for a Windows machine with the driver installed.
+# Otherwise it should be the name of the serial device.
+Port: Leonardo
+
+# Rows, Columns and FontSize control the size of the window
+# and the size of the text.
+Rows: 1
+Columns: 15
+FontSize: 12
+
+# Location can be any one of four values:
+# 'top right', 'top left', 'bottom right' or 'bottom left'
+Location: top right
+
+# If TitleBar is set to 'yes' then the message window will appear with
+# a title bar, which lets you drag the window to different locations.
+# If it is not set to 'yes' then there will be no title bar.  The message
+# window will take up less space on the screen, but you won't be able to
+# relocate it.
+TitleBar: yes
+
+# DisplayTime gives the number of seconds the window should display.
+# If there is no change to the message after that number of seconds the 
+# window disappears.  If DisplayTime is set to 0 the window will remain
+# visible always.
+# Note: The initial connection messages do not dissappear.
+DisplayTime: 0
+
+# Mappings - map one serial character sent from the SensAct
+# to a string to be displayed.
+u: Mouse Up
+d: Mouse Down
+l: Mouse Left
+r: Mouse Right
+R: 
