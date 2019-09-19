@@ -75,6 +75,14 @@ public class SensorGroupPanel extends JPanel {
         add(scroll, BorderLayout.CENTER);
     }
     
+    public SensorGroup getGroup() {
+        return thisGroup;
+    }
+    
+    public void makeVisible() {
+        statusControl.makeVisible();
+    }
+    
     void checkPanelStatus() {
         boolean hasT = false;   // assumed to start
         for(SensorPanel sp: sensorPanels) {

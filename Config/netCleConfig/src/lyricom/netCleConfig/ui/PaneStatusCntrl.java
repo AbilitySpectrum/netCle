@@ -42,4 +42,8 @@ public class PaneStatusCntrl {
     void panelIsEmpty() {
         pane.setIconAt(index, Utils.getIcon(Utils.ICON_EMPTY));        
     }
+    
+    void makeVisible() {
+        pane.setSelectedIndex(index);
+    }
 }

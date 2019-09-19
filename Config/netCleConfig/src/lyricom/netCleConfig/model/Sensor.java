@@ -30,15 +30,17 @@ public class Sensor {
     private int currentValue;
     private int level1;
     private int level2;
+    private SensorGroup group;
     
     private SensorSignalLevelChangeListener listener;
     
-    public Sensor(int id, String name, int min, int max, boolean cont) {
+    public Sensor(int id, String name, int min, int max, boolean cont, SensorGroup g) {
         this.id = id;
         this.name = name;
         this.minval = min;
         this.maxval = max;
         this.continuous = cont;
+        this.group = g;
         currentValue = 0;
         if (cont) {
             level1 = level2 = (min + max) / 2;
@@ -75,6 +77,10 @@ public class Sensor {
 
     public int getCurrentValue() {
         return currentValue;
+    }
+    
+    public SensorGroup getGroup() {
+        return group;
     }
 
     public void setCurrentValue(int currentValue) {

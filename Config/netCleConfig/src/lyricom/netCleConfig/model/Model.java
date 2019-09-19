@@ -137,24 +137,24 @@ public class Model {
         sensorGroups = new ArrayList<>();
         
         SensorGroup grp = new SensorGroup(GroupID.SENSOR1);
-        grp.add( new Sensor(5, MRes.getStr("SENSOR1A"), 0, 1023, true) );
-        grp.add( new Sensor(6, MRes.getStr("SENSOR1B"), 0, 1023, true) );
+        grp.add( new Sensor(5, MRes.getStr("SENSOR1A"), 0, 1023, true, grp) );
+        grp.add( new Sensor(6, MRes.getStr("SENSOR1B"), 0, 1023, true, grp) );
         sensorGroups.add(grp);
 
         grp = new SensorGroup(GroupID.SENSOR2);
-        grp.add( new Sensor(3, MRes.getStr("SENSOR2A"), 0, 1023, true) );
-        grp.add( new Sensor(4, MRes.getStr("SENSOR2B"), 0, 1023, true) );
+        grp.add( new Sensor(3, MRes.getStr("SENSOR2A"), 0, 1023, true, grp) );
+        grp.add( new Sensor(4, MRes.getStr("SENSOR2B"), 0, 1023, true, grp) );
         sensorGroups.add(grp);
         
         grp = new SensorGroup(GroupID.SENSOR3);
-        grp.add( new Sensor(1, MRes.getStr("SENSOR3A"), 0, 1023, true) );
-        grp.add( new Sensor(2, MRes.getStr("SENSOR3B"), 0, 1023, true) );
+        grp.add( new Sensor(1, MRes.getStr("SENSOR3A"), 0, 1023, true, grp) );
+        grp.add( new Sensor(2, MRes.getStr("SENSOR3B"), 0, 1023, true, grp) );
         sensorGroups.add(grp);
         
         grp = new SensorGroup(GroupID.ACCEL);
-        grp.add( new Sensor(8,  MRes.getStr("ACCELX"), -16000, 16000, true) );
-        grp.add( new Sensor(9,  MRes.getStr("ACCELY"), -16000, 16000, true) );
-        grp.add( new Sensor(10, MRes.getStr("ACCELZ"), -16000, 16000, true) );
+        grp.add( new Sensor(8,  MRes.getStr("ACCELX"), -16000, 16000, true, grp) );
+        grp.add( new Sensor(9,  MRes.getStr("ACCELY"), -16000, 16000, true, grp) );
+        grp.add( new Sensor(10, MRes.getStr("ACCELZ"), -16000, 16000, true, grp) );
         sensorGroups.add(grp);
 
 	/*
@@ -166,15 +166,15 @@ public class Model {
 	* 0 to 28,377 but we chop off the most violent motions.
         */
         grp = new SensorGroup(GroupID.GYRO);
-        grp.add( new Sensor(11, MRes.getStr("GYROX"), -15000, 15000, true) );
-        grp.add( new Sensor(12, MRes.getStr("GYROY"), -15000, 15000, true) );
-        grp.add( new Sensor(13, MRes.getStr("GYROZ"), -15000, 15000, true) );
-        grp.add( new Sensor(14, MRes.getStr("GYRO_ANY"), 0, 13000, true) );            
+        grp.add( new Sensor(11, MRes.getStr("GYROX"), -15000, 15000, true, grp) );
+        grp.add( new Sensor(12, MRes.getStr("GYROY"), -15000, 15000, true, grp) );
+        grp.add( new Sensor(13, MRes.getStr("GYROZ"), -15000, 15000, true, grp) );
+        grp.add( new Sensor(14, MRes.getStr("GYRO_ANY"), 0, 13000, true, grp) );            
         
         sensorGroups.add(grp);
 
         grp = new SensorGroup(GroupID.USB_PORT);
-        grp.add( new Sensor(7, MRes.getStr("USB_INPUT"), 0, 255, false) );
+        grp.add( new Sensor(7, MRes.getStr("USB_INPUT"), 0, 255, false, grp) );
         sensorGroups.add(grp);
         
         // Create a single list of all sensors

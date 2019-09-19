@@ -23,6 +23,7 @@ import lyricom.netCleConfig.model.SaAction;
 import lyricom.netCleConfig.model.SensorGroup;
 import lyricom.netCleConfig.model.Trigger;
 import lyricom.netCleConfig.model.Triggers;
+import lyricom.netCleConfig.ui.MainFrame;
 import lyricom.netCleConfig.ui.SensorPanel;
 
 /**
@@ -74,7 +75,64 @@ public class JoystickMouseSolution extends SolutionBase {
             return false;
         }
 
-        SaAction action = mouseSelection();
+        // Sanity check.  All locations should be in same group.
+        // Right == Left != Up == Down
+        SensorGroup g = upLocation.sensor.getGroup();
+        if (downLocation.sensor.getGroup() != g ||
+                leftLocation.sensor.getGroup() != g ||
+                rightLocation.sensor.getGroup() != g ) {
+            JOptionPane.showMessageDialog(theUI,
+                    SRes.getStr("JW_GROUP_ERROR"),
+                    SRes.getStr("SW_SOLUTION_FAIL_TITLE"),
+                    JOptionPane.ERROR_MESSAGE);
+            return false;                    
+        }
+        if (upLocation.sensor != downLocation.sensor) {
+            JOptionPane.showMessageDialog(theUI,
+                    SRes.getStr("JW_UPDOWN_ERROR"),
+                    SRes.getStr("SW_SOLUTION_FAIL_TITLE"),
+                    JOptionPane.ERROR_MESSAGE);
+            return false;            
+        }
+        if (leftLocation.sensor != rightLocation.sensor) {
+            JOptionPane.showMessageDialog(theUI,
+                    SRes.getStr("JW_LEFTRIGHT_ERROR"),
+                    SRes.getStr("SW_SOLUTION_FAIL_TITLE"),
+                    JOptionPane.ERROR_MESSAGE);
+            return false;                      
+        }
+        if (leftLocation.sensor == upLocation.sensor) {
+            JOptionPane.showMessageDialog(theUI,
+                    SRes.getStr("JW_UPLEFT_ERROR"),
+                    SRes.getStr("SW_SOLUTION_FAIL_TITLE"),
+                    JOptionPane.ERROR_MESSAGE);
+            return false;                        
+        }
+        
+        // Usage Check
+        if (Triggers.getInstance().isSensorUsed(upLocation.sensor)) {
+            int result = JOptionPane.showConfirmDialog(null,
+                upLocation.sensor.getName() + " " + SRes.getStr("ALREADY_PROGRAMMED_TEXT"),
+                SRes.getStr("ALREADY_PROGRAMMED_TITLE"),
+                JOptionPane.YES_NO_OPTION); 
+            if (result == JOptionPane.NO_OPTION) {
+                return false;
+            }               
+        }
+        
+        if (Triggers.getInstance().isSensorUsed(leftLocation.sensor)) {
+            int result = JOptionPane.showConfirmDialog(null,
+                leftLocation.sensor.getName() + " " + SRes.getStr("ALREADY_PROGRAMMED_TEXT"),
+                SRes.getStr("ALREADY_PROGRAMMED_TITLE"),
+                JOptionPane.YES_NO_OPTION); 
+            if (result == JOptionPane.NO_OPTION) {
+                return false;
+            }               
+        }
+        
+        MainFrame.TheFrame.showGroupPanel(upLocation.sensor.getGroup());
+   
+        SaAction action = mouseSelection(); // HID or Bluetooth
         if (action == null) {
             return false;
         }

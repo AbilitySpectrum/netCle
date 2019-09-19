@@ -25,21 +25,26 @@ package lyricom.netCleConfig.model;
  * @author Andrew
  */
 public enum GroupID {
-    SENSOR1,
-    SENSOR2,
-    SENSOR3,
-    ACCEL,
-    GYRO,
-    USB_PORT;
+    SENSOR1(true),
+    SENSOR2(true),
+    SENSOR3(true),
+    ACCEL(false),
+    GYRO(false),
+    USB_PORT(false);
     
     String localizedName;
+    boolean btn;
     
-    GroupID() {
+    GroupID(boolean btn) {
         localizedName = MRes.getStr(this.name());
+        this.btn = btn;
     }
     
     public String toString() {
         return localizedName;
     }
-
+    
+    public boolean isBtnGroup() {
+        return btn;
+    }
 }

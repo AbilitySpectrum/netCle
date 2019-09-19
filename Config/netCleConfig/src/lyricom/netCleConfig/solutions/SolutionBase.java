@@ -26,6 +26,7 @@ import lyricom.netCleConfig.model.SaAction;
 import lyricom.netCleConfig.model.SensorGroup;
 import lyricom.netCleConfig.model.Trigger;
 import lyricom.netCleConfig.model.Triggers;
+import lyricom.netCleConfig.ui.MainFrame;
 import lyricom.netCleConfig.ui.SensorPanel;
 
 /**
@@ -100,10 +101,20 @@ public abstract class SolutionBase implements Runnable {
                     JOptionPane.ERROR_MESSAGE);
             return null;
         } else {
+            if (Triggers.getInstance().isSensorUsed(btnLocHi.sensor)) {
+                int result = JOptionPane.showConfirmDialog(null,
+                    btnLocHi.sensor.getName() + " " + SRes.getStr("ALREADY_PROGRAMMED_TEXT"),
+                    SRes.getStr("ALREADY_PROGRAMMED_TITLE"),
+                    JOptionPane.YES_NO_OPTION); 
+                if (result == JOptionPane.NO_OPTION) {
+                    return null;
+                }    
+            }
+            MainFrame.TheFrame.showGroupPanel(btnLocHi.sensor.getGroup());
             return btnLocHi;
         }       
     }
-
+    
     private static final String HID_MOUSE = SRes.getStr("SW_HID_MOUSE");
     private static final String BT_MOUSE = SRes.getStr("SW_BT_MOUSE");
     private static final String[] MOUSE_OPTS = {HID_MOUSE, BT_MOUSE};

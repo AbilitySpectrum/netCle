@@ -57,7 +57,7 @@ import lyricom.netCleConfig.model.TriggerCallback;
  */
 public class MainFrame extends JFrame implements TriggerCallback {
     
-    public static JFrame TheFrame;
+    public static MainFrame TheFrame;
     private static final ResourceBundle RES = ResourceBundle.getBundle("strings");
 
     private final List<SensorGroupPanel> sensorGroups = new ArrayList<>();
@@ -406,13 +406,18 @@ public class MainFrame extends JFrame implements TriggerCallback {
         JPanel p = new MouseSpeedPanel();
         pane.add(MRes.getStr("MOUSE_SPEED"), p);
         
-
-        if (Model.getVersionID() >= 406) {
-            p = new TVSelectionPanel();
-            pane.add(MRes.getStr("TV_SELECTION"), p);
-        }
-            
+        p = new TVSelectionPanel();
+        pane.add(MRes.getStr("TV_SELECTION"), p);
+                 
         return pane;
+    }
+    
+    public void showGroupPanel(SensorGroup g) {
+        for(SensorGroupPanel p: sensorGroups) {
+            if (p.getGroup() == g) {
+                p.makeVisible();
+            }
+        }
     }
         
     // If true is returned continue with the operation.

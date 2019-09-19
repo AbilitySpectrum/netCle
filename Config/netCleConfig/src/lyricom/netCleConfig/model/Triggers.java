@@ -89,6 +89,15 @@ public class Triggers {
         return t;
     }
     
+    public boolean isSensorUsed(Sensor s) {
+        for(Trigger t: triggers) {
+            if (t.getSensor() == s) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public void deleteAll() {
         DATA_IN_SYNC = false;
         triggers = new ArrayList<>();
