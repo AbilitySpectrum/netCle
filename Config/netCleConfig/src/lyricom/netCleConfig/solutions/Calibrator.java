@@ -17,8 +17,8 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */ 
 package lyricom.netCleConfig.solutions;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import lyricom.netCleConfig.comms.Serial;
 import lyricom.netCleConfig.model.Model;
 import lyricom.netCleConfig.model.Sensor;
@@ -98,7 +98,18 @@ public class Calibrator {
     
     void getRestValues() {
         // Create an array of Sampling - one per sensor.
-        List<Sensor> sensors = theGroup.getMembers();
+        List<Sensor> sensors = new ArrayList<>();
+        if (theGroup.getID().isBtnGroup()) {
+            // If INPUT 1, 2 or 3 is theGroup the
+            // search all of them for a signal.
+            for(SensorGroup g: Model.getSensorGroups()) {
+                if (g.getID().isBtnGroup()) {
+                    sensors.addAll(g.getMembers());
+                }
+            }
+        } else {
+            sensors.addAll(theGroup.getMembers());
+        }
         restValues = new Sampling[sensors.size()];
         for(int i=0; i< sensors.size(); i++) {
             restValues[i] = new Sampling(sensors.get(i));
@@ -155,7 +166,7 @@ public class Calibrator {
         
         theUI.presentMessage(SRes.getStr("SW_THANK_YOU"));
         if (sleepAndCancelCheck(1000)) return null;
-        
+
         if (target.midPoint() < restValue.midPoint()) {
             if (  (target.maxval + target.allowance) 
                     >= (restValue.minval - restValue.allowance) ) {
