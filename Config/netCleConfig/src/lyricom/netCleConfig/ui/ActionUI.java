@@ -322,14 +322,14 @@ public class ActionUI {
     }
     
     ValueLabelPair[] LightBoxOptions = {
-        new ValueLabelPair(  1, RES.getString("LB_LIGHT") + " 1"),
-        new ValueLabelPair(  2, RES.getString("LB_LIGHT") + " 2"),
-        new ValueLabelPair(  4, RES.getString("LB_LIGHT") + " 3"),
-        new ValueLabelPair(  8, RES.getString("LB_LIGHT") + " 4"),
-        new ValueLabelPair( 16, RES.getString("LB_LIGHT") + " 5"),
-        new ValueLabelPair( 32, RES.getString("LB_LIGHT") + " 6"),
-        new ValueLabelPair( 64, RES.getString("LB_LIGHT") + " 7"),
-        new ValueLabelPair(128, RES.getString("LB_LIGHT") + " 8"),
+        new ValueLabelPair(  1, String.format(RES.getString("LB_LIGHT"), 1)),
+        new ValueLabelPair(  2, String.format(RES.getString("LB_LIGHT"), 2)),
+        new ValueLabelPair(  4, String.format(RES.getString("LB_LIGHT"), 3)),
+        new ValueLabelPair(  8, String.format(RES.getString("LB_LIGHT"), 4)),
+        new ValueLabelPair( 16, String.format(RES.getString("LB_LIGHT"), 5)),
+        new ValueLabelPair( 32, String.format(RES.getString("LB_LIGHT"), 6)),
+        new ValueLabelPair( 64, String.format(RES.getString("LB_LIGHT"), 7)),
+        new ValueLabelPair(128, String.format(RES.getString("LB_LIGHT"), 8)),
         new ValueLabelPair(255, RES.getString("LB_ALL_ON")),
         new ValueLabelPair(0, RES.getString("LB_OFF"))
     };

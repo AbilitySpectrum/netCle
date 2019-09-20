@@ -102,11 +102,17 @@ public class MainFrame extends JFrame implements TriggerCallback {
     
     private static final int BTN_SPACING = 10;
     
-    private JLabel triggerCnt;
+    private int MAX_TRIGGERS;
+    private JLabel triggerCntLbl;
+    private int triggerCnt;
     private JComponent triggerCount() {
+        // In the future this will be set based on the
+        // version number of the netCle board
+        // ( from Connection.getInstance.getVersionID(); )
+        MAX_TRIGGERS = 40;
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 5));
-        triggerCnt = new JLabel("");
-        p.add(triggerCnt);
+        triggerCntLbl = new JLabel("");
+        p.add(triggerCntLbl);
         JLabel l = new JLabel(" " + RES.getString("TRIGGER_COUNT"));
         p.add(l);
         Triggers t = Triggers.getInstance();
@@ -114,18 +120,41 @@ public class MainFrame extends JFrame implements TriggerCallback {
         return p;
     }
     
+    // Don't put up a too-many-triggers message if user is deleting triggers.
+    boolean suppressWarning = false;
     @Override
-    public void newTriggerCount(int count) {
-        final int c = count;
+    public void newTriggerCount(int count) {            
+        suppressWarning = count < triggerCnt;
+        triggerCnt = count;
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                triggerCnt.setText( Integer.toString(c) );
+                triggerCntLbl.setText( Integer.toString(triggerCnt) );
+                if (triggerCnt > MAX_TRIGGERS) {
+                    triggerCntLbl.setForeground(Color.red);
+                    if (!suppressWarning) {
+                        triggerWarning();
+                    }
+                } else {
+                   triggerCntLbl.setForeground(Color.black); 
+                }                       
             }
-            
         });
-    }
+     }
 
+    // Multiple trigger changes can come in quickly, especially if a solution
+    // is selected.  This code ensures that the too-many-triggers warning
+    // will only be displayed once for a burst of changes.
+    private volatile long lastWarningTime = 0;
+    private void triggerWarning() {
+        if (System.currentTimeMillis() > (lastWarningTime + 5000)) {
+            lastWarningTime = System.currentTimeMillis();
+            JOptionPane.showMessageDialog(MainFrame.TheFrame, 
+                String.format(RES.getString("TOO_MANY_TRIGGERS"), triggerCnt, MAX_TRIGGERS),
+                RES.getString("TOO_MANY_TRIGGERS_TITLE"),
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
     
     private JButton getBtn;
     private JButton saveBtn;
@@ -265,8 +294,16 @@ public class MainFrame extends JFrame implements TriggerCallback {
         return b;
     }
     
-    private void doSave() {
+    private boolean doSave() {
         OutStream os;
+        
+        if (triggerCnt > MAX_TRIGGERS) {
+            JOptionPane.showMessageDialog(MainFrame.TheFrame, 
+                String.format(RES.getString("TOO_MANY_TRIGGERS"), triggerCnt, MAX_TRIGGERS),
+                RES.getString("TOO_MANY_TRIGGERS_TITLE"),
+                JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         try {
             os = Triggers.getInstance().getTriggerData();
         } catch (DataFormatException ex) {
@@ -274,10 +311,11 @@ public class MainFrame extends JFrame implements TriggerCallback {
                 RES.getString("INTERNAL_ERROR"),
                 RES.getString("DATA_ERROR_TITLE"),
                 JOptionPane.ERROR_MESSAGE);
-            return;
+            return false;
         }
         Serial.getInstance().writeList(os.getBuffer());
         Triggers.DATA_IN_SYNC = true;
+        return true;
     }
     
     private void doClearAll() {
@@ -430,8 +468,7 @@ public class MainFrame extends JFrame implements TriggerCallback {
                     JOptionPane.YES_NO_CANCEL_OPTION
             );
             if (opt == JOptionPane.YES_OPTION) {
-                doSave();
-                return true;
+                return doSave();
             } else if (opt == JOptionPane.NO_OPTION) {
                 return true;
             } else {

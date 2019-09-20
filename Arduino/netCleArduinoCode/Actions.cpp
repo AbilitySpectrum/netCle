@@ -88,7 +88,8 @@ void Actors::init() {
   addActor( new IRTV(8) );
   addActor( new SerialSend(6) );
   addActor( new LightBox(11) );
-  addActor( new LEDDisplay(12) );
+  // LCD Display not in use.
+//  addActor( new LEDDisplay(12) );
 #ifdef MEMCHECK
   BreakPoints.actorsAlloc = (int) __brkval;
 #endif
@@ -593,6 +594,7 @@ void LightBox::doAction(long param) {
   Wire.endTransmission();  
 }
 
+/* LCD Display not in use.
 #define DT_ADDRESS 13
 void LEDDisplay::doAction(long param) {
   byte val = param &0xff;
@@ -601,4 +603,5 @@ void LEDDisplay::doAction(long param) {
   Wire.write(val);
   Wire.endTransmission();  
 }
+*/
 

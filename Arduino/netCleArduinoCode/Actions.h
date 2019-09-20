@@ -273,6 +273,7 @@ class LightBox: public Actor {
     void doAction(long param);
 };
 
+/* LCD Display not in use
 class LEDDisplay: public Actor {
   public:
     LEDDisplay(int i) {
@@ -281,4 +282,5 @@ class LEDDisplay: public Actor {
     void init() {}
     void doAction(long param);
 };
+*/
 #endif

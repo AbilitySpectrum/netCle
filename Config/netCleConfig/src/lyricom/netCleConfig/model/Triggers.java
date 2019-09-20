@@ -136,6 +136,7 @@ public class Triggers {
                 }
             }  
             if (refIndex == triggers.size()) {
+                sizeChanged();
                 return;  // not found
             }
         }
@@ -145,6 +146,7 @@ public class Triggers {
         } else {
             triggers.add(refIndex, t);
         }
+        sizeChanged();
     }
     
     public void loadTriggers(InStream in) throws IOError {
