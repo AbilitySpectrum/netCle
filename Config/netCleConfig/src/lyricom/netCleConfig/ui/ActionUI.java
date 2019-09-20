@@ -330,6 +330,7 @@ public class ActionUI {
         new ValueLabelPair( 32, RES.getString("LB_LIGHT") + " 6"),
         new ValueLabelPair( 64, RES.getString("LB_LIGHT") + " 7"),
         new ValueLabelPair(128, RES.getString("LB_LIGHT") + " 8"),
+        new ValueLabelPair(255, RES.getString("LB_ALL_ON")),
         new ValueLabelPair(0, RES.getString("LB_OFF"))
     };
     
