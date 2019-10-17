@@ -22,7 +22,6 @@
 #ifndef ActionData_H
 #define ActionData_H
 #include "netCle.h"
-#include <SoftwareSerial.h>
 #include "BTMouseCtl.h"
 #include "IO.h"
 
@@ -233,10 +232,7 @@ class BTMouse: public MouseControl {
     void mc_button(int val); 
 };
 
-class BTKeyboard: public KeyboardControl {
-  private:
-    SoftwareSerial *pBlueHID;
-    
+class BTKeyboard: public KeyboardControl {    
   public:
     BTKeyboard(int i) {
       id = i;
