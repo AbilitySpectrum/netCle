@@ -487,14 +487,14 @@ void initBT() {
     // If the device is brand new it will be set to
     // 115200 baud.  This first bit changes that to 9600.
     // If the device is already at 9600 this will have no effect.
-    delay(500);  // Give BT board a chance to initialize.
+    delay(1000);  // Give BT board a chance to initialize.
     Serial1.begin(115200);  // Bluetooth defaults to 115200bps    
     Serial1.print(F("$$$"));    // Enter command mode
     delay(100);
     Serial1.println(F("U,9600,N")); //Change baud rate to 9600 - no parity
+    delay(500);
 
     // Now connect at 9600 and configure the device
-    delay(100);
     Serial1.begin(9600);  // Start bluetooth at 9600 
     Serial1.print(F("$$$"));    // Enter command mode
     delay(100);
