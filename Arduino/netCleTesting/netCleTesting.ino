@@ -54,7 +54,7 @@ void setup() {
   while(!Serial);
 }
 
-int readVal = 0;
+int reading = 0;
 long lastReadTime;
 #define READ_INTERVAL_MS 1000
 
@@ -62,8 +62,8 @@ void loop() {
   int cmd;
   int val;
 
-  if (readVal && ((millis() - lastReadTime) > READ_INTERVAL_MS) ) {
-    doRead(readVal);
+  if (reading && ((millis() - lastReadTime) > READ_INTERVAL_MS) ) {
+    doRead();
     lastReadTime = millis();
   }
   if (Serial.available()) {
@@ -71,7 +71,7 @@ void loop() {
     if (cmd == -1) { // Nothing but white space.
       return;
     } 
-    readVal = 0;
+    reading = 0;
     switch(cmd) {                
       case 'o':
         val = getNextToken();
@@ -114,19 +114,10 @@ void loop() {
         break;
         
       case 'r':
-        val = getNextToken();
-        val = val - '0';
-        if (val == 0) {
-          Serial.println("Read All.");
-          doRead(0);
-        } else if (val >= 1 && val <= 6) {
-          Serial.print("Read " ); Serial.println(val);   
-          doRead(val);   
-          readVal = val;
-          lastReadTime = millis();    
-        } else {
-          Serial.println("Bad read value.");
-        }
+        Serial.println("Read All");
+        doRead();
+        reading = 1;
+        lastReadTime = millis();
         break;
 
       case 'g':
@@ -143,6 +134,11 @@ void loop() {
           digitalWrite(IR_PIN, 0);
           delay(250);
         }
+        break;
+
+      case 'L':
+        Serial.println("Light Box");
+        doLightBox();
         break;
         
       case 'h':
@@ -194,36 +190,56 @@ void doOutput(int val) {
   digitalWrite(val, HIGH);
 }
 
-void doRead(int val) {
-  if (val == 0) {
-    Serial.print("Input 1 = "); Serial.println( analogRead(INPUT_1) );
-    Serial.print("Input 2 = "); Serial.println( analogRead(INPUT_2) );
-    Serial.print("Input 3 = "); Serial.println( analogRead(INPUT_3) );
-    Serial.print("Input 4 = "); Serial.println( analogRead(INPUT_4) );
-    Serial.print("Input 5 = "); Serial.println( analogRead(INPUT_5) );
-    Serial.print("Input 6 = "); Serial.println( analogRead(INPUT_6) );
-  } else {
-    switch(val) {
-      case 1:
-        Serial.print("Input 1 = "); Serial.println( analogRead(INPUT_1) );
-        break;
-      case 2:
-        Serial.print("Input 2 = "); Serial.println( analogRead(INPUT_2) );
-        break;
-      case 3:
-        Serial.print("Input 3 = "); Serial.println( analogRead(INPUT_3) );
-        break;
-      case 4:
-        Serial.print("Input 4 = "); Serial.println( analogRead(INPUT_4) );
-        break;
-      case 5:
-        Serial.print("Input 5 = "); Serial.println( analogRead(INPUT_5) );
-        break;
-      case 6:
-        Serial.print("Input 6 = "); Serial.println( analogRead(INPUT_6) );
-        break;
-    }
-  }
+void print5(int val) {
+  Serial.print(' ');
+  int v = val / 1000;
+  Serial.print(v);
+  val = val - 1000 * v;
+  v = val / 100;
+  Serial.print(v);
+  val = val - 100 * v;
+  v = val / 10;  
+  Serial.print(v);
+  val = val - 10 * v;
+  Serial.print(val);
+  Serial.print(' ');
+}
+
+void doRead() {
+    int val = analogRead(INPUT_5);
+    print5(val);
+    val = analogRead(INPUT_6);
+    print5(val);
+    val = analogRead(INPUT_3);
+    print5(val);
+    val = analogRead(INPUT_4);
+    print5(val);
+    val = analogRead(INPUT_1);
+    print5(val);
+    val = analogRead(INPUT_2);
+    print5(val);
+    Serial.println();
+}
+
+#define MCP23008_ADDRESS 0x20
+
+void doLightBox() {
+  Wire.begin();
+  Wire.beginTransmission(MCP23008_ADDRESS);
+  Wire.write((byte)0);
+  Wire.write((byte)0x00);  // Set all pins to output mode
+  Wire.endTransmission(); 
+
+  int i;
+  for(i=0x80; ; i >>= 1) {
+    Wire.beginTransmission(MCP23008_ADDRESS);
+    Wire.write((byte)9);  // GPIO Address
+    Wire.write(i);
+    Wire.endTransmission();  
+    delay(200);
+    if (i == 0) break;
+  }  
+  Serial.println("Light box done.");
 }
 
 void doHelp() {
@@ -233,10 +249,11 @@ void doHelp() {
   Serial.println(" 'l0'            Turns the LED off.");
   Serial.println(" 'b'             Sounds the buzzer.");
   Serial.println(" 'r'             Reads the value of all input pins.");
-  Serial.println(" 'r' 1 to 6      Reads the value of a particular input port ");
   Serial.println("                 repeating until another command is entered.");
-  Serial.println("                 (1 = I1A, 2 = I1B, 3 = I2A ... 6 = I3B)");
+  Serial.println("                 Output is lines of 6 digits, giving the values for the 6 inputs.");
   Serial.println(" 'g'             Reads I2C Gyroscope.");
+  Serial.println(" 'L'             Blinks lights on the light box.");
+  Serial.println("                 This is an alternate way to test the I2C connection");
   Serial.println(" 't'             Runs the TV IR.  On/Off cycling every 1/4 second for two seconds.");
   Serial.println("                 Watch with a cell phone camera or with a multi-tester.");
 }
