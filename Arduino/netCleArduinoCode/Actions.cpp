@@ -472,27 +472,51 @@ void HIDKeyboard::kc_release(char key) {
 
 // Make the bluetooth pointer a singleton.
 // shared by BTKeyboard and BTMouse.
-static SoftwareSerial *pBlueHID = 0;
-SoftwareSerial *getBT() {
-  if (pBlueHID == 0) {
-    pBlueHID = new SoftwareSerial(BT_TX_PIN, BT_RX_PIN);
-    delay(1000);
-    pBlueHID->begin(115200);  // Bluetooth defaults to 115200bps
-    
-    pBlueHID->print("$");    // Print three times individually
-    pBlueHID->print("$");
-    pBlueHID->print("$");    // Enter command mode
-    delay(100);    // Short delay
-    pBlueHID->println("U,9600,N"); //Change baud rate to 9600 - no parity
-    pBlueHID->begin(9600);  // Start bluetooth at 9600    
+// Empty the rcv queue.
+void BTCommand(const __FlashStringHelper *cmd) {
+  Serial1.println(cmd);
+  delay(200);    // Tried 50, 100, 150.  Sometimes fails.
+  while(Serial1.available()) {
+    Serial1.read();
   }
-  return pBlueHID;
 }
 
+boolean BTinitDone = false;
+void initBT() {
+  if (!BTinitDone) {
+    // If the device is brand new it will be set to
+    // 115200 baud.  This first bit changes that to 9600.
+    // If the device is already at 9600 this will have no effect.
+    delay(500);  // Give BT board a chance to initialize.
+    Serial1.begin(115200);  // Bluetooth defaults to 115200bps    
+    Serial1.print(F("$$$"));    // Enter command mode
+    delay(100);
+    Serial1.println(F("U,9600,N")); //Change baud rate to 9600 - no parity
+
+    // Now connect at 9600 and configure the device
+    delay(100);
+    Serial1.begin(9600);  // Start bluetooth at 9600 
+    Serial1.print(F("$$$"));    // Enter command mode
+    delay(100);
+    BTCommand(F("SF,1")); // Factory reset
+    BTCommand(F("SU,9600")); // 9600 baud
+    BTCommand(F("SL,N"));   // No parity
+    BTCommand(F("S-,netCle")); // Device name will be netCle-xxxx
+                               // where xxxx is end of BT address.
+    BTCommand(F("S~,6"));    // HID mode
+    BTCommand(F("SH,0230")); // Combo mode - keyboard & mouse
+    BTCommand(F("SM,6"));    // Pairing mode - for auto-reconnect.
+    BTCommand(F("R,1"));     // Reboot
+    delay(100);
+                                    
+    BTinitDone = true;  
+  }
+}
 
 // --- Bluetooth Mouse --- //
 void BTMouse::init() {
-  pMouse = new BTMouseCtl( getBT() );
+  initBT();
+  pMouse = new BTMouseCtl();
 }
 
 void BTMouse::mc_move(int x, int y) {
@@ -518,11 +542,11 @@ void BTMouse::mc_button(int val) {
 
 // --- Bluetooth Keyboard --- //
 void BTKeyboard::init() {
-  pBlueHID = getBT();
+  initBT();
 }
 
 void BTKeyboard::kc_write(char character) {
-  pBlueHID->write(character);
+  Serial1.write(character);
 }
 
 // === IR TV === //
