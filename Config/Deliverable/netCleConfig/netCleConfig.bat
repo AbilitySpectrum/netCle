@@ -1,1 +1,1 @@
-java -jar SensactConfig.jar
+java -jar netCleConfig.jar
