@@ -267,6 +267,9 @@ class LightBox: public Actor {
     }
     void init() {}
     void doAction(long param);
+    void reset() {
+      doAction(0);  // Turn off all lights.
+    }
 };
 
 /* LCD Display not in use
