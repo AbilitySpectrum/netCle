@@ -210,7 +210,7 @@ public class Connection implements SerialCallback {
             if (!connected) return;
             InStream input = new InStream(bytes);
             try {
-                Triggers.getInstance().loadTriggers(input);
+                Triggers.getInstance().loadDataFromDevice(input);
                 SensorPanel.reloadTriggers();    
                 Triggers.DATA_IN_SYNC = true;
             } catch(IOError e) {

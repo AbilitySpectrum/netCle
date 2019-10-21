@@ -40,12 +40,15 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import lyricom.netCleConfig.comms.Serial;
+import lyricom.netCleConfig.model.ExportFilter;
 import lyricom.netCleConfig.model.IOError;
+import lyricom.netCleConfig.model.ImportFilter;
 import lyricom.netCleConfig.model.InStream;
 import lyricom.netCleConfig.model.MRes;
 import lyricom.netCleConfig.model.Model;
 import lyricom.netCleConfig.model.OutStream;
 import lyricom.netCleConfig.model.SensorGroup;
+import lyricom.netCleConfig.model.TmpImport;
 import lyricom.netCleConfig.model.Triggers;
 import lyricom.netCleConfig.model.TriggerCallback;
 
@@ -305,7 +308,7 @@ public class MainFrame extends JFrame implements TriggerCallback {
             return false;
         }
         try {
-            os = Triggers.getInstance().getTriggerData();
+            os = Triggers.getInstance().getAllTriggerData();
         } catch (DataFormatException ex) {
             JOptionPane.showMessageDialog(MainFrame.TheFrame, 
                 RES.getString("INTERNAL_ERROR"),
@@ -349,7 +352,11 @@ public class MainFrame extends JFrame implements TriggerCallback {
                 } while (val != Model.END_OF_BLOCK && val != -1);
                 
                 InStream is = new InStream(bytes);
-                Triggers.getInstance().loadTriggers(is);
+                TmpImport tmp = Triggers.getInstance().readTriggers(is);
+                ImportDlg dlg = new ImportDlg(this, tmp);
+                ImportFilter filter = dlg.getFilter();
+                if (filter == null) return;
+                Triggers.getInstance().loadTriggers(tmp, filter);
                 SensorPanel.reloadTriggers();      
                                
             } catch (IOException ex) {
@@ -368,6 +375,10 @@ public class MainFrame extends JFrame implements TriggerCallback {
     }
     
     private void doExport() {
+        ExportDlg dlg = new ExportDlg(this);
+        ExportFilter filter = dlg.getFilter();
+        if (filter == null) return;        
+        
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showSaveDialog(MainFrame.this);
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -387,7 +398,7 @@ public class MainFrame extends JFrame implements TriggerCallback {
             if (writeIt) {
                 OutStream os;
                 try {
-                    os = Triggers.getInstance().getTriggerData();
+                    os = Triggers.getInstance().getTriggerData(filter);
                 } catch (DataFormatException ex) {
                     JOptionPane.showMessageDialog(MainFrame.TheFrame, 
                         RES.getString("INTERNAL_ERROR"),
@@ -414,7 +425,7 @@ public class MainFrame extends JFrame implements TriggerCallback {
     private void displayTriggers() {
         OutStream os;
         try {
-            os = Triggers.getInstance().getTriggerData();
+            os = Triggers.getInstance().getAllTriggerData();
         } catch (DataFormatException ex) {
             JOptionPane.showMessageDialog(MainFrame.TheFrame, 
                 RES.getString("INTERNAL_ERROR"),

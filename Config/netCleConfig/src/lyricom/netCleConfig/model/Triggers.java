@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.zip.DataFormatException;
 
 /**
@@ -76,8 +78,15 @@ public class Triggers {
         return triggers;
     }
     
-    public void replace(List<Trigger> newList) {
-        triggers = newList;
+    public void replace(TmpImport tmp) {
+        triggers = tmp.getList();
+        sizeChanged();
+    }
+    
+    public void appendAll(TmpImport tmp) {
+        for(Trigger t: tmp.getList()) {
+            triggers.add(t);
+        }
         sizeChanged();
     }
     
@@ -148,16 +157,40 @@ public class Triggers {
         }
         sizeChanged();
     }
-    
-    public void loadTriggers(InStream in) throws IOError {
-        List<Trigger> tmpList = new ArrayList<>();
-        readTriggers(tmpList, in);
-        groupLevels(tmpList);
-        replace(tmpList);
+
+    // Load triggers from the device.
+    public void loadDataFromDevice(InStream in) throws IOError{
+        TmpImport tmp = readTriggers(in);
+        replace(tmp);
+        int[] mouseSpeeds = tmp.getMouseSpeeds();
+        if (mouseSpeeds != null) {
+            MouseSpeedTransfer.getInstance().setSpeeds(mouseSpeeds);
+        }
         DATA_IN_SYNC = true;
     }
     
-    private void readTriggers(List<Trigger> tmp, InStream in) throws IOError {
+    // Load data imported from a file.
+    public void loadTriggers(TmpImport tmp, ImportFilter filter) {
+        tmp.groupLevels();  // Precation on import data.
+        if (filter.isOverwrite()) {
+            replace(tmp);            
+        } else {
+            for(Sensor s: filter.getDeleteList()) {
+                deleteTriggerSet(s);
+            }
+            appendAll(tmp);
+        }
+        
+        // Replace mouse speeds if they are defined.
+        int[] mouseSpeeds = tmp.getMouseSpeeds();
+        if (mouseSpeeds != null) {
+            MouseSpeedTransfer.getInstance().setSpeeds(mouseSpeeds);
+        }
+    }
+    
+    public TmpImport readTriggers(InStream in) throws IOError {
+        TmpImport tmp = new TmpImport();
+        
         if (!Objects.equals(in.getChar(), Model.START_OF_TRIGGERS)) {
             throw new IOError(RES.getString("CDE_INVALID_START"));
         }
@@ -170,24 +203,50 @@ public class Triggers {
         
         int ch = in.getChar();
         if (ch == Model.MOUSE_SPEED) {
-            MouseSpeedTransfer.getInstance().fromStream(in);
+            int[] speeds = MouseSpeedTransfer.getInstance().fromStream(in);
+            if (speeds != null) {
+                tmp.setMouseSpeeds(speeds);
+            }
             ch = in.getChar();
         }
         if (ch != Model.END_OF_BLOCK) {
             throw new IOError(RES.getString("CDE_INVALID_END"));
         }
+        return tmp;
     }
     
-    public OutStream getTriggerData() throws DataFormatException {
+    public OutStream getAllTriggerData() throws DataFormatException {
+        return getTriggerData(new ExportFilter());
+    }
+    
+    public OutStream getTriggerData(ExportFilter filter) throws DataFormatException {
+        int triggerCount = 0;   
+        for(Trigger t: Triggers.getInstance().getAll()) {
+            if (filter.exportThis(t)) {
+                triggerCount++;
+            }
+        }
         OutStream os = new OutStream();
         os.putChar(Model.START_OF_TRIGGERS);
-        os.putNum(Triggers.getInstance().length(), 2);
+        os.putNum(triggerCount, 2);
         for(Trigger t: Triggers.getInstance().getAll()) {
-            t.toStream(os);
+            if (filter.exportThis(t)) {
+                t.toStream(os);
+            }
         }
-        MouseSpeedTransfer.getInstance().toStream(os);
+        if (filter.exportMouseSpeed()) {
+            MouseSpeedTransfer.getInstance().toStream(os);
+        }
         os.putChar(Model.END_OF_BLOCK);
         return os;
+    }
+    
+    public Set<Sensor> getUsedSensors() {
+        TreeSet<Sensor> theSet = new TreeSet<>();
+        for(Trigger t: Triggers.getInstance().getAll()) {
+            theSet.add(t.getSensor());
+        }        
+        return theSet;
     }
     
     class Cluster {

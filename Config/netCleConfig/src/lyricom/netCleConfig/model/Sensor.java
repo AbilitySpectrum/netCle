@@ -21,7 +21,7 @@ package lyricom.netCleConfig.model;
  *
  * @author Andrew
  */
-public class Sensor {
+public class Sensor implements Comparable {
     private final int id;
     private final String name;
     private final int minval;
@@ -122,5 +122,11 @@ public class Sensor {
         } else {
             level2 = value;
         }
+    }
+
+    @Override
+    public int compareTo(Object t) {
+        Sensor other = (Sensor) t;
+        return (this.name.compareTo(other.name));
     }
 }

@@ -64,7 +64,7 @@ public class MouseSpeedTransfer {
         os.putNum(values[4], 2);
     }
     
-    public void fromStream(InStream is) throws IOError {
+    public int[] fromStream(InStream is) throws IOError {
         int[] values = new int[5];
         
         int num = is.getNum(2);
@@ -73,7 +73,7 @@ public class MouseSpeedTransfer {
             for(int i=0; i<num; i++) {
                 is.getChar();
             }
-            return;
+            return null;
         }
         int delay;
         int jump;
@@ -88,7 +88,11 @@ public class MouseSpeedTransfer {
         values[2] = converter.convertToInput(delay, jump);
         values[3] = is.getNum(2);
         values[4] = is.getNum(2);
-        transfer.setSpeeds(values);
+        return values;
+    }
+    
+    public void setSpeeds(int[] speeds) {
+        transfer.setSpeeds(speeds);
     }
     
     static class Converter {

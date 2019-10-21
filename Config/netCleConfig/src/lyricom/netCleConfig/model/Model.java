@@ -28,7 +28,7 @@ import lyricom.netCleConfig.ui.ActionUI;
 /**
  * Static constant values.
  * Static method for accessing the model.
- * Values here match values used in the Sensact.
+ * Values here match values used in the netCle.
  * @author Andrew
  */
 public class Model {
