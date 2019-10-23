@@ -1,3 +1,22 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+    Copyright (C) 2019 Andrew Hodgson
+
+    This file is part of the netClé Configuration software.
+
+    netClé Configuration software is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    netClé Configuration software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this netClé configuration software.  
+    If not, see <https://www.gnu.org/licenses/>.   
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package lyricom.netCleConfig.ui;
 
 import java.awt.Dimension;
@@ -41,11 +60,23 @@ public class AboutDlg extends JDialog {
         arduinoVersion.setAlignmentX(0.5f);
         arduinoVersion.setFont(Utils.STATE_FONT);
         
+        JLabel copyRightNotice = new JLabel(RES.getString("COPYRIGHT_NOTICE"));
+        copyRightNotice.setAlignmentX(0.5f);
+        copyRightNotice.setFont(Utils.STD_FONT);
+        
+        JLabel licenseNotice = new JLabel(RES.getString("LICENSE_NOTICE"));
+        licenseNotice.setAlignmentX(0.5f);
+        licenseNotice.setFont(Utils.STD_FONT);
+        
         b.add(top);
         b.add(Box.createVerticalStrut(10));
         b.add(configVersion);
         b.add(Box.createVerticalStrut(8));
         b.add(arduinoVersion);
+        b.add(Box.createVerticalStrut(20));
+        b.add(copyRightNotice);
+        b.add(Box.createVerticalStrut(8));
+        b.add(licenseNotice);
         b.add(Box.createVerticalStrut(10));
         b.add(doneBtn());
         

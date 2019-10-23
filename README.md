@@ -1,4 +1,4 @@
-ï»¿## The Sensact Hub
+## The netClé Hub
 ### An Arduino shield with analog inputs and IR and relay outputs
 ### - with generic 'sensing' and 'acting' functions configurable by software
 
@@ -6,9 +6,9 @@
 
 1. a shield that is compatible with the Arduino board
 2. Arduino code that works in tandem with a web based app
-3. The web-based app configures the Arduino+Sensact combo
+3. The web-based app configures the Arduino+netClé combo
 4. Once configured, the combo may be plugged into any USB device for access control
-5. The shield also has on-board IR transceivers and is Bluetooth capable
+5. The shield also has an on-board IR transmitter and is Bluetooth capable
 
 #### Motivation
 
@@ -16,7 +16,7 @@ Existing switch controls for computer users with physical impairment tend to be 
 
 We provide a generic device that allows the user to experiment with different sensors, to find something that works best for him. We provide on-board IR output, a socket for an optional Bluetooth board and also configurable key strokes for USB HID controls. 
 
-The Sensact Hub brings together 3 analog inputs (one of them can be configured as an I2C input) and 2 relay outputs as well as HID, IR and Bluetooth outputs.
+The Sensact Hub brings together 3 analog inputs, one I2C connection and 2 relay outputs as well as HID, IR and Bluetooth outputs.
 
 We use 3.5mm audio sockets to make it easy to swap different input sensors. The tip is VCC, sleeve is GND and Ring is Signal. The first socket can be used by an I2C device where the two rings are SDA and SCL.
 
@@ -29,14 +29,11 @@ We have also been able to plug in a 6DO gyroscope+accelerator module. The user c
 #### Compatibility:
 
 
-#### To do
-Currently no IR capability.
-
 #### Partners
 
-This work is performed by volunteers and staff at BruyÃ¨re's Saint Vincent Hospital AAC Clinic.
+This work is performed by volunteers and staff at Bruyère's Saint Vincent Hospital AAC Clinic.
 
-BruyÃ¨re, Carleton and Ability Spectrum are not responsible for the use of this material. Please attribute the source if you republish or use partiallly or in whole, using License below.
+Bruyère, Carleton and Ability Spectrum are not responsible for the use of this material. Please attribute the source if you republish or use partiallly or in whole, using License below.
 
 #### Disclaimer
 
