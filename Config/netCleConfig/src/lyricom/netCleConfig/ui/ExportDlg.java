@@ -27,6 +27,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -40,6 +41,7 @@ import lyricom.netCleConfig.model.Triggers;
  * @author Andrew
  */
 public class ExportDlg extends JDialog {
+    private static final ResourceBundle RES = ResourceBundle.getBundle("strings");
     private JDialog thisDlg;
     private ExportFilter filter = null;
     
@@ -52,14 +54,14 @@ public class ExportDlg extends JDialog {
         theBox.setBorder(new EmptyBorder(10,10,10,10));
         theBox.add(Box.createVerticalStrut(5));
         
-        JLabel title = new JLabel("Export Options");
+        JLabel title = new JLabel(RES.getString("EXPORT_TITLE"));
         title.setFont(Utils.TITLE_FONT);
         title.setAlignmentX(CENTER_ALIGNMENT);
         theBox.add(title);
         theBox.add(Box.createVerticalStrut(5));
         
         JTextArea ta = new JTextArea(
-                "Which parts of the configuration\ndo you wish to export?"
+                RES.getString("EXPORT_MAIN_QUESTION")
         );
         ta.setEditable(false);
         ta.setBackground(theBox.getBackground());
@@ -91,7 +93,7 @@ public class ExportDlg extends JDialog {
     
     JComponent everythingBtn() {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton btn = new JButton("Everything");
+        JButton btn = new JButton(RES.getString("EXPORT_EVERYTHING"));
         btn.addActionListener(e -> {
             filter = new ExportFilter();
             thisDlg.dispose();
@@ -131,7 +133,7 @@ public class ExportDlg extends JDialog {
             box.add(cb);
         }
         
-        mouseSpeedBox = new JCheckBox("Mouse Speed");
+        mouseSpeedBox = new JCheckBox(RES.getString("EX_MOUSE_SPEED"));
         mouseSpeedBox.setAlignmentY(LEFT_ALIGNMENT);
         box.add(mouseSpeedBox);
         
@@ -143,7 +145,7 @@ public class ExportDlg extends JDialog {
         Set<Sensor> sensors = new HashSet<>();
         
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton btn = new JButton("Selected Items");
+        JButton btn = new JButton(RES.getString("EXPORT_SELECTED"));
         btn.addActionListener(e -> {
             for(CheckSensor cs: checkList) {
                 if (cs.box.isSelected()) {
