@@ -470,14 +470,36 @@ void HIDKeyboard::kc_release(char key) {
 #define BT_TX_PIN 0
 #define BT_RX_PIN 1
 
-// Make the bluetooth pointer a singleton.
-// shared by BTKeyboard and BTMouse.
-// Empty the rcv queue.
+
+// Send a command.  Wait for the response.
+// This has become rather sophisticated.
+// Waiting for a fixed time was not reliable.
+// Now the code waits for up to a second for a newline (the end of the response).
+// If nothing is seen it is assumed that there is no BT module attached,
+// so the code stops even trying.
+// Usually the response come in 100 ms or so, but it can take longer.
+boolean BT_Card_Available = true;  // We start optimistic!
+
 void BTCommand(const __FlashStringHelper *cmd) {
-  Serial1.println(cmd);
-  delay(200);    // Tried 50, 100, 150.  Sometimes fails.
-  while(Serial1.available()) {
-    Serial1.read();
+  long startTime;
+  boolean newLineFound = false;
+  if (!BT_Card_Available) return;
+  Serial1.print(cmd);
+
+  startTime = millis();
+  while(!newLineFound) {
+    delay(100);    
+    while(Serial1.available()) {
+      int ch = Serial1.read();
+      if (ch == '\n') {
+        newLineFound = true;
+        break;
+      }
+    }
+    if (!newLineFound && (millis() - startTime) > 1000) {
+      BT_Card_Available = false;
+      break;
+    }
   }
 }
 
@@ -489,26 +511,19 @@ void initBT() {
     // If the device is already at 9600 this will have no effect.
     delay(1000);  // Give BT board a chance to initialize.
     Serial1.begin(115200);  // Bluetooth defaults to 115200bps    
-    Serial1.print(F("$$$"));    // Enter command mode
-    delay(100);
-    Serial1.println(F("U,9600,N")); //Change baud rate to 9600 - no parity
-    delay(500);
-
-    // Now connect at 9600 and configure the device
-    Serial1.begin(9600);  // Start bluetooth at 9600 
-    Serial1.print(F("$$$"));    // Enter command mode
-    delay(100);
-    BTCommand(F("SF,1")); // Factory reset
-    BTCommand(F("SU,9600")); // 9600 baud
-    BTCommand(F("SL,N"));   // No parity
-    BTCommand(F("S-,netCle")); // Device name will be netCle-xxxx
+    BTCommand(F("$$$"));    // Enter command mode
+//    BTCommand(F("SF,1")); // Factory reset
+    BTCommand(F("SU,9600\n")); // 9600 baud
+    BTCommand(F("SL,N\n"));   // No parity
+    BTCommand(F("S-,netCle\n")); // Device name will be netCle-xxxx
                                // where xxxx is end of BT address.
-    BTCommand(F("S~,6"));    // HID mode
-    BTCommand(F("SH,0230")); // Combo mode - keyboard & mouse
-    BTCommand(F("SM,6"));    // Pairing mode - for auto-reconnect.
-    BTCommand(F("R,1"));     // Reboot
+    BTCommand(F("S~,6\n"));    // HID mode
+    BTCommand(F("SH,0230\n")); // Combo mode - keyboard & mouse
+    BTCommand(F("SM,6\n"));    // Pairing mode - for auto-reconnect.
+    BTCommand(F("R,1\n"));     // Reboot
     delay(100);
-                                    
+
+    Serial1.begin(9600);
     BTinitDone = true;  
   }
 }
