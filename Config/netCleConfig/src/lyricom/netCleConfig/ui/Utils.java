@@ -25,11 +25,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import lyricom.netCleConfig.model.ActionType;
-import lyricom.netCleConfig.model.Model;
-import lyricom.netCleConfig.model.Trigger;
-import lyricom.netCleConfig.widgets.WT_Action;
 
 /**
  *
