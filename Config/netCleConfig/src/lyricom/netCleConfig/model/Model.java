@@ -1,4 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+    Copyright (C) 2019 Andrew Hodgson
+
     This file is part of the netClé Configuration software.
 
     netClé Configuration software is free software: you can redistribute it and/or modify
@@ -12,7 +14,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this netClé Arduino software.  
+    along with this netClé configuration software.  
     If not, see <https://www.gnu.org/licenses/>.   
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package lyricom.netCleConfig.model;
@@ -28,7 +30,7 @@ import lyricom.netCleConfig.ui.ActionUI;
 /**
  * Static constant values.
  * Static method for accessing the model.
- * Values here match values used in the Sensact.
+ * Values here match values used in the netCle.
  * @author Andrew
  */
 public class Model {

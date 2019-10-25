@@ -19,34 +19,34 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package lyricom.netCleConfig.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  * @author Andrew
  */
-public class SensorGroup {
-    private final GroupID groupID;
-    private final List<Sensor> members = new ArrayList<>();
+public class ImportFilter {
+    private boolean overwrite = false;
+    private Set<Sensor> deleteList = new HashSet<>();
     
-    public SensorGroup(GroupID id) {
-        this.groupID = id;
+    public ImportFilter() {
+        
     }
     
-    public void add(Sensor s) {
-        members.add(s);
+    public void setOverwrite(boolean val) {
+        overwrite = val;
     }
     
-    public String getName() {
-        return groupID.toString();
+    public boolean isOverwrite() {
+        return overwrite;
     }
     
-    public GroupID getID() {
-        return groupID;
+    public void addToDeleteList(Sensor s) {
+        deleteList.add(s);
     }
     
-    public List<Sensor> getMembers() {
-        return members;
+    public Set<Sensor> getDeleteList() {
+        return deleteList;
     }
 }

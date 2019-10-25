@@ -1,4 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+    Copyright (C) 2019 Andrew Hodgson
+
     This file is part of the netClé Configuration software.
 
     netClé Configuration software is free software: you can redistribute it and/or modify
@@ -12,7 +14,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this netClé Arduino software.  
+    along with this netClé configuration software.  
     If not, see <https://www.gnu.org/licenses/>.   
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package lyricom.netCleConfig.model;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.zip.DataFormatException;
 
 /**
@@ -76,8 +80,15 @@ public class Triggers {
         return triggers;
     }
     
-    public void replace(List<Trigger> newList) {
-        triggers = newList;
+    public void replace(TmpImport tmp) {
+        triggers = tmp.getList();
+        sizeChanged();
+    }
+    
+    public void appendAll(TmpImport tmp) {
+        for(Trigger t: tmp.getList()) {
+            triggers.add(t);
+        }
         sizeChanged();
     }
     
@@ -148,16 +159,40 @@ public class Triggers {
         }
         sizeChanged();
     }
-    
-    public void loadTriggers(InStream in) throws IOError {
-        List<Trigger> tmpList = new ArrayList<>();
-        readTriggers(tmpList, in);
-        groupLevels(tmpList);
-        replace(tmpList);
+
+    // Load triggers from the device.
+    public void loadDataFromDevice(InStream in) throws IOError{
+        TmpImport tmp = readTriggers(in);
+        replace(tmp);
+        int[] mouseSpeeds = tmp.getMouseSpeeds();
+        if (mouseSpeeds != null) {
+            MouseSpeedTransfer.getInstance().setSpeeds(mouseSpeeds);
+        }
         DATA_IN_SYNC = true;
     }
     
-    private void readTriggers(List<Trigger> tmp, InStream in) throws IOError {
+    // Load data imported from a file.
+    public void loadTriggers(TmpImport tmp, ImportFilter filter) {
+        tmp.groupLevels();  // Precation on import data.
+        if (filter.isOverwrite()) {
+            replace(tmp);            
+        } else {
+            for(Sensor s: filter.getDeleteList()) {
+                deleteTriggerSet(s);
+            }
+            appendAll(tmp);
+        }
+        
+        // Replace mouse speeds if they are defined.
+        int[] mouseSpeeds = tmp.getMouseSpeeds();
+        if (mouseSpeeds != null) {
+            MouseSpeedTransfer.getInstance().setSpeeds(mouseSpeeds);
+        }
+    }
+    
+    public TmpImport readTriggers(InStream in) throws IOError {
+        TmpImport tmp = new TmpImport();
+        
         if (!Objects.equals(in.getChar(), Model.START_OF_TRIGGERS)) {
             throw new IOError(RES.getString("CDE_INVALID_START"));
         }
@@ -170,136 +205,49 @@ public class Triggers {
         
         int ch = in.getChar();
         if (ch == Model.MOUSE_SPEED) {
-            MouseSpeedTransfer.getInstance().fromStream(in);
+            int[] speeds = MouseSpeedTransfer.getInstance().fromStream(in);
+            if (speeds != null) {
+                tmp.setMouseSpeeds(speeds);
+            }
             ch = in.getChar();
         }
         if (ch != Model.END_OF_BLOCK) {
             throw new IOError(RES.getString("CDE_INVALID_END"));
         }
+        return tmp;
     }
     
-    public OutStream getTriggerData() throws DataFormatException {
+    public OutStream getAllTriggerData() throws DataFormatException {
+        return getTriggerData(new ExportFilter());
+    }
+    
+    public OutStream getTriggerData(ExportFilter filter) throws DataFormatException {
+        int triggerCount = 0;   
+        for(Trigger t: Triggers.getInstance().getAll()) {
+            if (filter.exportThis(t)) {
+                triggerCount++;
+            }
+        }
         OutStream os = new OutStream();
         os.putChar(Model.START_OF_TRIGGERS);
-        os.putNum(Triggers.getInstance().length(), 2);
+        os.putNum(triggerCount, 2);
         for(Trigger t: Triggers.getInstance().getAll()) {
-            t.toStream(os);
+            if (filter.exportThis(t)) {
+                t.toStream(os);
+            }
         }
-        MouseSpeedTransfer.getInstance().toStream(os);
+        if (filter.exportMouseSpeed()) {
+            MouseSpeedTransfer.getInstance().toStream(os);
+        }
         os.putChar(Model.END_OF_BLOCK);
         return os;
     }
     
-    class Cluster {
-        private long sum;
-        private int count;
-        private int avg;
-        private int width;
-        
-        public void reset(int w) {
-            width = w;
-            sum = 0;
-            avg = count = 0;
-        }
-        
-        public boolean empty() {
-            return (count == 0);
-        }
-        
-        public void add(int val) {
-            sum += val;
-            count++;
-            avg = (int) sum/count;
-        }
-        
-        public boolean inRange(int val) {
-            return (proximity(val) < width);
-        }
-        
-        public int proximity(int val) {
-            return (int) (Math.abs(val - avg));
-        }
-        
-        public int avg() {
-            return (int) avg;
-        }
-    }
-    
-    // Now the hard bit.  Deduce and set levels.
-    // All data within 15% of the average of a group
-    // is clusters in that group.
-    // Two groups are collected.
-    // Data belonging to neither group is put into the nearest group.
-    // DO NOT apply this to sensors that are not continuous.
-    // This code was needed to support the transition to fixed levels.
-    // That transition is long-ago complete, so perhaps this is no longer
-    // needed??
-    private void groupLevels(List<Trigger> tmp) {
-        Cluster group1 = new Cluster();
-        Cluster group2 = new Cluster();
-        
-        // For each sensor ...
-        for(Sensor s: Model.sensorList) {
-            if (!s.isContinuous()) {
-                continue;
-            }
-            int clusterWidth = ((s.getMaxval() - s.getMinval()) * 15) / 100;
-            group1.reset(clusterWidth);
-            group2.reset(clusterWidth);
-            
-            // .. go through all the triggers and cluster for that sensor.
-            for(Trigger t: tmp) {
-                if (t.getSensor() == s) {
-                    int tval = t.getTriggerValue();
-                    if (group1.empty()) {
-                        group1.add(tval);
-                    } else {
-                        // Group 1 already started
-                        if (group1.inRange(tval)) {
-                            // This one can be added to group 1.
-                            group1.add(tval);
-                        } else {
-                            if (group2.empty()) {
-                                group2.add(tval);
-                            } else {
-                                // Add to the nearest group.
-                                if (group1.proximity(tval) < group2.proximity(tval)) {
-                                    group1.add(tval);
-                                } else {
-                                    group2.add(tval);
-                                }
-                            }
-                        }                        
-                    }
-                }
-            }
-            if (!group1.empty()) {
-                // ... then set sensor levels and adjust trigger values
-                // to reflect the results of clustering.
-                if (group2.empty()) {
-                    s.setLevels(group1.avg(), s.getLevel2());
-                } else {
-                    s.setLevels(group1.avg(), group2.avg());
-                }
-                for(Trigger t: tmp) {
-                    if (t.getSensor() == s) {
-                        if (group2.empty()) {
-                            // All are in group 1
-                            t.setTriggerValue(group1.avg());
-                            t.setLevel(Trigger.Level.LEVEL1);
-                        } else {                        
-                            int tval = t.getTriggerValue();
-                            if (group1.proximity(tval) < group2.proximity(tval)) {
-                                t.setTriggerValue(group1.avg());
-                                t.setLevel(Trigger.Level.LEVEL1);
-                            } else {
-                                t.setTriggerValue(group2.avg());
-                                t.setLevel(Trigger.Level.LEVEL2);                        
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    public Set<Sensor> getUsedSensors() {
+        TreeSet<Sensor> theSet = new TreeSet<>();
+        for(Trigger t: Triggers.getInstance().getAll()) {
+            theSet.add(t.getSensor());
+        }        
+        return theSet;
     }
 }

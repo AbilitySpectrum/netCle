@@ -41,8 +41,10 @@ public class TriggersTest {
     public void simpleLoadTest() {
         InStream in = new InStream(testInput.getBytes());
         Triggers trigs = Triggers.getInstance();
+        TmpImport tmp;
         try {
-            trigs.loadTriggers(in);
+            tmp = trigs.readTriggers(in);
+            trigs.replace(tmp);
         } catch (IOError e) {
             fail("Unexpected IOError");
             return;
@@ -76,8 +78,10 @@ public class TriggersTest {
         InStream in = new InStream(testInput.getBytes());
         Triggers trigs = Triggers.getInstance();
         trigs.deleteAll();
+        TmpImport tmp;
         try {
-            trigs.loadTriggers(in);
+            tmp = trigs.readTriggers(in);
+            trigs.replace(tmp);
         } catch (IOError e) {
             fail("Unexpected IOError");
             return;
@@ -99,8 +103,10 @@ public class TriggersTest {
         InStream in = new InStream(testInput.getBytes());
         Triggers trigs = Triggers.getInstance();
         trigs.deleteAll();
+        TmpImport tmp;
         try {
-            trigs.loadTriggers(in);
+            tmp = trigs.readTriggers(in);
+            trigs.replace(tmp);
         } catch (IOError e) {
             fail("Unexpected IOError");
             return;
@@ -138,8 +144,10 @@ public class TriggersTest {
         InStream in = new InStream(testInput.getBytes());
         Triggers trigs = Triggers.getInstance();
         trigs.deleteAll();
+        TmpImport tmp;
         try {
-            trigs.loadTriggers(in);
+            tmp = trigs.readTriggers(in);
+            trigs.replace(tmp);
         } catch (IOError e) {
             fail("Unexpected IOError");
             return;
@@ -170,8 +178,10 @@ public class TriggersTest {
         InStream in = new InStream(testInput.getBytes());
         Triggers trigs = Triggers.getInstance();
         trigs.deleteAll();
+        TmpImport tmp;
         try {
-            trigs.loadTriggers(in);
+            tmp = trigs.readTriggers(in);
+            trigs.replace(tmp);
         } catch (IOError e) {
             fail("Unexpected IOError");
             return;
@@ -202,8 +212,10 @@ public class TriggersTest {
         InStream in = new InStream(testInput.getBytes());
         Triggers trigs = Triggers.getInstance();
         trigs.deleteAll();
+        TmpImport tmp;
         try {
-            trigs.loadTriggers(in);
+            tmp = trigs.readTriggers(in);
+            trigs.replace(tmp);
         } catch (IOError e) {
             fail("Unexpected IOError");
             return;
@@ -232,8 +244,10 @@ public class TriggersTest {
         InStream in = new InStream(testInput.getBytes());
         Triggers trigs = Triggers.getInstance();
         trigs.deleteAll();
+        TmpImport tmp;
         try {
-            trigs.loadTriggers(in);
+            tmp = trigs.readTriggers(in);
+            trigs.replace(tmp);
         } catch (IOError e) {
             fail("Unexpected IOError");
             return;
@@ -266,8 +280,10 @@ public class TriggersTest {
         InStream in = new InStream(testInput.getBytes());
         Triggers trigs = Triggers.getInstance();
         trigs.deleteAll();
+        TmpImport tmp;
         try {
-            trigs.loadTriggers(in);
+            tmp = trigs.readTriggers(in);
+            trigs.replace(tmp);
         } catch (IOError e) {
             fail("Unexpected IOError");
             return;
@@ -300,8 +316,10 @@ public class TriggersTest {
         InStream in = new InStream(testInput.getBytes());
         Triggers trigs = Triggers.getInstance();
         trigs.deleteAll();
+        TmpImport tmp;
         try {
-            trigs.loadTriggers(in);
+            tmp = trigs.readTriggers(in);
+            trigs.replace(tmp);
         } catch (IOError e) {
             fail("Unexpected IOError");
             return;
@@ -333,8 +351,10 @@ public class TriggersTest {
         InStream in = new InStream(testInput.getBytes());
         Triggers trigs = Triggers.getInstance();
         trigs.deleteAll();
+        TmpImport tmp;
         try {
-            trigs.loadTriggers(in);
+            tmp = trigs.readTriggers(in);
+            trigs.replace(tmp);
         } catch (IOError e) {
             fail("Unexpected IOError");
             return;
@@ -366,8 +386,10 @@ public class TriggersTest {
         InStream in = new InStream(testInput.getBytes());
         Triggers trigs = Triggers.getInstance();
         trigs.deleteAll();
+        TmpImport tmp;
         try {
-            trigs.loadTriggers(in);
+            tmp = trigs.readTriggers(in);
+            trigs.replace(tmp);
         } catch (IOError e) {
             fail("Unexpected IOError");
             return;

@@ -1,4 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+    Copyright (C) 2019 Andrew Hodgson
+
     This file is part of the netClé Configuration software.
 
     netClé Configuration software is free software: you can redistribute it and/or modify
@@ -12,7 +14,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this netClé Arduino software.  
+    along with this netClé configuration software.  
     If not, see <https://www.gnu.org/licenses/>.   
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package lyricom.netCleConfig.comms;
@@ -210,7 +212,7 @@ public class Connection implements SerialCallback {
             if (!connected) return;
             InStream input = new InStream(bytes);
             try {
-                Triggers.getInstance().loadTriggers(input);
+                Triggers.getInstance().loadDataFromDevice(input);
                 SensorPanel.reloadTriggers();    
                 Triggers.DATA_IN_SYNC = true;
             } catch(IOError e) {

@@ -19,34 +19,40 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package lyricom.netCleConfig.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 /**
- *
+ * Used to limit an export stream to a particular set of sensors.
  * @author Andrew
  */
-public class SensorGroup {
-    private final GroupID groupID;
-    private final List<Sensor> members = new ArrayList<>();
+public class ExportFilter {
+    private boolean exportAll;
+    private boolean exportMouseSpeed;
+    private Set<Sensor> sensors;
     
-    public SensorGroup(GroupID id) {
-        this.groupID = id;
+    public ExportFilter(Set<Sensor> sensors) {
+        this.sensors = sensors;
+        exportAll = false;       
     }
     
-    public void add(Sensor s) {
-        members.add(s);
+    public ExportFilter() {
+        exportAll = true;
+        exportMouseSpeed = true;
     }
     
-    public String getName() {
-        return groupID.toString();
+    public void setExportMouseSpeed(boolean b) {
+        exportMouseSpeed = b;
     }
     
-    public GroupID getID() {
-        return groupID;
+    public boolean exportThis(Trigger t) {
+        if (exportAll) {
+            return true;
+        } else {
+            return sensors.contains(t.getSensor());
+        }
     }
     
-    public List<Sensor> getMembers() {
-        return members;
+    boolean exportMouseSpeed() {
+        return exportMouseSpeed;
     }
 }

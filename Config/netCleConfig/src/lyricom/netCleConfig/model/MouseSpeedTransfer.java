@@ -1,4 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+    Copyright (C) 2019 Andrew Hodgson
+
     This file is part of the netClé Configuration software.
 
     netClé Configuration software is free software: you can redistribute it and/or modify
@@ -12,7 +14,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this netClé Arduino software.  
+    along with this netClé configuration software.  
     If not, see <https://www.gnu.org/licenses/>.   
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package lyricom.netCleConfig.model;
@@ -64,7 +66,7 @@ public class MouseSpeedTransfer {
         os.putNum(values[4], 2);
     }
     
-    public void fromStream(InStream is) throws IOError {
+    public int[] fromStream(InStream is) throws IOError {
         int[] values = new int[5];
         
         int num = is.getNum(2);
@@ -73,7 +75,7 @@ public class MouseSpeedTransfer {
             for(int i=0; i<num; i++) {
                 is.getChar();
             }
-            return;
+            return null;
         }
         int delay;
         int jump;
@@ -88,7 +90,11 @@ public class MouseSpeedTransfer {
         values[2] = converter.convertToInput(delay, jump);
         values[3] = is.getNum(2);
         values[4] = is.getNum(2);
-        transfer.setSpeeds(values);
+        return values;
+    }
+    
+    public void setSpeeds(int[] speeds) {
+        transfer.setSpeeds(speeds);
     }
     
     static class Converter {

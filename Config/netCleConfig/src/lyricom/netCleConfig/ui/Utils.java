@@ -1,4 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+    Copyright (C) 2019 Andrew Hodgson
+
     This file is part of the netClé Configuration software.
 
     netClé Configuration software is free software: you can redistribute it and/or modify
@@ -12,7 +14,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this netClé Arduino software.  
+    along with this netClé configuration software.  
     If not, see <https://www.gnu.org/licenses/>.   
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package lyricom.netCleConfig.ui;
@@ -23,11 +25,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import lyricom.netCleConfig.model.ActionType;
-import lyricom.netCleConfig.model.Model;
-import lyricom.netCleConfig.model.Trigger;
-import lyricom.netCleConfig.widgets.WT_Action;
 
 /**
  *

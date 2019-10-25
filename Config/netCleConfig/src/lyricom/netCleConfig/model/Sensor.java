@@ -1,4 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+    Copyright (C) 2019 Andrew Hodgson
+
     This file is part of the netClé Configuration software.
 
     netClé Configuration software is free software: you can redistribute it and/or modify
@@ -12,7 +14,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this netClé Arduino software.  
+    along with this netClé configuration software.  
     If not, see <https://www.gnu.org/licenses/>.   
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package lyricom.netCleConfig.model;
@@ -21,7 +23,7 @@ package lyricom.netCleConfig.model;
  *
  * @author Andrew
  */
-public class Sensor {
+public class Sensor implements Comparable {
     private final int id;
     private final String name;
     private final int minval;
@@ -122,5 +124,11 @@ public class Sensor {
         } else {
             level2 = value;
         }
+    }
+
+    @Override
+    public int compareTo(Object t) {
+        Sensor other = (Sensor) t;
+        return (this.name.compareTo(other.name));
     }
 }

@@ -4,13 +4,7 @@
  * Update: For V4.1 Hardware.
  * 
  * Commands can be sent via the serial link to drive Sensact functions.
- * 
- * 'i' + 0 to 15.  Sets power to the input jacks according to bit values.
- * 'o' + 0 to 3.   Turns on the output ports according to bit values.
- * 'l' + 0 to 7.   Sets the value of LED outputs.
- * 'b'             Sounds the buzzer.
- * 'r'             Reads the value of all input pins..
- * 'r' 1 to 6      Reads the value of a particular input pin.
+ * See help 
  */
 
 #include "Gyro.h"

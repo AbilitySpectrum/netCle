@@ -2,6 +2,8 @@
 // Actions.h
 // -------------------------------------
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+    Copyright (C) 2019 Andrew Hodgson
+
     This file is part of the Sensact Arduino software.
 
     Sensact Arduino software is free software: you can redistribute it and/or modify
@@ -267,6 +269,9 @@ class LightBox: public Actor {
     }
     void init() {}
     void doAction(long param);
+    void reset() {
+      doAction(0);  // Turn off all lights.
+    }
 };
 
 /* LCD Display not in use
