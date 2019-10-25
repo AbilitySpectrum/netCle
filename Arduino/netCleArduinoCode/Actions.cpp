@@ -514,8 +514,9 @@ void initBT() {
     delay(1000);  // Give BT board a chance to initialize.
     Serial1.begin(115200);  // Bluetooth defaults to 115200bps    
     BTCommand(F("$$$"));    // Enter command mode
-//    BTCommand(F("SF,1")); // Factory reset
+    BTCommand(F("SF,1\n"));   // Factory reset
     BTCommand(F("SU,9600\n")); // 9600 baud
+    BTCommand(F("SA,1\n"));   // Authentication mode 1
     BTCommand(F("SL,N\n"));   // No parity
     BTCommand(F("S-,netCle\n")); // Device name will be netCle-xxxx
                                // where xxxx is end of BT address.
