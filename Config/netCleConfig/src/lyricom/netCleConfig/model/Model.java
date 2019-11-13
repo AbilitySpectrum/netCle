@@ -68,14 +68,7 @@ public class Model {
     static public final int NUDGE_LEFT = 12;
     static public final int NUDGE_RIGHT = 13;
     static public final int NUDGE_STOP = 14;
-    
-    // OLD IR TV Control values	
-    static public final int TV_ON_OFF = 1;
-    static public final int VOLUME_UP = 2;
-    static public final int VOLUME_DOWN = 3;
-    static public final int CHANNEL_UP = 4;
-    static public final int CHANNEL_DOWN = 5;
-    
+        
     // NEW IR TV Control values
     static public final int IR_TV_ON_OFF = 1;
     static public final int IR_VOLUME_UP = 2;
@@ -213,7 +206,7 @@ public class Model {
         
         actionList.add(new SaAction(ActionType.HID_MOUSE, MOUSE_UP,       ActionUI.MOUSE_OPTION, null));
         actionList.add(new SaAction(ActionType.BUZZER, (400 << 16) + 250, ActionUI.BUZZER,       null));
-        actionList.add(new SaAction(ActionType.IR, TV_ON_OFF,  ActionUI.IR_OPTION,    null));       
+        actionList.add(new SaAction(ActionType.IR, IR_TV_ON_OFF,  ActionUI.IR_OPTION,    null));       
         actionList.add(new SaAction(ActionType.SERIAL, 65, ActionUI.KEY_OPTION, null));
         
         actionList.add(new SaAction(ActionType.SET_STATE, 0x101, ActionUI.SET_STATE, null));

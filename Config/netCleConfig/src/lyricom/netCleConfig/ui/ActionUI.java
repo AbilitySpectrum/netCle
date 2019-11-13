@@ -251,15 +251,7 @@ public class ActionUI {
              return option;
         }
     } 
-    
-    ValueLabelPair OldIRActions[] = {
-        new ValueLabelPair(Model.TV_ON_OFF,     "On/Off"),
-        new ValueLabelPair(Model.VOLUME_UP,     "Volume Up"),
-        new ValueLabelPair(Model.VOLUME_DOWN,   "Volume Down"),
-        new ValueLabelPair(Model.CHANNEL_UP,    "Channel Up"),
-        new ValueLabelPair(Model.CHANNEL_DOWN,  "Channel Down")
-    };
-    
+        
     ValueLabelPair V2IRActions[] = {
         new ValueLabelPair(Model.IR_TV_ON_OFF,   RES.getString("ACT_TV_TV_ON_OFF")),
         new ValueLabelPair(Model.IR_VOLUME_UP,   RES.getString("ACT_TV_VOLUME_UP")),
@@ -285,11 +277,7 @@ public class ActionUI {
          public W_Base createUI(Trigger t) {
              ValueLabelPair[] actionMap;
 
-             if (Model.getVersionID() >= 406) {
-                 actionMap = V2IRActions;
-             } else {
-                 actionMap = OldIRActions;
-             }
+            actionMap = V2IRActions;
              
              W_Composite comp = new W_Composite();
              W_Base irOption = 
