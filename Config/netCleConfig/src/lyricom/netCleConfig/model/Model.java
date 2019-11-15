@@ -198,13 +198,13 @@ public class Model {
                 (p) -> (((p & 0x80000000) == 0) && !((0x100 > p) && (p > 0x7f))) ) );
         actionList.add(new SaAction(ActionType.HID_SPECIAL, 0xB0,  ActionUI.HID_SPECIAL, 
                 (p) ->  ((0xfe > p) && (p > 0x7f))));
+        actionList.add(new SaAction(ActionType.HID_MOUSE, MOUSE_UP,       ActionUI.MOUSE_OPTION, null));
         
         actionList.add(new SaAction(ActionType.HID_KEYPRESS, 0xFF000061,  ActionUI.HID_KEYPRESS, 
                 (p) ->  ((p & 0xff000000) == KEY_PRESS)));
         actionList.add(new SaAction(ActionType.HID_KEYRELEASE, 0xFE000061,  ActionUI.HID_KEYRELEASE, 
                 (p) ->  ((p & 0xff000000) == KEY_RELEASE)));
         
-        actionList.add(new SaAction(ActionType.HID_MOUSE, MOUSE_UP,       ActionUI.MOUSE_OPTION, null));
         actionList.add(new SaAction(ActionType.BUZZER, (400 << 16) + 250, ActionUI.BUZZER,       null));
         actionList.add(new SaAction(ActionType.IR, IR_TV_ON_OFF,  ActionUI.IR_OPTION,    null));       
         actionList.add(new SaAction(ActionType.SERIAL, 65, ActionUI.KEY_OPTION, null));

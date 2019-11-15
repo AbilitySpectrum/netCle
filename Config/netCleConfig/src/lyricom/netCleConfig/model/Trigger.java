@@ -73,8 +73,11 @@ public class Trigger {
         if (sensor != other.sensor) return;
         
         reqdState = other.reqdState;
-//        triggerValue = other.triggerValue;
-        triggerValue = sensor.getLevel(other.level);
+        if (getSensor().isContinuous()) {
+            triggerValue = sensor.getLevel(other.level);
+        } else {
+            triggerValue = other.triggerValue;        
+        }
         level = other.level;
         condition = other.condition;
         delay = other.delay;
