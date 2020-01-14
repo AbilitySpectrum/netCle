@@ -138,7 +138,19 @@ public class ActionUI {
         new ValueLabelPair( 0xD3, RES.getString("ACT_KEY_PAGE_UP") ),
         new ValueLabelPair( 0xD6, RES.getString("ACT_KEY_PAGE_DOWN") ),
         new ValueLabelPair( 0xD2, RES.getString("ACT_KEY_HOME") ),
-        new ValueLabelPair( 0xD5, RES.getString("ACT_KEY_END") )
+        new ValueLabelPair( 0xD5, RES.getString("ACT_KEY_END") ),
+        new ValueLabelPair( 0xC2, RES.getString("ACT_F1") ),
+        new ValueLabelPair( 0xC3, RES.getString("ACT_F2") ),
+        new ValueLabelPair( 0xC4, RES.getString("ACT_F3") ),
+        new ValueLabelPair( 0xC5, RES.getString("ACT_F4") ),
+        new ValueLabelPair( 0xC6, RES.getString("ACT_F5") ),
+        new ValueLabelPair( 0xC7, RES.getString("ACT_F6") ),
+        new ValueLabelPair( 0xC8, RES.getString("ACT_F7") ),
+        new ValueLabelPair( 0xC9, RES.getString("ACT_F8") ),
+        new ValueLabelPair( 0xCA, RES.getString("ACT_F9") ),
+        new ValueLabelPair( 0xCB, RES.getString("ACT_F10") ),
+        new ValueLabelPair( 0xCC, RES.getString("ACT_F11") ),
+        new ValueLabelPair( 0xCD, RES.getString("ACT_F12") )    
     };
    
     
@@ -203,8 +215,24 @@ public class ActionUI {
         new ValueLabelPair( 0xD3, RES.getString("ACT_KEY_PAGE_UP") ),
         new ValueLabelPair( 0xD6, RES.getString("ACT_KEY_PAGE_DOWN") ),
         new ValueLabelPair( 0xD2, RES.getString("ACT_KEY_HOME") ),
-        new ValueLabelPair( 0xD5, RES.getString("ACT_KEY_END") )
-    };
+        new ValueLabelPair( 0xD5, RES.getString("ACT_KEY_END") ),
+        new ValueLabelPair( 0xC2, RES.getString("ACT_F1") ),
+        new ValueLabelPair( 0xC3, RES.getString("ACT_F2") ),
+        new ValueLabelPair( 0xC4, RES.getString("ACT_F3") ),
+        new ValueLabelPair( 0xC5, RES.getString("ACT_F4") ),
+        new ValueLabelPair( 0xC6, RES.getString("ACT_F5") ),
+        new ValueLabelPair( 0xC7, RES.getString("ACT_F6") ),
+        new ValueLabelPair( 0xC8, RES.getString("ACT_F7") ),
+        new ValueLabelPair( 0xC9, RES.getString("ACT_F8") ),
+        new ValueLabelPair( 0xCA, RES.getString("ACT_F9") ),
+        new ValueLabelPair( 0xCB, RES.getString("ACT_F10") ),
+        new ValueLabelPair( 0xCC, RES.getString("ACT_F11") ),
+        new ValueLabelPair( 0xCD, RES.getString("ACT_F12") ),
+        new ValueLabelPair( 0x80, RES.getString("ACT_CONTROL")),
+        new ValueLabelPair( 0x81, RES.getString("ACT_SHIFT")),
+        new ValueLabelPair( 0x82, RES.getString("ACT_ALT")),
+        new ValueLabelPair( 0x83, RES.getString("ACT_WINDOWS"))
+   };
        
     public static class HIDKeyPress extends ActionUI {
         @Override
