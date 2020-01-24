@@ -110,12 +110,36 @@ public class ActionUI {
 	new ValueLabelPair(Model.NUDGE_RIGHT,   RES.getString("ACT_MOUSE_DD_NRIGHT")),
 	new ValueLabelPair(Model.NUDGE_STOP,    RES.getString("ACT_MOUSE_DD_NSTOP"))       
     };
+    
+    static final ValueLabelPair MouseActionsExtended[] = {
+	new ValueLabelPair(Model.MOUSE_UP,      RES.getString("ACT_MOUSE_DD_UP"), true),
+	new ValueLabelPair(Model.MOUSE_DOWN,    RES.getString("ACT_MOUSE_DD_DOWN"), true),
+	new ValueLabelPair(Model.MOUSE_LEFT,    RES.getString("ACT_MOUSE_DD_LEFT"), true),
+	new ValueLabelPair(Model.MOUSE_RIGHT,   RES.getString("ACT_MOUSE_DD_RIGHT"), true),
+	new ValueLabelPair(Model.MOUSE_CLICK,   RES.getString("ACT_MOUSE_DD_CLICK")),
+	new ValueLabelPair(Model.MOUSE_RIGHT_CLICK, RES.getString("ACT_MOUSE_DD_RCLICK")),
+	new ValueLabelPair(Model.MOUSE_PRESS,   RES.getString("ACT_MOUSE_DD_PRESS")),
+	new ValueLabelPair(Model.MOUSE_RELEASE, RES.getString("ACT_MOUSE_DD_RELEASE")),
+	new ValueLabelPair(Model.NUDGE_UP,      RES.getString("ACT_MOUSE_DD_NUP")),
+	new ValueLabelPair(Model.NUDGE_DOWN,    RES.getString("ACT_MOUSE_DD_NDOWN")),
+	new ValueLabelPair(Model.NUDGE_LEFT,    RES.getString("ACT_MOUSE_DD_NLEFT")),
+	new ValueLabelPair(Model.NUDGE_RIGHT,   RES.getString("ACT_MOUSE_DD_NRIGHT")),
+	new ValueLabelPair(Model.NUDGE_STOP,    RES.getString("ACT_MOUSE_DD_NSTOP")),       
+	new ValueLabelPair(Model.MOUSE_WHEEL_UP,   RES.getString("ACT_MOUSE_DD_WHEEL_UP"), true),
+	new ValueLabelPair(Model.MOUSE_WHEEL_DOWN, RES.getString("ACT_MOUSE_DD_WHEEL_DOWN"), true)
+    };
 
     public static class MouseOptionUI extends ActionUI {    
         @Override
          public W_Base createUI(Trigger t) {
-             W_Base option = new WT_ValueLabelOption(
-                     RES.getString("ACT_MOUSE_LABEL"), t, MouseActions);
+             W_Base option;
+             if (Model.getVersionID() >= 102) {
+                option = new WT_ValueLabelOption(
+                     RES.getString("ACT_MOUSE_LABEL"), t, MouseActionsExtended);
+             } else {
+                option = new WT_ValueLabelOption(
+                     RES.getString("ACT_MOUSE_LABEL"), t, MouseActions);                 
+             }
              return option;
         }         
     } 

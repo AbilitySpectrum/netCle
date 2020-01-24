@@ -168,6 +168,7 @@ class MouseControl: public Actor {
     // the same time - so we need two repeat timers.
     unsigned int lastMouseVerticalMove;
     unsigned int lastMouseHorizontalMove;
+    unsigned int lastMouseWheelMove;
     unsigned int mouseStartTime;
     unsigned char maxSpeedReached;
     unsigned char jumpSize;         // Size of each mouse move
@@ -186,6 +187,7 @@ class MouseControl: public Actor {
     void checkAction();
     virtual void mc_move(int x, int y) = 0;
     virtual void mc_button(int val) = 0;
+    virtual void mc_wheel(int val) = 0;
 };
 
 class KeyboardControl: public Actor {
@@ -208,6 +210,7 @@ class HIDMouse: public MouseControl {
     }
     void mc_move(int x, int y);
     void mc_button(int val); 
+    void mc_wheel(int val);
 };
 
 class HIDKeyboard: public KeyboardControl {
@@ -232,6 +235,7 @@ class BTMouse: public MouseControl {
     void init();
     void mc_move(int x, int y);
     void mc_button(int val); 
+    void mc_wheel(int val);
 };
 
 class BTKeyboard: public KeyboardControl {    

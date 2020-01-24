@@ -68,6 +68,8 @@ public class Model {
     static public final int NUDGE_LEFT = 12;
     static public final int NUDGE_RIGHT = 13;
     static public final int NUDGE_STOP = 14;
+    static public final int MOUSE_WHEEL_UP = 20;
+    static public final int MOUSE_WHEEL_DOWN = 21;
         
     // NEW IR TV Control values
     static public final int IR_TV_ON_OFF = 1;
