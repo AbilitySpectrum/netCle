@@ -436,7 +436,7 @@ void KeyboardControl::doAction(long param) {
         kc_release(character);
       }
 
-  } else if (option == 0xfc) {  // Key + modifier
+  } else if (option == 0xfd) {  // Key + modifier
       int character = param & 0xff;
       int modifier = (param >> 8) & 0xff;
       if (character != 0) {

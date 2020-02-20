@@ -54,7 +54,7 @@ public class WT_KeyboardSpecial extends W_Combo {
     
     @Override
     public void update() {
-        int param = theTrigger.getActionParam() & 0xff;
+        int param = theTrigger.getActionParam();
         int value;
         if (keyType == KeyType.BASEKEY) {
             value = param & 0xff;
