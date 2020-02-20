@@ -124,12 +124,10 @@ public class Trigger {
         os.putID(actionState, 1);
 
         int transmittedActionParam = actionParam;
-        if (Model.getVersionID() >= 406) { 
-            if (action.getType() == ActionType.IR) {
-                // Map IR Action code parameter into the IR code signal
-                // needed for the selected TV type.
-                transmittedActionParam = TVInfo.getInstance().ID2Code(actionParam);
-            }
+        if (action.getType() == ActionType.IR) {
+            // Map IR Action code parameter into the IR code signal
+            // needed for the selected TV type.
+            transmittedActionParam = TVInfo.getInstance().ID2Code(actionParam);
         }
         
         os.putNum(transmittedActionParam, 4);
@@ -159,13 +157,11 @@ public class Trigger {
             throw new IOError(RES.getString("CDE_INVALID_ACTION_ID"));
         }
         if (action.getType() == ActionType.IR) {
-            if (Model.getVersionID() >= 406) {
-                // Map action paramter from IR code to an action ID
-                actionParam = TVInfo.getInstance().Code2ID(actionParam);
-                if (actionParam == 0) {
-                    throw new IOError(RES.getString("CDE_INVALID_TV_CODE"));
-                }
-            }
+            // Map action paramter from IR code to an action ID
+            actionParam = TVInfo.getInstance().Code2ID(actionParam);
+            if (actionParam == 0) {
+                throw new IOError(RES.getString("CDE_INVALID_TV_CODE"));
+            }            
         }
         delay = is.getNum(2);
         repeat = is.getBoolean();
