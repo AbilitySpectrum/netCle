@@ -114,7 +114,7 @@ public class MainFrame extends JFrame implements TriggerCallback {
         // In the future this will be set based on the
         // version number of the netCle board
         // ( from Connection.getInstance.getVersionID(); )
-        MAX_TRIGGERS = 40;
+        MAX_TRIGGERS = 38;
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 5));
         triggerCntLbl = new JLabel("");
         p.add(triggerCntLbl);
