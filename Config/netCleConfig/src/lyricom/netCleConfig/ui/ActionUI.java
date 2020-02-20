@@ -32,6 +32,7 @@ import lyricom.netCleConfig.widgets.WT_ValueLabelOption;
 import java.util.ResourceBundle;
 import lyricom.netCleConfig.model.Model;
 import lyricom.netCleConfig.model.Trigger;
+import lyricom.netCleConfig.widgets.WT_KeyboardSpecial;
 
 
 /**
@@ -177,14 +178,31 @@ public class ActionUI {
         new ValueLabelPair( 0xCC, RES.getString("ACT_F11") ),
         new ValueLabelPair( 0xCD, RES.getString("ACT_F12") )    
     };
+    
+    static final ValueLabelPair ModifierKeys[] = {
+        new ValueLabelPair( 0x0000, "None"),
+        new ValueLabelPair( 0x0200, "Control"),
+        new ValueLabelPair( 0x0300, "Shift"),
+        new ValueLabelPair( 0x0300, "Alt")
+    };
    
     
     public static class HIDSpecialUI extends ActionUI {        
         @Override
          public W_Base createUI(Trigger t) {
-             W_Base option = new WT_ValueLabelOption(
-                     RES.getString("ACT_KEY_LABEL"), t, HID_Keys);
-             return option;
+            if (Model.getVersionID() >= 102) {
+                W_Composite comp = new W_Composite();
+                comp.addPart(new WT_KeyboardSpecial("Modifier", 
+                        Model.KEY_COMBO, WT_KeyboardSpecial.KeyType.MODIFIER, t, ModifierKeys));
+                comp.addPart(new WT_KeyboardSpecial(RES.getString("ACT_KEY_LABEL"), 
+                        Model.KEY_COMBO, WT_KeyboardSpecial.KeyType.BASEKEY ,t, PR_Keys));
+                return comp;
+                
+            } else { // Old version
+                W_Base option = new WT_ValueLabelOption(
+                        RES.getString("ACT_KEY_LABEL"), t, HID_Keys);
+                return option;
+            }
         }
     } 
     
@@ -382,7 +400,7 @@ public class ActionUI {
         @Override
         public W_Base createUI(Trigger t) {
             return new WT_ValueLabelOption(
-                 RES.getString("ACT_VALUE_LABEL"), t, LightBoxOptions, false); 
+                 RES.getString("ACT_VALUE_LABEL"), t, LightBoxOptions); 
         }
     }
 
@@ -403,7 +421,7 @@ public class ActionUI {
         @Override
         public W_Base createUI(Trigger t) {
             return new WT_ValueLabelOption(
-                             RES.getString("ACT_RELAY_LABEL"), t, LD_Actions, false);
+                             RES.getString("ACT_RELAY_LABEL"), t, LD_Actions);
         }
     }
 }

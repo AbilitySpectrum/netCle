@@ -63,7 +63,13 @@ public class WT_ValueLabelOption extends W_Combo {
     public void widgetChanged() {
         ValueLabelPair p = (ValueLabelPair) theBox.getSelectedItem();
         theTrigger.setActionParam(p.getValue() | overlay);
-        if ( updateRepeat ) {     // Needed for IR
+        // Mostly the repeat option is taken from the ValueLabelPair.
+        // e.g. a mouse click action has no repeat,
+        //      a mouse move action always repeats.
+        // However, for IR actions the repeat option is set via a 
+        // separate "Repeat" checkbox.   So for IR actions, updateRepeat 
+        // gets set to false.
+        if ( updateRepeat ) {     
             theTrigger.setRepeat(p.getRepeat());
         }
     }

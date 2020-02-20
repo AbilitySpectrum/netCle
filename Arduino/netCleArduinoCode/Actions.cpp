@@ -424,23 +424,28 @@ void KeyboardControl::doAction(long param) {
   int i;
   int option = (param >> 24) & 0xff;
 
-  if (option == 0xff) {
-    for(i=1; i<4; i++) {
-      int character = (param >> 8 * (3-i)) & 0xff;
+  if (option == 0xff) {  // Key Press
+      int character = param & 0xff;
       if (character != 0) {
         kc_press(character);
       }
-    }
     
-  } else if (option == 0xfe) {
-    for(i=1; i<4; i++) {
-      int character = (param >> 8 * (3-i)) & 0xff;
+  } else if (option == 0xfe) {  // Key Release
+      int character = param & 0xff;
       if (character != 0) {
         kc_release(character);
       }
-    }
-    
-  } else {
+
+  } else if (option == 0xfc) {  // Key + modifier
+      int character = param & 0xff;
+      int modifier = (param >> 8) & 0xff;
+      if (character != 0) {
+        if (modifier != 0) kc_press(modifier);
+        kc_write(character);
+        if (modifier != 0) kc_release(modifier);
+      }
+      
+  } else {  // 1 to 4 characters to write.
     for(i=0; i<4; i++) {
       int character = (param >> 8 * (3-i)) & 0xff;
       if (character != 0) {

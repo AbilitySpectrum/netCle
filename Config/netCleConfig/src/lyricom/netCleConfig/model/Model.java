@@ -107,9 +107,12 @@ public class Model {
     static public final int RELAY_ON = 1;
     static public final int RELAY_OFF = 2;
     
-    // Press and Release values - added to key values (starting with v 4.4)
-    static public final int KEY_PRESS = 0xff000000;
+    // Press and Release values - added to key values 
+    static public final int KEY_PRESS   = 0xff000000;
     static public final int KEY_RELEASE = 0xfe000000;
+    // KEY_COMBO is used to send a modifier and a key 
+    /// (e.g. control + Z) in one action
+    static public final int KEY_COMBO   = 0xfd000000;
 
     static private int VERSION_ID;
     static public int getVersionID() { return VERSION_ID; }
@@ -198,8 +201,15 @@ public class Model {
         actionList.add(new SaAction(ActionType.BT_MOUSE, MOUSE_UP, ActionUI.MOUSE_OPTION, null));
         actionList.add(new SaAction(ActionType.HID_KEYBOARD,  65,  ActionUI.KEY_OPTION, 
                 (p) -> (((p & 0x80000000) == 0) && !((0x100 > p) && (p > 0x7f))) ) );
-        actionList.add(new SaAction(ActionType.HID_SPECIAL, 0xB0,  ActionUI.HID_SPECIAL, 
+        if (versionID >= 102) {
+            // HID Special now takes a modifier key and has a special code.
+            // Also key values can be less than 0x7f.
+            actionList.add(new SaAction(ActionType.HID_SPECIAL, 0xB0,  ActionUI.HID_SPECIAL, 
+                (p) ->  ((p & 0xff000000) == KEY_COMBO)));
+        } else {
+            actionList.add(new SaAction(ActionType.HID_SPECIAL, 0xB0,  ActionUI.HID_SPECIAL, 
                 (p) ->  ((0xfe > p) && (p > 0x7f))));
+        }
         actionList.add(new SaAction(ActionType.HID_MOUSE, MOUSE_UP,       ActionUI.MOUSE_OPTION, null));
         
         actionList.add(new SaAction(ActionType.HID_KEYPRESS, 0xFF000061,  ActionUI.HID_KEYPRESS, 

@@ -36,7 +36,7 @@ import lyricom.netCleConfig.comms.Connection;
  * @author Andrew
  */
 public class AboutDlg extends JDialog {
-    public static final String CONFIG_VERSION = "1.0";
+    public static final String CONFIG_VERSION = "1.01";
     private static final ResourceBundle RES = ResourceBundle.getBundle("strings");
     private AboutDlg thisDlg;
     
