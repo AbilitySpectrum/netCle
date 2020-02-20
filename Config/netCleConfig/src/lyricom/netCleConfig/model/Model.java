@@ -70,6 +70,12 @@ public class Model {
     static public final int NUDGE_STOP = 14;
     static public final int MOUSE_WHEEL_UP = 20;
     static public final int MOUSE_WHEEL_DOWN = 21;
+    // Extentions - added for v1.02 of the hub.
+    static public final int MOUSE_RIGHT_PRESS = 30;
+    static public final int MOUSE_RIGHT_RELEASE = 31;
+    static public final int MOUSE_MIDDLE_CLICK = 32;
+    static public final int MOUSE_MIDDLE_PRESS = 33;
+    static public final int MOUSE_MIDDLE_RELEASE = 34;
         
     // NEW IR TV Control values
     static public final int IR_TV_ON_OFF = 1;

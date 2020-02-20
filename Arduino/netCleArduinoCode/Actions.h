@@ -157,6 +157,11 @@ class Buzzer: public Actor {
 #define MC_RIGHT_CLICK 2
 #define MC_PRESS       3
 #define MC_RELEASE     4
+#define MC_RIGHT_PRESS    5
+#define MC_RIGHT_RELEASE  6
+#define MC_MIDDLE_CLICK   7
+#define MC_MIDDLE_PRESS   8
+#define MC_MIDDLE_RELEASE 9
 
 class MouseControl: public Actor {
   private:
