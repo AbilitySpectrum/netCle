@@ -207,15 +207,11 @@ public class Model {
         actionList.add(new SaAction(ActionType.BT_MOUSE, MOUSE_UP, ActionUI.MOUSE_OPTION, null));
         actionList.add(new SaAction(ActionType.HID_KEYBOARD,  65,  ActionUI.KEY_OPTION, 
                 (p) -> (((p & 0x80000000) == 0) && !((0x100 > p) && (p > 0x7f))) ) );
-        if (versionID >= 102) {
-            // HID Special now takes a modifier key and has a special code.
-            // Also key values can be less than 0x7f.
-            actionList.add(new SaAction(ActionType.HID_SPECIAL, 0xB0,  ActionUI.HID_SPECIAL, 
-                (p) ->  ((p & 0xff000000) == KEY_COMBO)));
-        } else {
-            actionList.add(new SaAction(ActionType.HID_SPECIAL, 0xB0,  ActionUI.HID_SPECIAL, 
-                (p) ->  ((0xfe > p) && (p > 0x7f))));
-        }
+        // HID Special now takes a modifier key and has a special code.
+        // Also key values can be less than 0x7f.
+        actionList.add(new SaAction(ActionType.HID_SPECIAL, 0xB0,  ActionUI.HID_SPECIAL, 
+                (p) -> ( ((p & 0xff000000) == KEY_COMBO) ||  // The new v1.02 format
+                        ((0xfe > p) && (p > 0x7f)) ) ));  // Recognize the old format too.
         actionList.add(new SaAction(ActionType.HID_MOUSE, MOUSE_UP,       ActionUI.MOUSE_OPTION, null));
         
         actionList.add(new SaAction(ActionType.HID_KEYPRESS, 0xFF000061,  ActionUI.HID_KEYPRESS, 
