@@ -253,10 +253,14 @@ public class ActionUI {
     
     static final ValueLabelPair ModifierKeys[] = {
         new ValueLabelPair( 0x0000, RES.getString("ACT_NONE")),
-        new ValueLabelPair( 0x8000, RES.getString("ACT_CONTROL")),
-        new ValueLabelPair( 0x8100, RES.getString("ACT_SHIFT")),
-        new ValueLabelPair( 0x8200, RES.getString("ACT_ALT")),
-        new ValueLabelPair( 0x8300, RES.getString("ACT_WINDOWS"))
+        new ValueLabelPair( 0x8000, RES.getString("ACT_LCONTROL")),
+        new ValueLabelPair( 0x8100, RES.getString("ACT_LSHIFT")),
+        new ValueLabelPair( 0x8200, RES.getString("ACT_LALT")),
+        new ValueLabelPair( 0x8300, RES.getString("ACT_LWINDOWS")),
+        new ValueLabelPair( 0x8400, RES.getString("ACT_RCONTROL")),
+        new ValueLabelPair( 0x8500, RES.getString("ACT_RSHIFT")),
+        new ValueLabelPair( 0x8600, RES.getString("ACT_RALT")),
+        new ValueLabelPair( 0x8700, RES.getString("ACT_RWINDOWS"))
     };
    
     
