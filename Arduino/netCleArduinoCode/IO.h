@@ -54,6 +54,7 @@ class InputStream {
     virtual int _getChar() = 0;
     
     int getChar();    // Filters out end-of-line characters.
+    long getShort() { return _getNumber(2); }
     long getNum() { return _getNumber(4); }
     long getLong() { return _getNumber(8); }
     int  getID() { return _getChar(2); }
@@ -70,7 +71,8 @@ class OutputStream {
     virtual void putChar(int c) = 0;
     
     void putLong(long val) { _putNumber(val, 8); }
-    void putNum(int val) { _putNumber(val, 4); }   
+    void putNum(int val) { _putNumber(val, 4); }  
+    void putShort(int val) { _putNumber(val, 2); } 
     void putID(char ID);
     void putState(char state);
     void putCondition(char condition);

@@ -77,11 +77,11 @@ public class InStream {
 	for (int i=0; i < length*2; i++) {
             int tmp = ((int) getChar() & 0xff) - Model.NUMBER_MASK;
             if (tmp < 0 || tmp > 15) {
-		throw new IOError(RES.getString("CDE_INVALID_NUMBER"));
+                throw new IOError(RES.getString("CDE_INVALID_NUMBER"));
             }
             value = (value << 4) + tmp;
             if ((i == 0) && (tmp & 0x8) == 0x8) {
-		negative = true;
+                negative = true;
             }
         }
         if (negative) {
@@ -107,7 +107,9 @@ public class InStream {
     
     public int getCondition() throws IOError {
         int tmp = ((int) getChar() & 0xff) - Model.CONDITION_MASK;
-        if (tmp < 1 || tmp > 3) {
+        if (tmp < 1 || tmp > 7 || tmp == 4) {  
+            // For v1.02 condition and repeat are combined.
+            // Valid values are 1, 2, 3, 5, 6 and 7.
             throw new IOError(RES.getString("CDE_INVALID_CONDITION"));
         }
         return tmp;

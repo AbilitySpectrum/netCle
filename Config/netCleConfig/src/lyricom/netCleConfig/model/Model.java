@@ -52,7 +52,6 @@ public class Model {
     static final byte CONDITION_MASK = '0';
     static final byte BOOL_TRUE = 'p';
     static final byte BOOL_FALSE = 'q';
-    static final byte TRIGGER_MASK = '0';
 
     // Mouse Action values
     static public final int MOUSE_UP = 1;

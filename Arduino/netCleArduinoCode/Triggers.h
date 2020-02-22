@@ -66,7 +66,7 @@ class Trigger {
       flags = DISCONNECTED;
       onTime = 0;
     }
-    int readTrigger(InputStream *);
+    int readTrigger(InputStream *, int version);
     void sendTrigger(OutputStream *);
 };
 
