@@ -108,4 +108,14 @@ extern brkPoints BreakPoints;
 #define MAX_SENSORS 8            // 2 bytes each
 #define MAX_ACTORS  10           // 2 bytes each
 
+                                                                                                                                                  
+// Uncomment line below if you are programming ATmega32u4 Accessible AAC Hub                                                                      
+# define AAC_HUB                                                                                                                                  
+
+#ifdef AAC_HUB
+     #define LED_BLUE  4
+     #define OUTPUT_A 12
+     #define OUTPUT_B 8
+#endif 
+
 #endif
