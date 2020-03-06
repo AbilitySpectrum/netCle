@@ -114,8 +114,8 @@ extern brkPoints BreakPoints;
 
 #ifdef AAC_HUB
      #define LED_BLUE  4
-     #define OUTPUT_A 12
-     #define OUTPUT_B 8
+     #define SENSACT_RELAY_1 12
+     #define SENSACT_RELAY_2 8
 #endif 
 
 #endif
