@@ -9,6 +9,10 @@
 
 #include "Gyro.h"
 
+// Comment out this #define if you are compiling for the first version 
+// of the AAC HUB
+#define HUB20 1
+
 #define INPUT_1   A0 
 #define INPUT_2   A1 
 #define INPUT_3   A2 
@@ -16,13 +20,23 @@
 #define INPUT_5   A4 
 #define INPUT_6   A5 
 
+#ifdef HUB20
+#define OUTPUT_A 12  
+#define OUTPUT_B 8 
+#else
 #define OUTPUT_A 11  
 #define OUTPUT_B 12  
+#endif
+
 #define IR_PIN 9
 
 #define LED_RED   5
 #define LED_GREEN 6
+#ifdef HUB20
+#define LED_BLUE  4
+#else
 #define LED_BLUE  7
+#endif
 
 #define BUZZER  10
 

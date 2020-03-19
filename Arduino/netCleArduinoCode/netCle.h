@@ -25,6 +25,10 @@
 #define SENSACT_H
 #include <Arduino.h>
 
+// Comment out this #define if you are compiling for the first version 
+// of the AAC HUB
+#define HUB20 1
+
 // timeDiff function.  Defined in Actions.cpp
 unsigned int timeDiff(unsigned int now, unsigned int prev);
 
@@ -47,7 +51,11 @@ extern brkPoints BreakPoints;
 
 // === Protocol Values === //
 // -- Commands and Block Headers -- //
+#ifdef HUB20
+#define VERSION         "2.00"
+#else
 #define VERSION         "1.02"
+#endif
 #define REPORT_MODE       'Q'
 #define RUN_SENSACT       'R'
 #define START_OF_SENSOR_DATA 'S'
@@ -86,7 +94,11 @@ extern brkPoints BreakPoints;
 // === LED Values === //
 #define LED_RED    5
 #define LED_GREEN  6
+#ifdef HUB20
+#define LED_BLUE   4
+#else
 #define LED_BLUE   7
+#endif
 
 // === Sensor Pins === //
 #define SENSACT_IN1A A0
@@ -99,8 +111,13 @@ extern brkPoints BreakPoints;
 // === Action Pins === //
 #define SENSACT_IR_OUT  9
 #define SENSACT_BUZZER  10
+#ifdef HUB20
+#define SENSACT_RELAY_1 12
+#define SENSACT_RELAY_2 8
+#else
 #define SENSACT_RELAY_1 11
 #define SENSACT_RELAY_2 12
+#endif
 
 // ==== Some Limits === //
 #define MAX_TRIGGERS 40         // Maximum number of triggers allowed - 15 bytes each.
