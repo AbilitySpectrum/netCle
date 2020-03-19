@@ -52,7 +52,6 @@ public class Model {
     static final byte CONDITION_MASK = '0';
     static final byte BOOL_TRUE = 'p';
     static final byte BOOL_FALSE = 'q';
-    static final byte TRIGGER_MASK = '0';
 
     // Mouse Action values
     static public final int MOUSE_UP = 1;
@@ -68,6 +67,14 @@ public class Model {
     static public final int NUDGE_LEFT = 12;
     static public final int NUDGE_RIGHT = 13;
     static public final int NUDGE_STOP = 14;
+    static public final int MOUSE_WHEEL_UP = 20;
+    static public final int MOUSE_WHEEL_DOWN = 21;
+    // Extentions - added for v1.02 of the hub.
+    static public final int MOUSE_RIGHT_PRESS = 30;
+    static public final int MOUSE_RIGHT_RELEASE = 31;
+    static public final int MOUSE_MIDDLE_CLICK = 32;
+    static public final int MOUSE_MIDDLE_PRESS = 33;
+    static public final int MOUSE_MIDDLE_RELEASE = 34;
         
     // NEW IR TV Control values
     static public final int IR_TV_ON_OFF = 1;
@@ -105,9 +112,12 @@ public class Model {
     static public final int RELAY_ON = 1;
     static public final int RELAY_OFF = 2;
     
-    // Press and Release values - added to key values (starting with v 4.4)
-    static public final int KEY_PRESS = 0xff000000;
+    // Press and Release values - added to key values 
+    static public final int KEY_PRESS   = 0xff000000;
     static public final int KEY_RELEASE = 0xfe000000;
+    // KEY_COMBO is used to send a modifier and a key 
+    /// (e.g. control + Z) in one action
+    static public final int KEY_COMBO   = 0xfd000000;
 
     static private int VERSION_ID;
     static public int getVersionID() { return VERSION_ID; }
@@ -196,8 +206,11 @@ public class Model {
         actionList.add(new SaAction(ActionType.BT_MOUSE, MOUSE_UP, ActionUI.MOUSE_OPTION, null));
         actionList.add(new SaAction(ActionType.HID_KEYBOARD,  65,  ActionUI.KEY_OPTION, 
                 (p) -> (((p & 0x80000000) == 0) && !((0x100 > p) && (p > 0x7f))) ) );
+        // HID Special now takes a modifier key and has a special code.
+        // Also key values can be less than 0x7f.
         actionList.add(new SaAction(ActionType.HID_SPECIAL, 0xB0,  ActionUI.HID_SPECIAL, 
-                (p) ->  ((0xfe > p) && (p > 0x7f))));
+                (p) -> ( ((p & 0xff000000) == KEY_COMBO) ||  // The new v1.02 format
+                        ((0xfe > p) && (p > 0x7f)) ) ));  // Recognize the old format too.
         actionList.add(new SaAction(ActionType.HID_MOUSE, MOUSE_UP,       ActionUI.MOUSE_OPTION, null));
         
         actionList.add(new SaAction(ActionType.HID_KEYPRESS, 0xFF000061,  ActionUI.HID_KEYPRESS, 

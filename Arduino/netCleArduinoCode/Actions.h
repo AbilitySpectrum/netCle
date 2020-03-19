@@ -157,6 +157,11 @@ class Buzzer: public Actor {
 #define MC_RIGHT_CLICK 2
 #define MC_PRESS       3
 #define MC_RELEASE     4
+#define MC_RIGHT_PRESS    5
+#define MC_RIGHT_RELEASE  6
+#define MC_MIDDLE_CLICK   7
+#define MC_MIDDLE_PRESS   8
+#define MC_MIDDLE_RELEASE 9
 
 class MouseControl: public Actor {
   private:
@@ -168,6 +173,7 @@ class MouseControl: public Actor {
     // the same time - so we need two repeat timers.
     unsigned int lastMouseVerticalMove;
     unsigned int lastMouseHorizontalMove;
+    unsigned int lastMouseWheelMove;
     unsigned int mouseStartTime;
     unsigned char maxSpeedReached;
     unsigned char jumpSize;         // Size of each mouse move
@@ -186,6 +192,7 @@ class MouseControl: public Actor {
     void checkAction();
     virtual void mc_move(int x, int y) = 0;
     virtual void mc_button(int val) = 0;
+    virtual void mc_wheel(int val) = 0;
 };
 
 class KeyboardControl: public Actor {
@@ -208,6 +215,7 @@ class HIDMouse: public MouseControl {
     }
     void mc_move(int x, int y);
     void mc_button(int val); 
+    void mc_wheel(int val);
 };
 
 class HIDKeyboard: public KeyboardControl {
@@ -232,6 +240,7 @@ class BTMouse: public MouseControl {
     void init();
     void mc_move(int x, int y);
     void mc_button(int val); 
+    void mc_wheel(int val);
 };
 
 class BTKeyboard: public KeyboardControl {    

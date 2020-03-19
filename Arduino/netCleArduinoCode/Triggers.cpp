@@ -167,12 +167,20 @@ const ActionData* Triggers::getActions(const SensorData *pData) {
 }
 
 int Triggers::readTriggers(InputStream *is) {
-  long tCount = is->getNum();
+  char tmp = is->getChar();
+  int versionID;
+  if (tmp == '1') {
+    versionID = 1;
+  } else {
+    versionID = 0;
+    is->getChar(); 
+  }
+  long tCount = is->getShort();
   if (tCount == IO_NUMERROR) return IO_ERROR;
   if (tCount > MAX_TRIGGERS) return IO_ERROR;
   
   for(int i=0; i<tCount; i++) {
-    if (aTriggers[i].readTrigger(is) == IO_ERROR) {
+    if (aTriggers[i].readTrigger(is, versionID) == IO_ERROR) {
       return IO_ERROR;
     }
   }
@@ -198,7 +206,8 @@ int Triggers::readTriggers(InputStream *is) {
 
 void Triggers::sendTriggers(OutputStream *os) {
   os->putChar(START_OF_TRIGGER_BLOCK);
-  os->putNum(nTriggers);
+  os->putChar('1');
+  os->putShort(nTriggers);
   for(int i=0; i<nTriggers; i++) {
     aTriggers[i].sendTrigger(os);
   }
@@ -207,20 +216,31 @@ void Triggers::sendTriggers(OutputStream *os) {
   os->putChar(END_OF_BLOCK);  // End of transmission block
 }
 
-int Trigger::readTrigger(InputStream *is) {
+int Trigger::readTrigger(InputStream *is, int versionID) {
   int actionState;
   int reqdState;
   int tmpint;
   long tmplong;
-  
-  if (is->getChar() != TRIGGER_START) return IO_ERROR;
+
+  if (versionID == 0) {
+    if (is->getChar() != TRIGGER_START) return IO_ERROR;
+  }
   if ((tmpint       = is->getID())        == IO_ERROR) return IO_ERROR;
   sensorID = tmpint;
   if ((reqdState  = is->getState())     == IO_ERROR) return IO_ERROR;
   if ((tmplong = is->getNum())    == IO_NUMERROR) return IO_ERROR;
   triggerValue = tmplong;
-  if ((tmpint  = is->getCondition()) == IO_ERROR) return IO_ERROR;
-  conditions = tmpint;
+  if (versionID == 0) {
+    if ((tmpint  = is->getCondition()) == IO_ERROR) return IO_ERROR;
+    conditions = tmpint;
+  } else { // New version
+    if ((tmpint = is->getCondition()) == IO_ERROR) return IO_ERROR;
+    int repeat = tmpint & 0x04;
+    conditions = tmpint & 0x03;  // Mask off the transported repeat bit
+    if (repeat) {
+      conditions += 0x10;  // Mask on the internal repeat bit;
+    }
+  }
   if ((tmpint  = is->getID())        == IO_ERROR) return IO_ERROR;
   actionID = tmpint;
   if ((actionState = is->getState())      == IO_ERROR) return IO_ERROR;
@@ -229,26 +249,29 @@ int Trigger::readTrigger(InputStream *is) {
   actionParameters = tmplong;
   if ((tmplong = is->getNum())    == IO_NUMERROR) return IO_ERROR;
   delayMs = tmplong;
-  if ((tmpint  = is->getBool())      == IO_ERROR) return IO_ERROR;
-  if (tmpint) {
-    conditions += 0x10;  // Repeat
+  if (versionID == 0) {
+    if ((tmpint  = is->getBool()) == IO_ERROR) return IO_ERROR;
+    if (tmpint) {
+      conditions += 0x10;  // Repeat
+    }
+    if (is->getChar() != TRIGGER_END) return IO_ERROR;
   }
-  if (is->getChar() != TRIGGER_END) return IO_ERROR;
   return 0;
 }
 
 void Trigger::sendTrigger(OutputStream *os) {
-  os->putChar(TRIGGER_START);
   os->putID(sensorID);
   os->putState( REQD_STATE(stateValues) ); 
   os->putNum(triggerValue);
-  os->putCondition(CONDITION(conditions));
+  int val = CONDITION(conditions);
+  if (ISREPEAT(conditions)) {
+    val += 4;
+  }
+  os->putCondition(val);
   os->putID(actionID);
   os->putState( ACTION_STATE(stateValues) );  
   os->putLong(actionParameters);
   os->putNum(delayMs);
-  os->putBool(ISREPEAT(conditions));
-  os->putChar(TRIGGER_END);
 }
 
 

@@ -77,7 +77,7 @@ int InputStream::getCondition(){
   char val = 0;
   
   val = getChar() - CONDITION_MASK;
-  if (val < 1 || val > 3) {
+  if (val < 1 || val > 7 || val == 4) {
     return IO_ERROR;
   }
   return val;

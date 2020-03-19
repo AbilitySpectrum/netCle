@@ -115,32 +115,42 @@ public class Trigger {
     
     public void toStream(OutStream os) throws DataFormatException {
         os.putChar((byte)'\n');
-        os.putChar(TRIGGER_START);
+        if (Model.getVersionID() < 102) { // use old format
+            os.putChar(TRIGGER_START);
+        }
         os.putID(sensor.getId(), 2);
         os.putID(reqdState, 1);
         os.putNum(triggerValue, 2);
-        os.putCondition(condition);
+        if (Model.getVersionID() < 102) { // use old format
+            os.putCondition(condition);
+        } else {
+            // Combine condition and repeat in one byte.
+            int rval = repeat ? 4 : 0;
+            os.putCondition(condition + rval);
+        }
         os.putID(action.getId(), 2);
         os.putID(actionState, 1);
 
         int transmittedActionParam = actionParam;
-        if (Model.getVersionID() >= 406) { 
-            if (action.getType() == ActionType.IR) {
-                // Map IR Action code parameter into the IR code signal
-                // needed for the selected TV type.
-                transmittedActionParam = TVInfo.getInstance().ID2Code(actionParam);
-            }
+        if (action.getType() == ActionType.IR) {
+            // Map IR Action code parameter into the IR code signal
+            // needed for the selected TV type.
+            transmittedActionParam = TVInfo.getInstance().ID2Code(actionParam);
         }
         
         os.putNum(transmittedActionParam, 4);
         os.putNum(delay, 2);
-        os.putBoolean(repeat);
-        os.putChar(TRIGGER_END);
+        if (Model.getVersionID() < 102) {  // use old format
+            os.putBoolean(repeat);
+            os.putChar(TRIGGER_END);
+        }
     }
     
-    public void fromStream(InStream is) throws IOError {
-        if (is.getChar() != TRIGGER_START) {
-            throw new IOError(RES.getString("CDE_INVALID_TRIGGER_START"));
+    public void fromStream(InStream is, int version) throws IOError {
+        if (version == 0) {
+            if (is.getChar() != TRIGGER_START) {
+                throw new IOError(RES.getString("CDE_INVALID_TRIGGER_START"));
+            }
         }
         int sensorID = is.getID(2);
         Sensor tmp = Model.getSensorByID(sensorID);
@@ -151,6 +161,11 @@ public class Trigger {
         reqdState = is.getID(1);
         triggerValue = is.getNum(2);
         condition = is.getCondition();
+        if (version == 1) {
+            // Split condition and repeat
+            repeat = (condition & 4) == 4;
+            condition = condition & ~4;
+        }
         int actionID = is.getID(2);
         actionState = is.getID(1);
         actionParam = is.getNum(4);
@@ -159,18 +174,18 @@ public class Trigger {
             throw new IOError(RES.getString("CDE_INVALID_ACTION_ID"));
         }
         if (action.getType() == ActionType.IR) {
-            if (Model.getVersionID() >= 406) {
-                // Map action paramter from IR code to an action ID
-                actionParam = TVInfo.getInstance().Code2ID(actionParam);
-                if (actionParam == 0) {
-                    throw new IOError(RES.getString("CDE_INVALID_TV_CODE"));
-                }
-            }
+            // Map action paramter from IR code to an action ID
+            actionParam = TVInfo.getInstance().Code2ID(actionParam);
+            if (actionParam == 0) {
+                throw new IOError(RES.getString("CDE_INVALID_TV_CODE"));
+            }            
         }
         delay = is.getNum(2);
-        repeat = is.getBoolean();
-        if (is.getChar() != TRIGGER_END) {
-            throw new IOError(RES.getString("CDE_INVALID_TRIGGER_END"));
+        if (version == 0) {
+            repeat = is.getBoolean();
+            if (is.getChar() != TRIGGER_END) {
+                throw new IOError(RES.getString("CDE_INVALID_TRIGGER_END"));
+            }
         }
     }
 

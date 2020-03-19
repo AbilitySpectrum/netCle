@@ -56,7 +56,7 @@ public class TriggerTest {
         }
         
         String result = BufToString(os.getBuffer());
-        assertEquals("\nt@BA`bkl2@GB`ai```oj`aodqz", result);
+        assertEquals("\n@BA`bkl2@GB`ai```oj`aod", result);
     }
 
     /**
@@ -67,7 +67,7 @@ public class TriggerTest {
         Trigger t = new Trigger();       
         InStream is = new InStream("\nt@BA`bkl2@GB`abcdefg`aodqz".getBytes());
         try {
-            t.fromStream(is);
+            t.fromStream(is, 0);
             
             assertEquals("Sensor 3B", t.getSensor().getName());
             assertEquals(ActionType.BUZZER, t.getAction().getType());

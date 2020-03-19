@@ -31,7 +31,7 @@
 class BTMouseCtl {
   char buttonState = 0;
 
-  void send(char x, char y) {
+  void send(char x, char y, char wheel) {
     unsigned char xmit[7];
     xmit[0] = 0xFD;
     xmit[1] = 5;
@@ -39,7 +39,7 @@ class BTMouseCtl {
     xmit[3] = buttonState;
     xmit[4] = x;
     xmit[5] = y;
-    xmit[6] = 0;
+    xmit[6] = wheel;
     Serial1.write(xmit, 7);
   }
      
@@ -48,17 +48,21 @@ class BTMouseCtl {
     }
 
     void move(char x, char y) {
-      send(x, y);
+      send(x, y, 0);
+    }
+
+    void wheel(char val) {
+      send(0, 0, val);
     }
 
     void press(int btn) {
       buttonState |= btn;
-      send(0,0);
+      send(0,0,0);
     }
 
     void release(int btn) {
       buttonState &= ~btn;
-      send(0,0);
+      send(0,0,0);
     }
 
     void click(int btn) {

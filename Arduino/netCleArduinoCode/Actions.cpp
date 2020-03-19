@@ -200,6 +200,19 @@ void Buzzer::doAction(long param) {
 #define NUDGE_RIGHT   13
 #define NUDGE_STOP    14
 
+// Mouse wheel actions
+#define SA_MOUSE_WHEEL_UP 20
+#define SA_MOUSE_WHEEL_DOWN 21
+
+// Further extensions added for  v1.02.
+#define SA_MOUSE_RIGHT_PRESS     30
+#define SA_MOUSE_RIGHT_RELEASE   31
+#define SA_MOUSE_MIDDLE          32
+#define SA_MOUSE_MIDDLE_PRESS    33
+#define SA_MOUSE_MIDDLE_RELEASE  34
+
+#define WHEEL_REPEAT_TIME 250  // milli-seconds
+
 unsigned char delay_1 = 35;
 unsigned char jump_1 = 2;
 
@@ -302,6 +315,10 @@ void MouseControl::assessAction(long param, int repeat) {
       if ( timeDiff(now, lastMouseHorizontalMove) < repeatInterval) {
         return;   
       }      
+    } else if (option == SA_MOUSE_WHEEL_UP || option == SA_MOUSE_WHEEL_DOWN) {
+      if ( timeDiff(now, lastMouseWheelMove) < WHEEL_REPEAT_TIME) {
+        return;
+      }
     } else {
       // Repeat for all other mouse actions is not allowed
       return;
@@ -316,6 +333,8 @@ void MouseControl::assessAction(long param, int repeat) {
     lastMouseVerticalMove = now;
   } else if (option == SA_MOUSE_LEFT || option == SA_MOUSE_RIGHT) {
     lastMouseHorizontalMove = now;
+  } else if (option == SA_MOUSE_WHEEL_UP || option == SA_MOUSE_WHEEL_DOWN) {
+    lastMouseWheelMove = now;
   }
   doAction(param);   
 }
@@ -347,6 +366,27 @@ void MouseControl::doAction(long param) {
     case SA_MOUSE_RELEASE:
       mc_button(MC_RELEASE);
       break;
+    case SA_MOUSE_WHEEL_UP:
+      mc_wheel(1);
+      break;
+    case SA_MOUSE_WHEEL_DOWN:
+      mc_wheel(-1);
+      break;
+    case SA_MOUSE_RIGHT_PRESS:
+      mc_button(MC_RIGHT_PRESS);
+      break;
+    case SA_MOUSE_RIGHT_RELEASE:
+      mc_button(MC_RIGHT_RELEASE);
+      break;
+    case SA_MOUSE_MIDDLE:
+      mc_button(MC_MIDDLE_CLICK);
+      break;  
+    case SA_MOUSE_MIDDLE_PRESS:
+      mc_button(MC_MIDDLE_PRESS);
+      break;    
+    case SA_MOUSE_MIDDLE_RELEASE:
+      mc_button(MC_MIDDLE_RELEASE);
+      break;  
     case NUDGE_UP:
       if (verticalMouseState == MOUSE_MOVING_DOWN) {
         verticalMouseState = MOUSE_STILL;
@@ -406,23 +446,28 @@ void KeyboardControl::doAction(long param) {
   int i;
   int option = (param >> 24) & 0xff;
 
-  if (option == 0xff) {
-    for(i=1; i<4; i++) {
-      int character = (param >> 8 * (3-i)) & 0xff;
+  if (option == 0xff) {  // Key Press
+      int character = param & 0xff;
       if (character != 0) {
         kc_press(character);
       }
-    }
     
-  } else if (option == 0xfe) {
-    for(i=1; i<4; i++) {
-      int character = (param >> 8 * (3-i)) & 0xff;
+  } else if (option == 0xfe) {  // Key Release
+      int character = param & 0xff;
       if (character != 0) {
         kc_release(character);
       }
-    }
-    
-  } else {
+
+  } else if (option == 0xfd) {  // Key + modifier
+      int character = param & 0xff;
+      int modifier = (param >> 8) & 0xff;
+      if (character != 0) {
+        if (modifier != 0) kc_press(modifier);
+        kc_write(character);
+        if (modifier != 0) kc_release(modifier);
+      }
+      
+  } else {  // 1 to 4 characters to write.
     for(i=0; i<4; i++) {
       int character = (param >> 8 * (3-i)) & 0xff;
       if (character != 0) {
@@ -439,21 +484,40 @@ void HIDMouse::mc_move(int x, int y) {
     Mouse.move(x, y);
 }
 
+void HIDMouse::mc_wheel(int val) {
+    Mouse.move(0, 0, val);
+}
+
 void HIDMouse::mc_button(int val) {
   switch(val) {
     case MC_LEFT_CLICK:
-      Mouse.click();
+      Mouse.click(MOUSE_LEFT);
       break;
     case MC_RIGHT_CLICK:
       Mouse.click(MOUSE_RIGHT);
       break;
     case MC_PRESS:
-      Mouse.press();
+      Mouse.press(MOUSE_LEFT);
       break;
     case MC_RELEASE:
-      Mouse.release();
+      Mouse.release(MOUSE_LEFT);
       break;
-  }
+    case MC_RIGHT_PRESS:
+      Mouse.press(MOUSE_RIGHT);
+      break;
+    case MC_RIGHT_RELEASE:
+      Mouse.release(MOUSE_RIGHT);
+      break;
+    case MC_MIDDLE_CLICK:
+      Mouse.click(MOUSE_MIDDLE);
+      break;
+    case MC_MIDDLE_PRESS:
+      Mouse.press(MOUSE_MIDDLE);
+      break;
+     case MC_MIDDLE_RELEASE:
+      Mouse.release(MOUSE_MIDDLE);
+      break;
+      }
 }
 
 // --- HID Keyboard --- //
@@ -541,6 +605,10 @@ void BTMouse::mc_move(int x, int y) {
     pMouse->move(x, y);
 }
 
+void BTMouse::mc_wheel(int val) {
+    pMouse->wheel(val);
+}
+
 void BTMouse::mc_button(int val) {
   switch(val) {
     case MC_LEFT_CLICK:
@@ -555,7 +623,22 @@ void BTMouse::mc_button(int val) {
     case MC_RELEASE:
       pMouse->release(BT_LEFT_BUTTON);
       break;
-  }
+    case MC_RIGHT_PRESS:
+      pMouse->press(BT_RIGHT_BUTTON);
+      break;
+    case MC_RIGHT_RELEASE:
+      pMouse->release(BT_RIGHT_BUTTON);
+      break;
+    case MC_MIDDLE_CLICK:
+      pMouse->click(BT_CENTER_BUTTON);
+      break;
+    case MC_MIDDLE_PRESS:
+      pMouse->press(BT_CENTER_BUTTON);
+      break;
+     case MC_MIDDLE_RELEASE:
+      pMouse->release(BT_CENTER_BUTTON);
+      break;
+     }
 }
 
 // --- Bluetooth Keyboard --- //

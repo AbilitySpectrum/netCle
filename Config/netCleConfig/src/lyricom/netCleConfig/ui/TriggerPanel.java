@@ -104,7 +104,12 @@ public class TriggerPanel extends JPanel {
         if (ACTION_WIDTH == 0) {
             // Calibrate the size of actionUI.
             Trigger tmp = new Trigger(t.getSensor());
-            tmp.setAction(Model.getActionByType(ActionType.IR));
+            if (Model.getVersionID() >= 102) {
+                // Largest possible widget changed with v1.02 (Modifier keys)
+                tmp.setAction(Model.getActionByType(ActionType.HID_SPECIAL));
+            } else {
+                tmp.setAction(Model.getActionByType(ActionType.IR));
+            }
             tmp.setActionParam( 2 );
             WT_Action tmpUI = new WT_Action(RES.getString("TPANEL_DO"), tmp);
             Dimension dim = tmpUI.getPreferredSize();

@@ -170,7 +170,12 @@ public class TriggerEditDlg extends JDialog {
         if (ACTION_SIZE == null) {
             // Calibration
             SaAction savedAction = tmpTrig.getAction();
-            tmpTrig.setAction(Model.getActionByType(ActionType.IR));
+            if (Model.getVersionID() >= 102) {
+                // Largest possible widget changed with v1.02 (Modifier keys)
+                tmpTrig.setAction(Model.getActionByType(ActionType.HID_SPECIAL));
+            } else {
+                tmpTrig.setAction(Model.getActionByType(ActionType.IR));    
+            }
             int savedParam = tmpTrig.getActionParam();
             tmpTrig.setActionParam(2);
             WT_Action actionUI = new WT_Action("", tmpTrig);

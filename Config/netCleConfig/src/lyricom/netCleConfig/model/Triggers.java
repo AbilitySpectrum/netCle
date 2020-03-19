@@ -196,14 +196,22 @@ public class Triggers {
         if (!Objects.equals(in.getChar(), Model.START_OF_TRIGGERS)) {
             throw new IOError(RES.getString("CDE_INVALID_START"));
         }
-        int triggerCount = in.getNum(2);
+        int version = 0;
+        int ch = in.getChar();
+        if (ch == '1') {
+            version = 1;
+        } else {
+            version = 0;
+            in.getChar();
+        }
+        int triggerCount = in.getNum(1);
         for(int i=0; i<triggerCount; i++) {
             Trigger t = new Trigger();
-            t.fromStream(in);
+            t.fromStream(in, version);
             tmp.add(t);
         }
         
-        int ch = in.getChar();
+        ch = in.getChar();
         if (ch == Model.MOUSE_SPEED) {
             int[] speeds = MouseSpeedTransfer.getInstance().fromStream(in);
             if (speeds != null) {
@@ -230,7 +238,12 @@ public class Triggers {
         }
         OutStream os = new OutStream();
         os.putChar(Model.START_OF_TRIGGERS);
-        os.putNum(triggerCount, 2);
+        if (Model.getVersionID() >= 102) {
+            os.putChar((byte)'1');
+            os.putNum(triggerCount, 1);
+        } else {
+            os.putNum(triggerCount, 2);
+        }
         for(Trigger t: Triggers.getInstance().getAll()) {
             if (filter.exportThis(t)) {
                 t.toStream(os);
