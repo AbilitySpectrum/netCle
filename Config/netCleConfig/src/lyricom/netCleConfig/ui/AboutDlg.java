@@ -30,13 +30,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import lyricom.netCleConfig.comms.Connection;
+import lyricom.netCleConfig.model.Model;
 
 /**
  *
  * @author Andrew
  */
 public class AboutDlg extends JDialog {
-    public static final String CONFIG_VERSION = "1.01";
     private static final ResourceBundle RES = ResourceBundle.getBundle("strings");
     private AboutDlg thisDlg;
     
@@ -51,7 +51,7 @@ public class AboutDlg extends JDialog {
         top.setFont(Utils.TITLE_FONT);
         
         JLabel configVersion = new JLabel(RES.getString("CONFIG_VERSION")
-            + " " + CONFIG_VERSION);
+            + " " + Model.CONFIG_VERSION);
         configVersion.setAlignmentX(0.5f);
         configVersion.setFont(Utils.STATE_FONT);
         

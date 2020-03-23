@@ -32,10 +32,13 @@ import lyricom.netCleConfig.ui.ActionUI;
  * Static method for accessing the model.
  * Values here match values used in the netCle.
  * @author Andrew
- */
+ */ 
 public class Model {
     private static final ResourceBundle RES = ResourceBundle.getBundle("strings");
-
+    
+    // Version Number
+    public static final String CONFIG_VERSION = "1.02";
+    
     // Commands sent to sensact
     public static final Byte CMD_VERSION        = (byte) 'V';
     public static final Byte CMD_RUN            = (byte) 'R';
