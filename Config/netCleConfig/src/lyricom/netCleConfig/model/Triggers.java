@@ -163,6 +163,7 @@ public class Triggers {
     // Load triggers from the device.
     public void loadDataFromDevice(InStream in) throws IOError{
         TmpImport tmp = readTriggers(in);
+        tmp.groupLevels();        
         replace(tmp);
         int[] mouseSpeeds = tmp.getMouseSpeeds();
         if (mouseSpeeds != null) {
