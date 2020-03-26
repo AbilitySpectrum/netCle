@@ -203,11 +203,7 @@ public class TriggerPanel extends JPanel {
     }
     
     public void levelsChanged() {
-        if (theTrigger.getLevel() == Trigger.Level.LEVEL1) {
-            theTrigger.setTriggerValue( theTrigger.getSensor().getLevel1() );
-        } else {
-            theTrigger.setTriggerValue( theTrigger.getSensor().getLevel2() );
-        }
+        theTrigger.updateLevel();  // Resets the trigger value based on level.
         signalLevel.update();
     }
     

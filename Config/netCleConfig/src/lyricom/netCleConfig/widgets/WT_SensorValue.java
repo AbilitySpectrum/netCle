@@ -22,7 +22,9 @@ package lyricom.netCleConfig.widgets;
 import lyricom.netCleConfig.model.Trigger;
 
 /**
- *
+ * Set the value for a non-continuous sensor (USB input).
+ * Levels are not used for this type of input.
+ * 
  * @author Andrew
  */
 public class WT_SensorValue extends W_TextField {

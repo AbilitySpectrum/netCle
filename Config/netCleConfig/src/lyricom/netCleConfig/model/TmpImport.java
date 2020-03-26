@@ -77,110 +77,78 @@ public class TmpImport {
         triggers = list;
     }    
     
-    private class Cluster {
-        private long sum;
-        private int count;
-        private int avg;
-        private int width;
-        
-        public void reset(int w) {
-            width = w;
-            sum = 0;
-            avg = count = 0;
-        }
-        
-        public boolean empty() {
-            return (count == 0);
-        }
-        
-        public void add(int val) {
-            sum += val;
-            count++;
-            avg = (int) sum/count;
-        }
-        
-        public boolean inRange(int val) {
-            return (proximity(val) < width);
-        }
-        
-        public int proximity(int val) {
-            return (int) (Math.abs(val - avg));
-        }
-        
-        public int avg() {
-            return (int) avg;
-        }
-    }
-    
-    // Now the hard bit.  Deduce and set levels.
-    // All data within 15% of the average of a group
-    // is clusters in that group.
-    // Two groups are collected.
-    // Data belonging to neither group is put into the nearest group.
-    // DO NOT apply this to sensors that are not continuous.
-    // This code was needed to support the transition to fixed levels.
-    // That transition is long-ago complete, so perhaps this is no longer
-    // needed??
+    // There should be, at most, two values for all the
+    // triggers associated with a single sensor.
+    // These are the two threshold values.
+    // This code goes through all the triggers to deduce
+    // what these two levels are.
     public void groupLevels() {
-        Cluster group1 = new Cluster();
-        Cluster group2 = new Cluster();
+        int level1 = 0;
+        boolean level1Set;
+        int level2 = 0;
+        boolean level2Set;
         
         // For each sensor ...
         for(Sensor s: Model.sensorList) {
             if (!s.isContinuous()) {
-                continue;
+                continue;  // ... but not the non-continuos ones.
             }
-            int clusterWidth = ((s.getMaxval() - s.getMinval()) * 15) / 100;
-            group1.reset(clusterWidth);
-            group2.reset(clusterWidth);
+            level1Set = level2Set = false;
             
-            // .. go through all the triggers and cluster for that sensor.
+            // .. go through all the triggers and find the two levels
+            // for the sensor.
             for(Trigger t: triggers) {
                 if (t.getSensor() == s) {
                     int tval = t.getTriggerValue();
-                    if (group1.empty()) {
-                        group1.add(tval);
+                    if (!level1Set) {
+                        level1 = tval;
+                        level1Set = true;
                     } else {
                         // Group 1 already started
-                        if (group1.inRange(tval)) {
-                            // This one can be added to group 1.
-                            group1.add(tval);
-                        } else {
-                            if (group2.empty()) {
-                                group2.add(tval);
-                            } else {
-                                // Add to the nearest group.
-                                if (group1.proximity(tval) < group2.proximity(tval)) {
-                                    group1.add(tval);
+                        if (tval != level1) {
+                            if (!level2Set) {
+                                level2 = tval;
+                                level2Set = true;
+                            } else if (tval != level2) {
+                                // level1 and level2 already set.
+                                // value matches neither - should not happen.
+                                // Go with closest match
+                                int diff1, diff2;
+                                
+                                diff1 = level1 - tval;
+                                if (diff1 < 0) diff1 *= -1;
+                                
+                                diff2 = level2 - tval;
+                                if (diff2 < 0) diff2 *= -1;
+                                
+                                if (diff1 < diff2) {
+                                    t.forceTriggerValue(level1);
                                 } else {
-                                    group2.add(tval);
+                                    t.forceTriggerValue(level2);
                                 }
                             }
-                        }                        
+                        }
                     }
                 }
             }
-            if (!group1.empty()) {
+            if (level1Set) {
                 // ... then set sensor levels and adjust trigger values
                 // to reflect the results of clustering.
-                if (group2.empty()) {
-                    s.setLevels(group1.avg(), s.getLevel2());
+                if (level2Set) {
+                    s.setLevels(level1, level2);
                 } else {
-                    s.setLevels(group1.avg(), group2.avg());
+                    s.setLevels(level1, s.getLevel2());
                 }
                 for(Trigger t: triggers) {
                     if (t.getSensor() == s) {
-                        if (group2.empty()) {
+                        if (!level2Set) {
                             // All are in group 1
-                            t.setTriggerValue(group1.avg());
-                            t.setLevel(Trigger.Level.LEVEL1);
+                           t.setLevel(Trigger.Level.LEVEL1);
                         } else {                        
                             int tval = t.getTriggerValue();
-                            if (group1.proximity(tval) < group2.proximity(tval)) {
-                                t.setTriggerValue(group1.avg());
+                            if (tval == level1) {
                                 t.setLevel(Trigger.Level.LEVEL1);
                             } else {
-                                t.setTriggerValue(group2.avg());
                                 t.setLevel(Trigger.Level.LEVEL2);                        
                             }
                         }
