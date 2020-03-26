@@ -36,6 +36,7 @@ public class MouseSpeedTransfer {
     
     private Converter converter = new Converter();
     private MouseSpeedTransferInterface transfer;
+    private int[] savedValues;  // Used for miniMain - when there is no UI.
     
     private MouseSpeedTransfer() {
         
@@ -47,7 +48,12 @@ public class MouseSpeedTransfer {
     }
     
     public void toStream(OutStream os) {
-        int[] values = transfer.getSpeeds();
+        int[] values;
+        if (transfer == null) {
+            values = savedValues;
+        } else {
+            values = transfer.getSpeeds();
+        }
         
         os.putChar((byte)'\n');
         os.putChar(Model.MOUSE_SPEED);
@@ -94,7 +100,11 @@ public class MouseSpeedTransfer {
     }
     
     public void setSpeeds(int[] speeds) {
-        transfer.setSpeeds(speeds);
+        if (transfer != null) {
+            transfer.setSpeeds(speeds);
+        } else {
+            savedValues = speeds;
+        }
     }
     
     static class Converter {
