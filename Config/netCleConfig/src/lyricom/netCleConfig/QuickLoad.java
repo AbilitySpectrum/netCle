@@ -36,8 +36,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.DataFormatException;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -50,7 +48,6 @@ import lyricom.netCleConfig.model.Model;
 import lyricom.netCleConfig.model.OutStream;
 import lyricom.netCleConfig.model.TmpImport;
 import lyricom.netCleConfig.model.Triggers;
-import lyricom.netCleConfig.ui.MainFrame;
 import lyricom.netCleConfig.ui.ScreenInfo;
 import lyricom.netCleConfig.ui.Utils;
 
@@ -58,7 +55,7 @@ import lyricom.netCleConfig.ui.Utils;
  *
  * @author Andrew
  */
-public class MiniMain extends JFrame implements ActionListener {
+public class QuickLoad extends JFrame implements ActionListener {
     private static final ResourceBundle RES = ResourceBundle.getBundle("strings");
     
     public static void main(String[] args) {
@@ -67,28 +64,27 @@ public class MiniMain extends JFrame implements ActionListener {
         conn.establishConnection();
         
         Model.initModel(conn.getVersionID());
-//        SolutionRegister.init();
         
         SwingUtilities.invokeLater(() -> {
-            new MiniMain();
+            new QuickLoad();
         });
     }
     
-    public MiniMain() {
+    public QuickLoad() {
         super();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("netCle Configuration Loader");
+        setTitle(RES.getString("QUICKLOAD_TITLE"));
         setLayout(new BorderLayout());
         
         JTextArea lbl = new JTextArea();
-        lbl.setText("Click on OK, and then select the\nconfiguration file you want to load.");
+        lbl.setText(RES.getString("QUICKLOAD_MESSAGE"));
         lbl.setFont(Utils.TITLE_FONT);
         lbl.setEditable(false);
         lbl.setBorder(new EmptyBorder(15,15,15,15));
         
         add(lbl, BorderLayout.CENTER);
         
-        JButton btn = new JButton("OK");
+        JButton btn = new JButton(RES.getString("QUICKLOAD_BUTTON"));
         btn.addActionListener(this);
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
         p.add(btn);
