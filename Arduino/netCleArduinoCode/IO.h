@@ -25,6 +25,7 @@
 #define IO_H
 
 #include <EEPROM.h>
+#include <SoftwareSerial.h>
 #include "netCle.h"
 
 /*
@@ -104,6 +105,36 @@ class SerialOutputStream : public OutputStream {
     void init() {}
     void putChar(int c) {
       Serial.write(c);
+    }
+};
+
+// --- Software Serial Port I/O --- //
+class SoftSerialInputStream : public InputStream {
+  SoftwareSerial *softSerial;
+  public:
+    SoftSerialInputStream(SoftwareSerial *pss) {softSerial = pss;}
+    void init() {}
+    
+    int _getChar() {
+      int count = 0;
+      while (!softSerial->available()) {
+        delay(10);
+        count++;
+        if (count > 50) { // Waiting for over 1/2 second
+          return IO_ERROR;
+        }
+      }
+      return softSerial->read();
+    }
+};
+
+class SoftSerialOutputStream : public OutputStream {
+  SoftwareSerial *softSerial;
+  public:
+    SoftSerialOutputStream(SoftwareSerial *pss) {softSerial = pss;}
+    void init() {}
+    void putChar(int c) {
+      softSerial->write(c);
     }
 };
 

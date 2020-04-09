@@ -42,8 +42,15 @@ extern Sensors sensors;
 extern PCInputSensor *pcInput;  // Needed here so we can push commands to it.
 Triggers triggers;
 extern Actors actors;
+
 SerialInputStream serialInput;
 SerialOutputStream serialOutput;
+SoftwareSerial softSerial(11,4);   // Rx, Tx
+SoftSerialInputStream softInput(&softSerial);
+SoftSerialOutputStream softOutput(&softSerial);
+
+InputStream *currentInput;  // Set to either serialInput or softInput.
+OutputStream *currentOutput;
 
 long lastActionTime = 0;
 
@@ -54,6 +61,10 @@ void setup() {
   
   
   Serial.begin(9600);
+  softSerial.begin(9600);
+
+  currentInput = &serialInput;
+  currentOutput = &serialOutput;
 
 #ifdef MEMCHECK
   BreakPoints.atStart = (int) __brkval;
@@ -95,8 +106,8 @@ void loop() {
 
   switch(cmd) {
     case START_OF_TRIGGER_BLOCK:
-      serialInput.init();
-      val = triggers.readTriggers(&serialInput);
+      currentInput->init();
+      val = triggers.readTriggers(currentInput);
       if (val == IO_ERROR) {
         flashLED(LED_RED);
         tone(SENSACT_BUZZER, 190, 500);
@@ -112,8 +123,8 @@ void loop() {
       break;
       
     case REQUEST_TRIGGERS:
-      serialOutput.init();
-      triggers.sendTriggers(&serialOutput);
+      currentOutput->init();
+      triggers.sendTriggers(currentOutput);
       break;
       
     case GET_VERSION: // Get Version also sets IDLEX mode.
@@ -136,7 +147,7 @@ void loop() {
       break;
     
     case KEYBOARD_CMD:
-      int cmd = Serial.read();
+      int cmd = currentInput->_getChar();
       pcInput->setNextCmd(cmd);
       break;
   }
@@ -161,12 +172,26 @@ void loop() {
 }
 
 int checkForCommand() {
-  while(Serial.available()) {
+  // Only one of Serial and SoftSerial should be available,
+  // so we should enter only one while loop.
+  while (Serial.available()) {
     int val = Serial.read();
     // Is it one of the unique command characters (Q,R,S,T,U or V) ?
     if (val >= MIN_COMMAND && val <= MAX_COMMAND) {
+      currentInput = &serialInput;
+      currentOutput = &serialOutput;
       return val;
-    }
+    }  
+  } 
+  
+  while (softSerial.available()) {
+    int val = softSerial.read();
+    // Is it one of the unique command characters (Q,R,S,T,U or V) ?
+    if (val >= MIN_COMMAND && val <= MAX_COMMAND) {
+      currentInput = &softInput;
+      currentOutput = &softOutput;
+      return val;
+    }    
   }
   return 0;
 }
@@ -199,24 +224,30 @@ void ledsOff() {
 }  
 
 void sendVersionInfo() {
-  Serial.print(GET_VERSION);  // V
-  Serial.print(VERSION);  // version #
-  Serial.print(END_OF_BLOCK); // Z
+  if (currentOutput == &softOutput) {
+    softSerial.print(GET_VERSION);  // V
+    softSerial.print(VERSION);  // version #
+    softSerial.print(END_OF_BLOCK); // Z    
+  } else {
+    Serial.print(GET_VERSION);  // V
+    Serial.print(VERSION);  // version #
+    Serial.print(END_OF_BLOCK); // Z
+  }
 }
 
 // Report sensor values
 void report(const SensorData *sdata) {
-  serialOutput.init();
-  serialOutput.putChar(START_OF_SENSOR_DATA);
+  currentOutput->init();
+  currentOutput->putChar(START_OF_SENSOR_DATA);
   int len = sdata->length();
-  serialOutput.putNum(len);
+  currentOutput->putNum(len);
   for(int i=0; i<len; i++) {
     const SensorDatum *d = sdata->getValue(i);
-    serialOutput.putID(d->sensorID);
-    serialOutput.putNum(d->sensorValue);
+    currentOutput->putID(d->sensorID);
+    currentOutput->putNum(d->sensorValue);
   }
-  serialOutput.putChar('\n');  // For debug readability
-  serialOutput.putChar(END_OF_BLOCK);
+  currentOutput->putChar('\n');  // For debug readability
+  currentOutput->putChar(END_OF_BLOCK);
 }
 
 int freeRam ()  {
