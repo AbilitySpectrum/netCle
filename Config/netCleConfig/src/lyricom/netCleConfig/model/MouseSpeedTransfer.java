@@ -50,6 +50,9 @@ public class MouseSpeedTransfer {
     public void toStream(OutStream os) {
         int[] values;
         if (transfer == null) {
+            if (savedValues == null) {
+                return;   // There was no mouse speed in the data.
+            }
             values = savedValues;
         } else {
             values = transfer.getSpeeds();

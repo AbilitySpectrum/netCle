@@ -60,9 +60,15 @@ public class Connection implements SerialCallback {
     private String versionString;
     private int versionID;
     private boolean connected = false;
+    private Shortcut shortcut = null;
     
     private Connection() {
         serial = Serial.getInstance();
+    }
+    
+    // This gives Quickload a quick way to get configuration data.
+    public void registerShortcut(Shortcut sc) {
+        shortcut = sc;
     }
     
     public void establishConnection() {
@@ -210,6 +216,10 @@ public class Connection implements SerialCallback {
         // Process Trigger Data
         } else if (bytes.get(0).equals(Model.START_OF_TRIGGERS)) {
             if (!connected) return;
+            if (shortcut != null) {
+                // Running QuickLoad.  Just pass the raw data to the handler.
+                shortcut.configDataForExport(bytes);
+            }
             InStream input = new InStream(bytes);
             try {
                 Triggers.getInstance().loadDataFromDevice(input);
