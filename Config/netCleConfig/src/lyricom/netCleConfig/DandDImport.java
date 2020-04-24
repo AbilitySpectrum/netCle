@@ -52,17 +52,7 @@ public class DandDImport extends TransferHandler {
         }
         
         try {
-            if (supp.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-                // Fetch the Transferable and its data
-                Transferable t = supp.getTransferable();
-                String data = (String) t.getTransferData(DataFlavor.stringFlavor);
-
-                parent.loadFromString(data);
-
-                return false;   // If you return true it may be treated as move 
-                                // and original data will be deleted.
-
-            } else if (supp.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+            if (supp.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
                 Transferable t = supp.getTransferable();
                 ArrayList<File> theList = new ArrayList<>();
 
@@ -71,12 +61,21 @@ public class DandDImport extends TransferHandler {
                 if (!theList.isEmpty()) {
                     parent.loadFromFile(theList.get(0));
                 }
+                return true;   // Returning true here seems to be ok??
+                
+            } else if (supp.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                // Fetch the Transferable and its data
+                Transferable t = supp.getTransferable();
+                String data = (String) t.getTransferData(DataFlavor.stringFlavor);
+
+                    parent.loadFromString(data);
+
                 return false;   // If you return true it may be treated as move 
                                 // and original data will be deleted.
             } 
             
         } catch (UnsupportedFlavorException | IOException ex) {
-            parent.setText("Drop failed.");            
+            parent.setText("Drop failed: " + ex.getMessage());            
          }
         return false;
     }

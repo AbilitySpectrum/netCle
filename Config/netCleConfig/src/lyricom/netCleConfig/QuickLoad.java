@@ -138,7 +138,6 @@ public class QuickLoad extends JFrame implements ActionListener, Shortcut, KeyLi
         pack();
         // Center on screen
         Dimension dim = getPreferredSize();
-        System.out.println(dim.width);
         if (dim.width < 400) dim.width = 400;
         setSize(dim);
         Point center = ScreenInfo.getCenter();
