@@ -45,7 +45,7 @@ extern Actors actors;
 
 SerialInputStream serialInput;
 SerialOutputStream serialOutput;
-SoftwareSerial softSerial(11,4);   // Rx, Tx
+SoftwareSerial softSerial(11,7);   // Rx, Tx
 SoftSerialInputStream softInput(&softSerial);
 SoftSerialOutputStream softOutput(&softSerial);
 
