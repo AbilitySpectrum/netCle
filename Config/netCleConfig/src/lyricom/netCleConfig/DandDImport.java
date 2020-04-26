@@ -1,20 +1,16 @@
 package lyricom.netCleConfig;
 
 import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.TransferHandler;
-import lyricom.netCleConfig.model.IOError;
 
 /**
  *
@@ -23,8 +19,8 @@ import lyricom.netCleConfig.model.IOError;
 public class DandDImport extends TransferHandler {
     private static final ResourceBundle RES = ResourceBundle.getBundle("strings");
 
-    private QuickLoad parent;
-    public DandDImport(QuickLoad parent) {
+    private EasyLoad parent;
+    public DandDImport(EasyLoad parent) {
         this.parent = parent;
     }
     
@@ -55,7 +51,7 @@ public class DandDImport extends TransferHandler {
             if (supp.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
                 Transferable t = supp.getTransferable();
                 ArrayList<File> theList = new ArrayList<>();
-
+                
                 theList.addAll((Collection<? extends File>) t.getTransferData(DataFlavor.javaFileListFlavor));
 
                 if (!theList.isEmpty()) {
@@ -75,7 +71,7 @@ public class DandDImport extends TransferHandler {
             } 
             
         } catch (UnsupportedFlavorException | IOException ex) {
-            parent.setText("Drop failed: " + ex.getMessage());            
+            parent.setText(RES.getString("EASYLOAD_ERR_UNSUPPORTED_FMT"));        
          }
         return false;
     }

@@ -74,7 +74,7 @@ import lyricom.netCleConfig.ui.Utils;
  *
  * @author Andrew
  */
-public class QuickLoad extends JFrame implements ActionListener, Shortcut, KeyListener {
+public class EasyLoad extends JFrame implements ActionListener, Shortcut, KeyListener {
     private static final ResourceBundle RES = ResourceBundle.getBundle("strings");
     // Action Commands
     private static final String COPY  = "Copy";
@@ -92,29 +92,24 @@ public class QuickLoad extends JFrame implements ActionListener, Shortcut, KeyLi
         Model.initModel(conn.getVersionID());
         
         SwingUtilities.invokeLater(() -> {
-            new QuickLoad();
+            new EasyLoad();
         });
     }
     
     private JTextArea textArea;
     
-    public QuickLoad() {
+    public EasyLoad() {
         super();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle(RES.getString("QUICKLOAD_TITLE"));
+        setTitle(RES.getString("EASYLOAD_TITLE"));
         setLayout(new BorderLayout());
         
         // Get the connection to send us the config when sent from netCle
         conn.registerShortcut(this);
         
         textArea = new JTextArea();
-        textArea.setText("To send:\n"
-                + "click Copy, then paste into an e-mail.\n\n"
-                + "To receive:\n"
-                + "copy e-mail containing configuration\n"
-                + "and then Paste here.\n\n"
-                + "You can also drag and drop text or config files\n"
-                + "to this window.");
+        textArea.setText(RES.getString("EASYLOAD_INSTRUCTION"));
+ 
         textArea.setFont(Utils.TITLE_FONT);
         textArea.setForeground(new Color(0x606050));
         textArea.setEditable(false);
@@ -148,17 +143,17 @@ public class QuickLoad extends JFrame implements ActionListener, Shortcut, KeyLi
     
     private JPanel buttons() {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JButton btn = new JButton("Copy");
+        JButton btn = new JButton(RES.getString("EASYLOAD_COPY_BTN"));
         btn.addActionListener(this);
         btn.setActionCommand(COPY);
         p.add(btn);
  
-        btn = new JButton("Paste");
+        btn = new JButton(RES.getString("EASYLOAD_PASTE_BTN"));
         btn.addActionListener(this);
         btn.setActionCommand(PASTE);
         p.add(btn);
         
-        btn = new JButton("Close");
+        btn = new JButton(RES.getString("EASYLOAD_CLOSE_BTN"));
         btn.addActionListener(this);
         btn.setActionCommand(CLOSE);
         p.add(btn);
@@ -174,10 +169,10 @@ public class QuickLoad extends JFrame implements ActionListener, Shortcut, KeyLi
     
     private void createMenus() {
         popup = new JPopupMenu();
-        copyMI = new JMenuItem("Copy configuration");
-        pasteMI = new JMenuItem("Paste configuration");
-        idleMI = new JMenuItem("Idle Mode");
-        runMI = new JMenuItem("Run Mode");
+        copyMI = new JMenuItem(RES.getString("EASYLOAD_MENU_COPY"));
+        pasteMI = new JMenuItem(RES.getString("EASYLOAD_MENU_PASTE"));
+        idleMI = new JMenuItem(RES.getString("EASYLOAD_MENU_IDLE"));
+        runMI = new JMenuItem(RES.getString("EASYLOAD_MENU_RUN"));
         
         popup.add(copyMI);
         popup.add(pasteMI);
@@ -236,7 +231,7 @@ public class QuickLoad extends JFrame implements ActionListener, Shortcut, KeyLi
         StringSelection selection = new StringSelection(buf);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(selection, selection);
-        textArea.setText("Configuration copied to clipboard.");
+        textArea.setText(RES.getString("EASYLOAD_ACK_COPY"));
     }
     
     // Functions to support export
@@ -282,10 +277,10 @@ public class QuickLoad extends JFrame implements ActionListener, Shortcut, KeyLi
             loadConfigurationData(stream);
                                 
         } catch (UnsupportedFlavorException ex) {
-            textArea.setText("Sorry, there is no suitable data\non the clipboard.");
+            textArea.setText(RES.getString("EASYLOAD_ERR_NODATA"));
 
         } catch (IOException ex) {
-            textArea.setText("Unable to access clipboard data.");  
+            textArea.setText(RES.getString("EASYLOAD_ERR_NO_ACCESS"));
  
         }
     }
@@ -310,12 +305,12 @@ public class QuickLoad extends JFrame implements ActionListener, Shortcut, KeyLi
             doImport(configData);
             doSave();
             Serial.getInstance().writeByte(Model.CMD_RUN);
-            setText("New configuration saved to netClé");
+            setText(RES.getString("EASYLOAD_ACK_PASTE"));
             
         } catch (IOError ex) {
-            setText("Error in configuration data:\n" + ex.getMessage());
+            setText(RES.getString("EASYLOAD_ERR_BAD_FORMAT") + ex.getMessage());
         } catch (DataFormatException | IOException ex) {
-            setText("Unexpected error.\n" + ex.getMessage());
+            setText(RES.getString("EASYLOAD_ERR_UNEXPECTED") + ex.getMessage());
         }
     }
     // Input data could be a whole e-mail.
@@ -338,8 +333,7 @@ public class QuickLoad extends JFrame implements ActionListener, Shortcut, KeyLi
                         }
                     } while (nextChr != Model.END_OF_BLOCK && nextChr != -1);
                     if (nextChr == -1) {
-                        throw new IOError("The pasted text does not contain\n"
-                            + "any configuration data.");
+                        throw new IOError(RES.getString("EASYLOAD_ERR_NO_CONFIG_DATA"));
                     } else {
                         return buf.toString();
                     }
@@ -347,8 +341,7 @@ public class QuickLoad extends JFrame implements ActionListener, Shortcut, KeyLi
             }
         }
         
-        throw new IOError("The pasted text does not contain\n"
-                            + "any configuration data.");
+        throw new IOError(RES.getString("EASYLOAD_ERR_NO_CONFIG_DATA"));
     }
     
     // doImport
@@ -421,60 +414,4 @@ public class QuickLoad extends JFrame implements ActionListener, Shortcut, KeyLi
             }
         }
     }
-
-    // -------------------------------------------
-    // UNUSED AT THIS TIME
-    // -------------------------------------------
-    /*
-    
-/*    - UNUSED.  Code to open a file browser to find a config file.
-    private boolean doImport() {
-        JFileChooser fileChooser = new JFileChooser();
-        int result = fileChooser.showOpenDialog(null);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File input = fileChooser.getSelectedFile();
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(input);
-                List<Byte> bytes = new ArrayList<>();
-                int val;
-                do {
-                    val = fis.read();
-                    if (val != -1) {
-                        bytes.add((byte)val);
-                    }
-                } while (val != Model.END_OF_BLOCK && val != -1);
-                
-                InStream is = new InStream(bytes);
-                TmpImport tmp = Triggers.getInstance().readTriggers(is);
-                ImportFilter filter = new ImportFilter();
-                filter.setOverwrite(true);
-                Triggers.getInstance().loadTriggers(tmp, filter);
-                return true;
-                               
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null,
-                    RES.getString("IMPORT_FAILED_TEXT"),
-                    RES.getString("IMPORT_FAILED_TITLE"),
-                    JOptionPane.ERROR_MESSAGE);
-                return false;
-            
-            } catch(IOError e) {
-                JOptionPane.showMessageDialog(null, 
-                    RES.getString("DATA_ERROR_TEXT") + "\n" + e.getMessage(),
-                    RES.getString("DATA_ERROR_TITLE"),
-                    JOptionPane.ERROR_MESSAGE);
-                return false;
-            } finally {
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (IOException ex) {                        
-                    }
-                }
-            }
-        }     
-        return false;
-    }
-*/
 }
