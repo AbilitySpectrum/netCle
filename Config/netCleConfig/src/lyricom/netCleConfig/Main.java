@@ -45,15 +45,30 @@ public class Main {
         String country;
         Locale locale;
         
-        if (args.length == 2) {
-            language = args[0];
-            country = args[1];
-            locale = new Locale(language, country);
-        } else if (args.length == 1) {
-            language = args[0];
-            locale = new Locale(language);
-        } else {
+        String url = "";
+        int port = 0;
+        
+        if (args.length >= 3) {
+            if (!args[0].equals("-c")) {
+                System.out.println("Bad command line args.");
+                System.exit(0);
+            }
+            url = args[1];
+            port = Integer.parseInt(args[2]);
+            System.out.print("TCP connection to " + url + ":");
+            System.out.println(port);
             locale = Locale.getDefault();
+        } else {
+            if (args.length == 2) {
+                language = args[0];
+                country = args[1];
+                locale = new Locale(language, country);
+            } else if (args.length == 1) {
+                language = args[0];
+                locale = new Locale(language);
+            } else {
+                locale = Locale.getDefault();
+            }
         }
         Locale.setDefault(locale);
         
