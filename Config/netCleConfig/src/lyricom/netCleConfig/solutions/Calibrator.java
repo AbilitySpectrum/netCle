@@ -21,6 +21,7 @@ package lyricom.netCleConfig.solutions;
 
 import java.util.ArrayList;
 import java.util.List;
+import lyricom.netCleConfig.comms.Connection;
 import lyricom.netCleConfig.comms.Serial;
 import lyricom.netCleConfig.model.Model;
 import lyricom.netCleConfig.model.Sensor;
@@ -87,11 +88,11 @@ public class Calibrator {
     }
     
     void startCalibration() {
-        Serial.getInstance().writeByte(Model.CMD_DISPLAY);
+        Connection.getInstance().writeByte(Model.CMD_DISPLAY);
     }
     
     void endCalibration() {
-        Serial.getInstance().writeByte(Model.CMD_VERSION);        
+        Connection.getInstance().writeByte(Model.CMD_VERSION);        
     }
     
     void cancel() {

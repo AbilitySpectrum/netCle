@@ -48,7 +48,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.zip.DataFormatException;
@@ -57,7 +56,6 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import lyricom.netCleConfig.comms.Connection;
-import lyricom.netCleConfig.comms.Serial;
 import lyricom.netCleConfig.comms.Shortcut;
 import lyricom.netCleConfig.model.IOError;
 import lyricom.netCleConfig.model.ImportFilter;
@@ -67,7 +65,6 @@ import lyricom.netCleConfig.model.OutStream;
 import lyricom.netCleConfig.model.TmpImport;
 import lyricom.netCleConfig.model.Triggers;
 import lyricom.netCleConfig.ui.ScreenInfo;
-import lyricom.netCleConfig.ui.TriggerPanel;
 import lyricom.netCleConfig.ui.Utils;
 
 /**
@@ -86,7 +83,7 @@ public class EasyLoad extends JFrame implements ActionListener, Shortcut, KeyLis
     private static Connection conn;
     
     public static void main(String[] args) {
-        conn = Connection.getInstance();
+        conn = Connection.getInstance(null, 0);
         conn.establishConnection();
         
         Model.initModel(conn.getVersionID());
@@ -203,7 +200,7 @@ public class EasyLoad extends JFrame implements ActionListener, Shortcut, KeyLis
     public void actionPerformed(ActionEvent ae) {
         String ac = ae.getActionCommand();
         if (ac == COPY) {
-           Serial.getInstance().writeByte(Model.CMD_GET_TRIGGERS);
+           Connection.getInstance().writeByte(Model.CMD_GET_TRIGGERS);
            // ... data will arrive at configDataForExport() below.
            
         } else if (ac == PASTE) {
@@ -213,10 +210,10 @@ public class EasyLoad extends JFrame implements ActionListener, Shortcut, KeyLis
             System.exit(0);
             
         } else if (ac == IDLE) {
-            Serial.getInstance().writeByte(Model.CMD_VERSION);
+            Connection.getInstance().writeByte(Model.CMD_VERSION);
             
         } else if (ac == RUN) {
-            Serial.getInstance().writeByte(Model.CMD_RUN);
+            Connection.getInstance().writeByte(Model.CMD_RUN);
         }
     }
 
@@ -304,7 +301,7 @@ public class EasyLoad extends JFrame implements ActionListener, Shortcut, KeyLis
             String configData = findConfigData(stream);
             doImport(configData);
             doSave();
-            Serial.getInstance().writeByte(Model.CMD_RUN);
+            Connection.getInstance().writeByte(Model.CMD_RUN);
             setText(RES.getString("EASYLOAD_ACK_PASTE"));
             
         } catch (IOError ex) {
@@ -361,7 +358,7 @@ public class EasyLoad extends JFrame implements ActionListener, Shortcut, KeyLis
         OutStream os;
         
         os = Triggers.getInstance().getAllTriggerData();
-        Serial.getInstance().writeList(os.getBuffer());
+        Connection.getInstance().writeList(os.getBuffer());
         Triggers.DATA_IN_SYNC = true;
     }
 
@@ -377,17 +374,17 @@ public class EasyLoad extends JFrame implements ActionListener, Shortcut, KeyLis
     public void keyPressed(KeyEvent ke) {
         if (ke.isControlDown()) {
             if (ke.getKeyCode() == KeyEvent.VK_C) {
-                Serial.getInstance().writeByte(Model.CMD_GET_TRIGGERS);
+                Connection.getInstance().writeByte(Model.CMD_GET_TRIGGERS);
 
             }
             if (ke.getKeyCode() == KeyEvent.VK_V) {
                 doPaste();
             }
             if (ke.getKeyCode() == KeyEvent.VK_I) {
-                Serial.getInstance().writeByte(Model.CMD_VERSION);
+                Connection.getInstance().writeByte(Model.CMD_VERSION);
             }
             if (ke.getKeyCode() == KeyEvent.VK_R) {
-                Serial.getInstance().writeByte(Model.CMD_RUN);
+                Connection.getInstance().writeByte(Model.CMD_RUN);
             }
         }
      }

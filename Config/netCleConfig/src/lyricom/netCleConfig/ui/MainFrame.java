@@ -41,6 +41,7 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import lyricom.netCleConfig.comms.Connection;
 import lyricom.netCleConfig.comms.Serial;
 import lyricom.netCleConfig.model.ExportFilter;
 import lyricom.netCleConfig.model.IOError;
@@ -102,7 +103,7 @@ public class MainFrame extends JFrame implements TriggerCallback {
         // Get triggers after frame is set up.
         // This will happen on the initial connection only.
         // Not on a reconnection - since that does not rebuild the main frame.
-        Serial.getInstance().writeByte(Model.CMD_GET_TRIGGERS);
+        Connection.getInstance().writeByte(Model.CMD_GET_TRIGGERS);
     }
     
     private static final int BTN_SPACING = 10;
@@ -253,15 +254,15 @@ public class MainFrame extends JFrame implements TriggerCallback {
         exportBtn.setToolTipText(RES.getString("BTN_EXPORT_TTT"));
         exitBtn.setToolTipText(RES.getString("BTN_EXIT_TTT"));
         
-        getBtn.addActionListener(e -> Serial.getInstance().writeByte(Model.CMD_GET_TRIGGERS));
+        getBtn.addActionListener(e -> Connection.getInstance().writeByte(Model.CMD_GET_TRIGGERS));
         saveBtn.addActionListener(e -> doSave());
         clearAllBtn.addActionListener(e -> doClearAll());
         runBtn.addActionListener (e -> {
             if (inSyncCheck()) {
-                Serial.getInstance().writeByte(Model.CMD_RUN);
+                Connection.getInstance().writeByte(Model.CMD_RUN);
             }
         });
-        idleBtn.addActionListener(e -> Serial.getInstance().writeByte(Model.CMD_VERSION));
+        idleBtn.addActionListener(e -> Connection.getInstance().writeByte(Model.CMD_VERSION));
         importBtn.addActionListener(e -> doImport());
         exportBtn.addActionListener(e -> doExport());
         aboutBtn.addActionListener(e -> {
@@ -318,7 +319,7 @@ public class MainFrame extends JFrame implements TriggerCallback {
                 JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        Serial.getInstance().writeList(os.getBuffer());
+        Connection.getInstance().writeList(os.getBuffer());
         Triggers.DATA_IN_SYNC = true;
         return true;
     }

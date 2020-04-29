@@ -45,7 +45,7 @@ public class Main {
         String country;
         Locale locale;
         
-        String url = "";
+        String address = null;
         int port = 0;
         
         if (args.length >= 3) {
@@ -53,9 +53,9 @@ public class Main {
                 System.out.println("Bad command line args.");
                 System.exit(0);
             }
-            url = args[1];
+            address = args[1];
             port = Integer.parseInt(args[2]);
-            System.out.print("TCP connection to " + url + ":");
+            System.out.print("TCP connection to " + address + ":");
             System.out.println(port);
             locale = Locale.getDefault();
         } else {
@@ -72,7 +72,7 @@ public class Main {
         }
         Locale.setDefault(locale);
         
-        Connection conn = Connection.getInstance();
+        Connection conn = Connection.getInstance(address, port);
         conn.establishConnection();
         
         Model.initModel(conn.getVersionID());

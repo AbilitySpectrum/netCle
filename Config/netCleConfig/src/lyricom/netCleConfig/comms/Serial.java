@@ -128,17 +128,17 @@ public class Serial implements Runnable {
         return blist;
     }
        
-    public int writeList(List<Byte> bytes) {
+    int writeList(List<Byte> bytes) {
         return writeData(Utils.listToArray(bytes));
     }
     
-    public int writeByte(Byte val) {
+    int writeByte(Byte val) {
         byte[] buffer = new byte[1];
         buffer[0] = (byte) val;
         return writeData(buffer);
     }
     
-    public int writeData(byte[] buffer) {
+    int writeData(byte[] buffer) {
         int writeBytes;
         int totalBytes = 0;
         while (buffer.length > 300) {
