@@ -31,6 +31,7 @@
 
 // Uncomment this #define if you want the SoftSerial interface enabled.
 // This will also reduce max triggers to 30.
+// #define SOFT_SERIAL 1
 
 // timeDiff function.  Defined in Actions.cpp
 unsigned int timeDiff(unsigned int now, unsigned int prev);
