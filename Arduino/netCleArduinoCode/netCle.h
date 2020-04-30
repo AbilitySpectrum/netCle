@@ -29,6 +29,9 @@
 // of the AAC HUB
 #define HUB20 1
 
+// Uncomment this #define if you want the SoftSerial interface enabled.
+// This will also reduce max triggers to 30.
+
 // timeDiff function.  Defined in Actions.cpp
 unsigned int timeDiff(unsigned int now, unsigned int prev);
 
@@ -120,7 +123,11 @@ extern brkPoints BreakPoints;
 #endif
 
 // ==== Some Limits === //
+#ifdef SOFT_SERIAL
 #define MAX_TRIGGERS 30         // Maximum number of triggers allowed - 15 bytes each.
+#else
+#define MAX_TRIGGERS 40         // Maximum number of triggers allowed - 15 bytes each.
+#endif
 #define MAX_ACTIONS 10            // Maximum number of actions allowed per trigger check - 5 bytes each.
 #define MAX_SENSORS 8            // 2 bytes each
 #define MAX_ACTORS  10           // 2 bytes each

@@ -25,8 +25,10 @@
 #define IO_H
 
 #include <EEPROM.h>
-#include <SoftwareSerial.h>
 #include "netCle.h"
+#ifdef SOFT_SERIAL
+#include <SoftwareSerial.h>
+#endif
 
 /*
  * Code to get and put various data types from/to a stream.
@@ -108,6 +110,7 @@ class SerialOutputStream : public OutputStream {
     }
 };
 
+#ifdef SOFT_SERIAL
 // --- Software Serial Port I/O --- //
 class SoftSerialInputStream : public InputStream {
   SoftwareSerial *softSerial;
@@ -137,6 +140,7 @@ class SoftSerialOutputStream : public OutputStream {
       softSerial->write(c);
     }
 };
+#endif
 
 // --- EEPROM I/O --- //
 

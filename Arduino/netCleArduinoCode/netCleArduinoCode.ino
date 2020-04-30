@@ -24,7 +24,9 @@
 #include "Actions.h"
 #include "IO.h"
 #include <EEPROM.h>
+#ifdef SOFT_SERIAL
 #include <SoftwareSerial.h>
+#endif
 //#include <IRLib2.h>
 #include <Wire.h>
 
@@ -45,12 +47,15 @@ extern Actors actors;
 
 SerialInputStream serialInput;
 SerialOutputStream serialOutput;
+
+#ifdef SOFT_SERIAL
 SoftwareSerial softSerial(11,7);   // Rx, Tx
 SoftSerialInputStream softInput(&softSerial);
 SoftSerialOutputStream softOutput(&softSerial);
 
 InputStream *currentInput;  // Set to either serialInput or softInput.
 OutputStream *currentOutput;
+#endif
 
 long lastActionTime = 0;
 
@@ -61,10 +66,11 @@ void setup() {
   
   
   Serial.begin(9600);
+#ifdef SOFT_SERIAL
   softSerial.begin(9600);
-
   currentInput = &serialInput;
   currentOutput = &serialOutput;
+#endif
 
 #ifdef MEMCHECK
   BreakPoints.atStart = (int) __brkval;
@@ -106,8 +112,13 @@ void loop() {
 
   switch(cmd) {
     case START_OF_TRIGGER_BLOCK:
+#ifdef SOFT_SERIAL
       currentInput->init();
       val = triggers.readTriggers(currentInput);
+#else
+      serialInput.init();
+      val = triggers.readTriggers(&serialInput);
+#endif
       if (val == IO_ERROR) {
         flashLED(LED_RED);
         tone(SENSACT_BUZZER, 190, 500);
@@ -123,8 +134,13 @@ void loop() {
       break;
       
     case REQUEST_TRIGGERS:
+#ifdef SOFT_SERIAL
       currentOutput->init();
       triggers.sendTriggers(currentOutput);
+#else
+      serialOutput.init();
+      triggers.sendTriggers(&serialOutput);
+#endif
       break;
       
     case GET_VERSION: // Get Version also sets IDLEX mode.
@@ -147,7 +163,11 @@ void loop() {
       break;
     
     case KEYBOARD_CMD:
+#ifdef SOFT_SERIAL
       int cmd = currentInput->_getChar();
+#else
+      int cmd = Serial.read();
+#endif
       pcInput->setNextCmd(cmd);
       break;
   }
@@ -178,12 +198,14 @@ int checkForCommand() {
     int val = Serial.read();
     // Is it one of the unique command characters (Q,R,S,T,U or V) ?
     if (val >= MIN_COMMAND && val <= MAX_COMMAND) {
+#ifdef SOFT_SERIAL
       currentInput = &serialInput;
       currentOutput = &serialOutput;
+#endif
       return val;
     }  
   } 
-  
+#ifdef SOFT_SERIAL  
   while (softSerial.available()) {
     int val = softSerial.read();
     // Is it one of the unique command characters (Q,R,S,T,U or V) ?
@@ -193,6 +215,7 @@ int checkForCommand() {
       return val;
     }    
   }
+#endif
   return 0;
 }
 
@@ -224,6 +247,7 @@ void ledsOff() {
 }  
 
 void sendVersionInfo() {
+#ifdef SOFT_SERIAL
   if (currentOutput == &softOutput) {
     softSerial.print(GET_VERSION);  // V
     softSerial.print(VERSION);  // version #
@@ -233,10 +257,16 @@ void sendVersionInfo() {
     Serial.print(VERSION);  // version #
     Serial.print(END_OF_BLOCK); // Z
   }
+#else
+    Serial.print(GET_VERSION);  // V
+    Serial.print(VERSION);  // version #
+    Serial.print(END_OF_BLOCK); // Z
+#endif
 }
 
 // Report sensor values
 void report(const SensorData *sdata) {
+#ifdef SOFT_SERIAL
   currentOutput->init();
   currentOutput->putChar(START_OF_SENSOR_DATA);
   int len = sdata->length();
@@ -248,6 +278,19 @@ void report(const SensorData *sdata) {
   }
   currentOutput->putChar('\n');  // For debug readability
   currentOutput->putChar(END_OF_BLOCK);
+#else
+  serialOutput.init();
+  serialOutput.putChar(START_OF_SENSOR_DATA);
+  int len = sdata->length();
+  serialOutput.putNum(len);
+  for(int i=0; i<len; i++) {
+    const SensorDatum *d = sdata->getValue(i);
+    serialOutput.putID(d->sensorID);
+    serialOutput.putNum(d->sensorValue);
+  }
+  serialOutput.putChar('\n');  // For debug readability
+  serialOutput.putChar(END_OF_BLOCK);  
+#endif
 }
 
 int freeRam ()  {
