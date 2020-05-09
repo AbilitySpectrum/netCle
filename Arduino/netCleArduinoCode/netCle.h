@@ -56,9 +56,9 @@ extern brkPoints BreakPoints;
 // === Protocol Values === //
 // -- Commands and Block Headers -- //
 #ifdef HUB20
-#define VERSION         "2.00"
+#define VERSION         "2.00b"
 #else
-#define VERSION         "1.02"
+#define VERSION         "1.03b"
 #endif
 #define REPORT_MODE       'Q'
 #define RUN_SENSACT       'R'
