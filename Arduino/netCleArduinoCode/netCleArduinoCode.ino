@@ -37,7 +37,7 @@ char memcheck_done = 0;
 char memcheck_started = 0;
 #endif
 
-enum rMode{RUN, REPORT, IDLEX};  // IDLE seems to be a keyword - thus IDLEX.
+// enum rMode{RUN, REPORT, IDLEX};  // IDLE seems to be a keyword - thus IDLEX.
 rMode runMode;
 
 extern Sensors sensors;
