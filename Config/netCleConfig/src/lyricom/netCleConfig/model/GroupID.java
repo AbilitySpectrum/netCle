@@ -30,6 +30,7 @@ public enum GroupID {
     SENSOR1(true),
     SENSOR2(true),
     SENSOR3(true),
+    LEDGROUP(false),
     ACCEL(false),
     GYRO(false),
     USB_PORT(false);

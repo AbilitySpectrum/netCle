@@ -42,6 +42,7 @@ void Sensors::init() {
   pcInput = new PCInputSensor(7);
   addSensor( pcInput );
   addSensor( new GyroSensor(8, 9, 10, 11, 12, 13, 14) );
+  addSensor( new LEDSensor(15) );
 #ifdef MEMCHECK
   BreakPoints.sensorsAlloc = (int) __brkval;
 #endif  

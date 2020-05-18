@@ -175,6 +175,10 @@ public class Model {
             sensorGroups.add(grp);
         }
         
+        grp = new SensorGroup(GroupID.LEDGROUP);
+        grp.add( new Sensor(15, "LED", 0, 1023, true, grp));
+        sensorGroups.add(grp);
+        
         grp = new SensorGroup(GroupID.ACCEL);
         grp.add( new Sensor(8,  MRes.getStr("ACCELX"), -16000, 16000, true, grp) );
         grp.add( new Sensor(9,  MRes.getStr("ACCELY"), -16000, 16000, true, grp) );

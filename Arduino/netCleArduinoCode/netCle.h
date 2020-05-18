@@ -98,8 +98,10 @@ extern brkPoints BreakPoints;
 // === LED Values === //
 #define LED_RED    5
 #define LED_GREEN  6
+#define LED_GREEN_ANALOG A7 // On Leonardo digital pin 6 == analog pin 7.  Why? Who knows!
 #ifdef HUB20
 #define LED_BLUE   4
+#define LED_BLUE_ANALOG A6 // On Leonardo digital pin 4 == analog pin 6.  Why? Who knows!
 #else
 #define LED_BLUE   7
 #endif
@@ -130,7 +132,7 @@ extern brkPoints BreakPoints;
 #define MAX_TRIGGERS 40         // Maximum number of triggers allowed - 15 bytes each.
 #endif
 #define MAX_ACTIONS 10            // Maximum number of actions allowed per trigger check - 5 bytes each.
-#define MAX_SENSORS 8            // 2 bytes each
+#define MAX_SENSORS 9            // 2 bytes each
 #define MAX_ACTORS  10           // 2 bytes each
 
 #endif

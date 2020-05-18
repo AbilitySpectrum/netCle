@@ -25,9 +25,6 @@
 #define SensorData_H
 #include "netCle.h"
 
-enum rMode {RUN, REPORT, IDLEX};  // IDLE seems to be a keyword - thus IDLEX.
-extern rMode runMode;
-
 // SensorDatum - Holds data from a single logical sensor
 struct SensorDatum {  
   char sensorID;
@@ -98,29 +95,32 @@ class AnalogSensor: public Sensor {
       pinMode(pinNumber, INPUT);
     }
     void getValues(SensorData *pData) {
-      // naughty bit here --- 2020-05-16 Sat
-      if( pinNumber == SENSACT_IN3B ) {
-          //digitalWrite(LED_RED, LOW);
-          //digitalWrite(LED_GREEN, LOW);
-          digitalWrite(LED_BLUE, LOW);
-          pinMode(LED_BLUE,INPUT);
-          delay(30);
-          int val = 1023-analogRead(A6);  // A6=BLUE A7=GREEN
-          pData->addValue(id, val);
-          pinMode(LED_BLUE,OUTPUT);
-          if (runMode == RUN) {
-            digitalWrite(LED_GREEN, HIGH);
-          } else if (runMode == REPORT) {
-            digitalWrite(LED_RED, HIGH);
-          } else { // IDLEX mode
-            digitalWrite(LED_BLUE, HIGH);
-          }
-      } else {
-        int val = analogRead(pinNumber);
-        pData->addValue(id, val);
-      }
+      int val = analogRead(pinNumber);
+      pData->addValue(id, val);
     }
     int nDataUnits() { return 1; }
+};
+
+class LEDSensor: public Sensor {
+  protected:
+    int id;
+  public:
+    LEDSensor(int i) {
+      id = i;
+    }
+    void init() {
+    }
+    void getValues(SensorData *pData) {
+        digitalWrite(LED_BLUE, LOW);
+        pinMode(LED_BLUE,INPUT);
+        delay(30);
+        int val = 1023 - analogRead(LED_BLUE_ANALOG);  // A6=BLUE A7=GREEN
+        pData->addValue(id, val);
+        pinMode(LED_BLUE,OUTPUT);
+        // No need to reset the light - that will happen in the main-line code.
+    }
+    
+    int nDataUnits() { return 1; }  
 };
 
 class PCInputSensor: public Sensor {
