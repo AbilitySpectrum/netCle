@@ -17,6 +17,8 @@
     along with this Sensact Arduino software.  
     If not, see <https://www.gnu.org/licenses/>.   
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */ 
+int debug_hist[103];
+bool debug_out = false;
 
 #include "netCle.h"
 #include "Sensors.h"
@@ -124,9 +126,9 @@ void loop() {
         tone(SENSACT_BUZZER, 190, 500);
       } else {
         flashLED(LED_GREEN);
-        tone(SENSACT_BUZZER, 800, 200);
+        tone(SENSACT_BUZZER, 800, 20);
         delay(500);
-        tone(SENSACT_BUZZER, 800, 200);
+        tone(SENSACT_BUZZER, 800, 20);
         triggers.reset();
         actors.reset();
         sensors.reset();
@@ -168,7 +170,18 @@ void loop() {
 #else
       int cmd = Serial.read();
 #endif
-      pcInput->setNextCmd(cmd);
+//      pcInput->setNextCmd(cmd);
+      if (cmd == '?') { // tmp debug messgage
+        for (int i = 0; i < 103; i++) {
+          if ( debug_hist[i] != 0 ) {
+            Serial.print(i); Serial.print(","); Serial.print(debug_hist[i]); Serial.println();
+          }
+        }
+      } else if (cmd == '+') { // tmp debug messgage
+        debug_out = !debug_out;
+      } else {
+        pcInput->setNextCmd(cmd);
+      }  
       break;
   }
   

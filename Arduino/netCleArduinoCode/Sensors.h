@@ -20,6 +20,8 @@
     along with this Sensact Arduino software.  
     If not, see <https://www.gnu.org/licenses/>.   
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */ 
+extern int debug_hist[103];
+extern bool debug_out;
 
 #ifndef SensorData_H
 #define SensorData_H
@@ -114,7 +116,9 @@ class LEDSensor: public Sensor {
         digitalWrite(LED_BLUE, LOW);
         pinMode(LED_BLUE,INPUT);
         delay(30);
-        int val = 1023 - analogRead(LED_BLUE_ANALOG);  // A6=BLUE A7=GREEN
+        int val = 1023 - analogRead(LED_BLUE_ANALOG)*2;  // A6=BLUE A7=GREEN
+        if(debug_out) {Serial.print("W:"); Serial.print(val); Serial.println('Z');}
+        debug_hist[val/10]++;
         pData->addValue(id, val);
         pinMode(LED_BLUE,OUTPUT);
         // No need to reset the light - that will happen in the main-line code.
