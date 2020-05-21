@@ -117,8 +117,8 @@ class LEDSensor: public Sensor {
         pinMode(LED_BLUE,INPUT);
         delay(30);
         int val = 1023 - analogRead(LED_BLUE_ANALOG)*2;  // A6=BLUE A7=GREEN
-        if(debug_out) {Serial.print("W:"); Serial.print(val); Serial.println('Z');}
-        debug_hist[val/10]++;
+        if(debug_out) {Serial.print("W:"); Serial.println(val); Serial.print('Z');}
+        debug_hist[(int) (val/10)]++;
         pData->addValue(id, val);
         pinMode(LED_BLUE,OUTPUT);
         // No need to reset the light - that will happen in the main-line code.
