@@ -1,4 +1,4 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * *
     Copyright (C) 2019 Andrew Hodgson
 
     This file is part of the Sensact Arduino software.
@@ -14,9 +14,9 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this Sensact Arduino software.  
-    If not, see <https://www.gnu.org/licenses/>.   
- * * * * * * * * * * * * * * * * * * * * * * * * * * * */ 
+    along with this Sensact Arduino software.
+    If not, see <https://www.gnu.org/licenses/>.
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 int debug_hist[103];
 bool debug_out = false;
 
@@ -39,7 +39,7 @@ char memcheck_done = 0;
 char memcheck_started = 0;
 #endif
 
-enum rMode{RUN, REPORT, IDLEX};  // IDLE seems to be a keyword - thus IDLEX.
+enum rMode {RUN, REPORT, IDLEX}; // IDLE seems to be a keyword - thus IDLEX.
 rMode runMode;
 
 extern Sensors sensors;
@@ -51,7 +51,7 @@ SerialInputStream serialInput;
 SerialOutputStream serialOutput;
 
 #ifdef SOFT_SERIAL
-SoftwareSerial softSerial(11,7);   // Rx, Tx
+SoftwareSerial softSerial(11, 7);  // Rx, Tx
 SoftSerialInputStream softInput(&softSerial);
 SoftSerialOutputStream softOutput(&softSerial);
 
@@ -65,8 +65,8 @@ void setup() {
   pinMode(LED_RED, OUTPUT);
   pinMode(LED_GREEN, OUTPUT);
   pinMode(LED_BLUE, OUTPUT);
-  
-  
+
+
   Serial.begin(9600);
 #ifdef SOFT_SERIAL
   softSerial.begin(9600);
@@ -92,9 +92,9 @@ void setup() {
 void loop() {
   int cmd = checkForCommand();
   int val;
-  
-//  Serial.print(F("ram: ")); Serial.println(freeRam());
-//  delay(1000);
+
+  //  Serial.print(F("ram: ")); Serial.println(freeRam());
+  //  delay(1000);
 
 #ifdef MEMCHECK
   if (runMode == IDLEX) {
@@ -106,13 +106,13 @@ void loop() {
       doMemCheck();
       memcheck_done = 1;
     }
-//    Serial.print(F("ram: ")); Serial.println(freeRam());
+    //    Serial.print(F("ram: ")); Serial.println(freeRam());
   } else {
     memcheck_done = 0;
   }
 #endif
 
-  switch(cmd) {
+  switch (cmd) {
     case START_OF_TRIGGER_BLOCK:
 #ifdef SOFT_SERIAL
       currentInput->init();
@@ -134,7 +134,7 @@ void loop() {
         sensors.reset();
       }
       break;
-      
+
     case REQUEST_TRIGGERS:
 #ifdef SOFT_SERIAL
       currentOutput->init();
@@ -144,13 +144,13 @@ void loop() {
       triggers.sendTriggers(&serialOutput);
 #endif
       break;
-      
+
     case GET_VERSION: // Get Version also sets IDLEX mode.
-      sendVersionInfo();  
+      sendVersionInfo();
       runMode = IDLEX;
       setLED();
       break;
-      
+
     case RUN_SENSACT:
       runMode = RUN;
       triggers.reset();
@@ -158,49 +158,52 @@ void loop() {
       sensors.reset();
       setLED();
       break;
-      
+
     case REPORT_MODE:
       runMode = REPORT;
       setLED();
       break;
-    
+
     case KEYBOARD_CMD:
 #ifdef SOFT_SERIAL
       int cmd = currentInput->_getChar();
 #else
       int cmd = Serial.read();
 #endif
-//      pcInput->setNextCmd(cmd);
+      //      pcInput->setNextCmd(cmd);
       if (cmd == '?') { // tmp debug messgage
+        Serial.print("W");
         for (int i = 0; i < 103; i++) {
+
           if ( debug_hist[i] != 0 ) {
             Serial.print(i); Serial.print(","); Serial.print(debug_hist[i]); Serial.println();
           }
         }
+        Serial.println("Z");
       } else if (cmd == '+') { // tmp debug messgage
         debug_out = !debug_out;
       } else {
         pcInput->setNextCmd(cmd);
-      }  
+      }
       break;
   }
-  
+
   const SensorData *pSensorData;
-  
+
   if (runMode == REPORT) {
     if ((lastActionTime + REPORTING_INTERVAL) < millis()) {
       pSensorData = sensors.getData();
       report(pSensorData);
       lastActionTime = millis();
     }
-    
+
   } else if (runMode == RUN) {
     if ((lastActionTime + READING_INTERVAL) < millis()) {
       pSensorData = sensors.getData();
       const ActionData *pActionData = triggers.getActions(pSensorData);
       actors.doActions(pActionData);
       lastActionTime = millis();
-    } 
+    }
   } // ELSE IDLEX mode - do nothing.
 }
 
@@ -216,9 +219,9 @@ int checkForCommand() {
       currentOutput = &serialOutput;
 #endif
       return val;
-    }  
-  } 
-#ifdef SOFT_SERIAL  
+    }
+  }
+#ifdef SOFT_SERIAL
   while (softSerial.available()) {
     int val = softSerial.read();
     // Is it one of the unique command characters (Q,R,S,T,U or V) ?
@@ -226,7 +229,7 @@ int checkForCommand() {
       currentInput = &softInput;
       currentOutput = &softOutput;
       return val;
-    }    
+    }
   }
 #endif
   return 0;
@@ -245,35 +248,35 @@ void flashLED(int led) {
 void setLED() {
   ledsOff();
   if (runMode == RUN) {
-     digitalWrite(LED_GREEN, HIGH);
-  } else if (runMode == REPORT) {  
-     digitalWrite(LED_RED, HIGH);
+    digitalWrite(LED_GREEN, HIGH);
+  } else if (runMode == REPORT) {
+    digitalWrite(LED_RED, HIGH);
   } else { // IDLEX mode
-     digitalWrite(LED_BLUE, HIGH);
+    digitalWrite(LED_BLUE, HIGH);
   }
-} 
-  
+}
+
 void ledsOff() {
   digitalWrite(LED_RED, LOW);
   digitalWrite(LED_BLUE, LOW);
   digitalWrite(LED_GREEN, LOW);
-}  
+}
 
 void sendVersionInfo() {
 #ifdef SOFT_SERIAL
   if (currentOutput == &softOutput) {
     softSerial.print(GET_VERSION);  // V
     softSerial.print(VERSION);  // version #
-    softSerial.print(END_OF_BLOCK); // Z    
+    softSerial.print(END_OF_BLOCK); // Z
   } else {
     Serial.print(GET_VERSION);  // V
     Serial.print(VERSION);  // version #
     Serial.print(END_OF_BLOCK); // Z
   }
 #else
-    Serial.print(GET_VERSION);  // V
-    Serial.print(VERSION);  // version #
-    Serial.print(END_OF_BLOCK); // Z
+  Serial.print(GET_VERSION);  // V
+  Serial.print(VERSION);  // version #
+  Serial.print(END_OF_BLOCK); // Z
 #endif
 }
 
@@ -284,7 +287,7 @@ void report(const SensorData *sdata) {
   currentOutput->putChar(START_OF_SENSOR_DATA);
   int len = sdata->length();
   currentOutput->putNum(len);
-  for(int i=0; i<len; i++) {
+  for (int i = 0; i < len; i++) {
     const SensorDatum *d = sdata->getValue(i);
     currentOutput->putID(d->sensorID);
     currentOutput->putNum(d->sensorValue);
@@ -296,35 +299,35 @@ void report(const SensorData *sdata) {
   serialOutput.putChar(START_OF_SENSOR_DATA);
   int len = sdata->length();
   serialOutput.putNum(len);
-  for(int i=0; i<len; i++) {
+  for (int i = 0; i < len; i++) {
     const SensorDatum *d = sdata->getValue(i);
     serialOutput.putID(d->sensorID);
     serialOutput.putNum(d->sensorValue);
   }
   serialOutput.putChar('\n');  // For debug readability
-  serialOutput.putChar(END_OF_BLOCK);  
+  serialOutput.putChar(END_OF_BLOCK);
 #endif
 }
 
 int freeRam ()  {
-   extern int __heap_start, *__brkval; 
-   int v; 
-   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+  extern int __heap_start, *__brkval;
+  int v;
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }
 
 #ifdef MEMCHECK
 char *memBuf;
 void startMemCheck() {
   memBuf = new char[MEMCHECK_SIZE];
-  for(int i=0; i<MEMCHECK_SIZE; i++) {
+  for (int i = 0; i < MEMCHECK_SIZE; i++) {
     memBuf[i] = 1;
   }
 }
 
 void doMemCheck() {
-  extern int __heap_start; 
+  extern int __heap_start;
   int i;
-  for(i=0; i<MEMCHECK_SIZE; i++) {
+  for (i = 0; i < MEMCHECK_SIZE; i++) {
     if (memBuf[i] != 1) {
       break;
     }
@@ -345,4 +348,3 @@ void doMemCheck() {
   Serial.print("MemCheck: "); Serial.println(i);
 }
 #endif
-  

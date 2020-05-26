@@ -103,6 +103,8 @@ class AnalogSensor: public Sensor {
     int nDataUnits() { return 1; }
 };
 
+extern void setLED();
+
 class LEDSensor: public Sensor {
   protected:
     int id;
@@ -121,6 +123,7 @@ class LEDSensor: public Sensor {
         debug_hist[(int) (val/10)]++;
         pData->addValue(id, val);
         pinMode(LED_BLUE,OUTPUT);
+        setLED();
         // No need to reset the light - that will happen in the main-line code.
     }
     
