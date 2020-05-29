@@ -385,6 +385,13 @@ public class MainFrame extends JFrame implements TriggerCallback {
         int result = fileChooser.showSaveDialog(MainFrame.this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File output = fileChooser.getSelectedFile();
+            // Force the extension to be .txt unless an extension was already 
+            // provided.
+            String fileName = output.getAbsolutePath();           
+            if (! fileName.toLowerCase().endsWith(".txt")) {
+                fileName += ".txt";
+                output = new File(fileName);
+            }
             boolean writeIt = false;
             if (output.exists()) {
                 result = JOptionPane.showConfirmDialog(MainFrame.this,
