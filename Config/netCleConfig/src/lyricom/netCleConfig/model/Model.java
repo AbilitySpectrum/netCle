@@ -119,6 +119,7 @@ public class Model {
     /// (e.g. control + Z) in one action
     static public final int KEY_COMBO   = 0xfd000000;
 
+    static public final String CONFIG_VERSION = "1.02b";
     static private int VERSION_ID;
     static public int getVersionID() { return VERSION_ID; }
     
