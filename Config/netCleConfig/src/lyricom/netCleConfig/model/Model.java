@@ -145,35 +145,19 @@ public class Model {
         sensorGroups = new ArrayList<>();
         
         SensorGroup grp = new SensorGroup(GroupID.SENSOR1);
-        if (versionID >= 200) {
-            grp.add( new Sensor(1, MRes.getStr("SENSOR1A"), 0, 1023, true, grp) );
-            grp.add( new Sensor(2, MRes.getStr("SENSOR1B"), 0, 1023, true, grp) );
-            sensorGroups.add(grp);
+        grp.add( new Sensor(5, MRes.getStr("SENSOR1A"), 0, 1023, true, grp) );
+        grp.add( new Sensor(6, MRes.getStr("SENSOR1B"), 0, 1023, true, grp) );
+        sensorGroups.add(grp);
 
-            grp = new SensorGroup(GroupID.SENSOR2);
-            grp.add( new Sensor(3, MRes.getStr("SENSOR2A"), 0, 1023, true, grp) );
-            grp.add( new Sensor(4, MRes.getStr("SENSOR2B"), 0, 1023, true, grp) );
-            sensorGroups.add(grp);
+        grp = new SensorGroup(GroupID.SENSOR2);
+        grp.add( new Sensor(3, MRes.getStr("SENSOR2A"), 0, 1023, true, grp) );
+        grp.add( new Sensor(4, MRes.getStr("SENSOR2B"), 0, 1023, true, grp) );
+        sensorGroups.add(grp);
 
-            grp = new SensorGroup(GroupID.SENSOR3);
-            grp.add( new Sensor(5, MRes.getStr("SENSOR3A"), 0, 1023, true, grp) );
-            grp.add( new Sensor(6, MRes.getStr("SENSOR3B"), 0, 1023, true, grp) );
-            sensorGroups.add(grp);            
-        } else {
-            grp.add( new Sensor(5, MRes.getStr("SENSOR1A"), 0, 1023, true, grp) );
-            grp.add( new Sensor(6, MRes.getStr("SENSOR1B"), 0, 1023, true, grp) );
-            sensorGroups.add(grp);
-
-            grp = new SensorGroup(GroupID.SENSOR2);
-            grp.add( new Sensor(3, MRes.getStr("SENSOR2A"), 0, 1023, true, grp) );
-            grp.add( new Sensor(4, MRes.getStr("SENSOR2B"), 0, 1023, true, grp) );
-            sensorGroups.add(grp);
-
-            grp = new SensorGroup(GroupID.SENSOR3);
-            grp.add( new Sensor(1, MRes.getStr("SENSOR3A"), 0, 1023, true, grp) );
-            grp.add( new Sensor(2, MRes.getStr("SENSOR3B"), 0, 1023, true, grp) );
-            sensorGroups.add(grp);
-        }
+        grp = new SensorGroup(GroupID.SENSOR3);
+        grp.add( new Sensor(1, MRes.getStr("SENSOR3A"), 0, 1023, true, grp) );
+        grp.add( new Sensor(2, MRes.getStr("SENSOR3B"), 0, 1023, true, grp) );
+        sensorGroups.add(grp);      
         
         grp = new SensorGroup(GroupID.ACCEL);
         grp.add( new Sensor(8,  MRes.getStr("ACCELX"), -16000, 16000, true, grp) );
