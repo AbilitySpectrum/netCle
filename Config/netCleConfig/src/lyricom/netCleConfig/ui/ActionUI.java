@@ -221,6 +221,15 @@ public class ActionUI {
         new ValueLabelPair( 0x37, RES.getString("ACT_KEY_7")),
         new ValueLabelPair( 0x38, RES.getString("ACT_KEY_8")),
         new ValueLabelPair( 0x39, RES.getString("ACT_KEY_9")),
+        
+        new ValueLabelPair( 0x2B, RES.getString("ACT_PLUS_KEY")),
+        new ValueLabelPair( 0x2D, RES.getString("ACT_MINUS_KEY")),
+        new ValueLabelPair( 0x60, RES.getString("ACT_BACK_QUOTE")),
+        new ValueLabelPair( 0x5B, RES.getString("ACT_OPEN_SQ_BRACKET")),
+        new ValueLabelPair( 0x5D, RES.getString("ACT_CLOSED_SQ_BRACKET")),
+        new ValueLabelPair( 0x7B, RES.getString("ACT_OPEN_CURLY_BRACKET")),
+        new ValueLabelPair( 0x7D, RES.getString("ACT_CLOSED_CURLY_BRACKET")),
+        
         new ValueLabelPair( 0x20, RES.getString("ACT_KEY_SPACE")),
         new ValueLabelPair( 0xDA, RES.getString("ACT_KEY_UP_ARROW") ),
         new ValueLabelPair( 0xD9, RES.getString("ACT_KEY_DOWN_ARROW") ),
@@ -321,6 +330,15 @@ public class ActionUI {
         new ValueLabelPair( 0x37, RES.getString("ACT_KEY_7")),
         new ValueLabelPair( 0x38, RES.getString("ACT_KEY_8")),
         new ValueLabelPair( 0x39, RES.getString("ACT_KEY_9")),
+        
+        new ValueLabelPair( 0x2B, RES.getString("ACT_PLUS_KEY")),
+        new ValueLabelPair( 0x2D, RES.getString("ACT_MINUS_KEY")),
+        new ValueLabelPair( 0x60, RES.getString("ACT_BACK_QUOTE")),
+        new ValueLabelPair( 0x5B, RES.getString("ACT_OPEN_SQ_BRACKET")),
+        new ValueLabelPair( 0x5D, RES.getString("ACT_CLOSED_SQ_BRACKET")),
+        new ValueLabelPair( 0x7B, RES.getString("ACT_OPEN_CURLY_BRACKET")),
+        new ValueLabelPair( 0x7D, RES.getString("ACT_CLOSED_CURLY_BRACKET")),
+        
         new ValueLabelPair( 0x20, RES.getString("ACT_KEY_SPACE")),
         new ValueLabelPair( 0xDA, RES.getString("ACT_KEY_UP_ARROW") ),
         new ValueLabelPair( 0xD9, RES.getString("ACT_KEY_DOWN_ARROW") ),

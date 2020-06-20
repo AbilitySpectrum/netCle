@@ -101,14 +101,10 @@ public class Trigger {
     public final void setSensor(Sensor s) {
         sensor = s;
         if (getSensor().isContinuous()) {
-            if (level == Level.LEVEL1) {
-                setTriggerValue( sensor.getLevel1() );
-            } else {
-                setTriggerValue( sensor.getLevel2() );
-            }
+            triggerValue = sensor.getLevel(level);
             setCondition(TRIGGER_ON_HIGH);
         } else {
-            setTriggerValue('a');
+            triggerValue = 'a';
             setCondition(TRIGGER_ON_EQUAL);
         }
     }
@@ -206,10 +202,20 @@ public class Trigger {
         return triggerValue;
     }
 
+    // Should only be called to update a non-continuous trigger
+    // e.g. USB serial input.
+    // For continous triggers, set the levels in the sensor
+    // and call setLevel to set the trigger value from the sensor level.
     public void setTriggerValue(int triggerValue) {
         this.triggerValue = triggerValue;
         Triggers.DATA_IN_SYNC = false;
-    }
+    } 
+    
+    // Should never be called really - see groupLevels in TmpImport.java
+    public void forceTriggerValue(int triggerValue) {
+        this.triggerValue = triggerValue;
+        Triggers.DATA_IN_SYNC = false;
+    } 
 
     public int getCondition() {
         return condition;
@@ -274,8 +280,17 @@ public class Trigger {
         return level;
     }
 
+    // Set the level and set the value from the sensor level.
     public void setLevel(Level level) {
         this.level = level;
-         Triggers.DATA_IN_SYNC = false;
-   }
+        this.triggerValue = sensor.getLevel(level);
+        Triggers.DATA_IN_SYNC = false;
+    }
+    
+    // Called when the sensor level has been changed
+    // (by the user moving a slider in the Set Threshold window.
+    public void updateLevel() {
+        this.triggerValue = sensor.getLevel(level);
+        Triggers.DATA_IN_SYNC = false;
+    }
 }

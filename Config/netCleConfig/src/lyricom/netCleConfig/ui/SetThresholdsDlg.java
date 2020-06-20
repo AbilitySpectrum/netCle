@@ -30,6 +30,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ResourceBundle;
 import javax.swing.*;
+import lyricom.netCleConfig.comms.Connection;
 import lyricom.netCleConfig.comms.Serial;
 import lyricom.netCleConfig.model.Model;
 import lyricom.netCleConfig.model.Sensor;
@@ -78,7 +79,7 @@ public class SetThresholdsDlg extends JDialog implements SensorSignalLevelChange
             @Override
             public void windowClosing(WindowEvent e) {
                 theSensor.removeListener();
-                Serial.getInstance().writeByte(Model.CMD_VERSION);
+                Connection.getInstance().writeByte(Model.CMD_VERSION);
                 cancelled = true;
                 thisDlg.dispose();
             }
@@ -92,7 +93,7 @@ public class SetThresholdsDlg extends JDialog implements SensorSignalLevelChange
         
         // Do not do this before the sliders are set up to receive the values.
         theSensor.setListener(this);
-        Serial.getInstance().writeByte(Model.CMD_DISPLAY);
+        Connection.getInstance().writeByte(Model.CMD_DISPLAY);
         
         setVisible(true);
     }
@@ -126,14 +127,14 @@ public class SetThresholdsDlg extends JDialog implements SensorSignalLevelChange
         JButton cancel = new JButton(RES.getString("BTN_CANCEL"));
         done.addActionListener(e -> {
             theSensor.removeListener();
-            Serial.getInstance().writeByte(Model.CMD_VERSION);
+            Connection.getInstance().writeByte(Model.CMD_VERSION);
             level1 = gtSlider.getValue();
             level2 = ltSlider.getValue();
             thisDlg.dispose();
         });
         cancel.addActionListener(e -> {
             theSensor.removeListener();
-            Serial.getInstance().writeByte(Model.CMD_VERSION);
+            Connection.getInstance().writeByte(Model.CMD_VERSION);
             cancelled = true;
             thisDlg.dispose();
         });

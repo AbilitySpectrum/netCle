@@ -140,7 +140,6 @@ public abstract class SolutionBase implements Runnable {
         Trigger t = Triggers.getInstance().newTrigger(loc.sensor);
         t.setLevel(loc.level);
         t.setReqdState(startState);
-        t.setTriggerValue( loc.value );
         t.setCondition( loc.condition );
         t.setDelay(delay);
         t.setAction(action);

@@ -163,7 +163,7 @@ public class Triggers {
     // Load triggers from the device.
     public void loadDataFromDevice(InStream in) throws IOError{
         TmpImport tmp = readTriggers(in);
-        tmp.groupLevels();        
+        tmp.groupLevels();
         replace(tmp);
         int[] mouseSpeeds = tmp.getMouseSpeeds();
         if (mouseSpeeds != null) {
@@ -174,7 +174,7 @@ public class Triggers {
     
     // Load data imported from a file.
     public void loadTriggers(TmpImport tmp, ImportFilter filter) {
-        tmp.groupLevels();  // Precation on import data.
+        tmp.groupLevels();  
         if (filter.isOverwrite()) {
             replace(tmp);            
         } else {

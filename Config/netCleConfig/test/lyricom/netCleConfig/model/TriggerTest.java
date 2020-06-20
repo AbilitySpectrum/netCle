@@ -18,7 +18,7 @@ public class TriggerTest {
         
     @BeforeClass
     public static void setupClass() throws Exception {
-        Model.initModel(410);
+        Model.initModel(102);
     }
     
     public String BufToString(List<Byte> bytes) {

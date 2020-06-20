@@ -1,77 +1,49 @@
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-    Copyright (C) 2019 Andrew Hodgson
-
-    This file is part of the netClé Configuration software.
-
-    netClé Configuration software is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    netClé Configuration software is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this netClé configuration software.  
-    If not, see <https://www.gnu.org/licenses/>.   
- * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package lyricom.netCleConfig.comms;
 
-import com.fazecast.jSerialComm.SerialPort;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import lyricom.netCleConfig.model.IOError;
 import lyricom.netCleConfig.model.InStream;
 import lyricom.netCleConfig.model.Model;
 import lyricom.netCleConfig.model.Triggers;
 import lyricom.netCleConfig.ui.MainFrame;
-import lyricom.netCleConfig.ui.PortSelectionDlg;
 import lyricom.netCleConfig.ui.SensorPanel;
+import lyricom.netCleConfig.ui.Utils;
 
 /**
- * The Connection singleton class manages the creation of
- * the serial connection and any required reconnection.
- * 
- * If connection cannot be established this class will call
- * System.exit directly.
- * 
+ *
  * @author Andrew
  */
-public class Connection implements SerialCallback {
-    private static final ResourceBundle RES = ResourceBundle.getBundle("strings");
+public abstract class Connection implements SerialCallback {
+    protected static final ResourceBundle RES = ResourceBundle.getBundle("strings");
+
     private static Connection instance = null;
     
-    public static Connection getInstance() {
-        if (instance == null) {
-            instance = new Connection();
+    public static Connection getInstance(String url, int port) {
+        if (url == null) {
+            instance = new SerialConn();
+        } else {
+            instance = new SocketConn(url, port);
         }
         return instance;
     }
     
-    private final Serial serial;
+    public static Connection getInstance() {
+        return instance;
+    }
+    
     private Semaphore versionSemaphore; 
     private String versionString;
     private int versionID;
-    private boolean connected = false;
-    
-    private Connection() {
-        serial = Serial.getInstance();
-    }
-    
-    public void establishConnection() {
-        versionString = RES.getString("CM_DEFAULT_VERSION");
-        serial.setCallback(this);
-        doConnection(true);
-        connected = true;
-    }
-    
+    protected boolean connected = false;
+    private Shortcut shortcut = null;
+
+    Connection() {}
+       
     public String getVersionString() {
         return versionString;
     }
@@ -79,36 +51,30 @@ public class Connection implements SerialCallback {
     public int getVersionID() {
         return versionID;
     }
+   
+    // This gives Quickload a quick way to get configuration data.
+    public void registerShortcut(Shortcut sc) {
+        shortcut = sc;
+    }
     
-    private void doConnection(boolean auto) {
-        boolean connected;
+    // Establish the connection and get version number.
+    // Establish the connection or die!
+    public void establishConnection() {
         boolean connectionSuccess = false;
-        while( ! connectionSuccess) {
-            SerialPort port = doPortSelection(auto);
-            
-            if (serial.open_port(port)) {
-                connected = true;
-                serial.startDispatchThread();
-            } else {
-                connected = false;
-                confirm(RES.getString("CMT_FAILURE"),
-                    RES.getString("CM_FAIL_RETRY")
-                );
-            }
-            
-            if (connected) {
+        boolean autoSelect = true;  // Automatically select the 'Leonardo' device.
+        while (!connectionSuccess) {
+            if (doConnection(autoSelect)) {
                 try {
                     Thread.sleep(1000); // Wait for ATMega to reboot.
                     versionSemaphore = new Semaphore(1);
                     versionSemaphore.acquire();
-                    serial.writeByte(Model.CMD_VERSION);
+                    writeByte(Model.CMD_VERSION);
                     if (versionSemaphore.tryAcquire(1, 2000, TimeUnit.MILLISECONDS)) {
                         connectionSuccess = true;
                     } else {
                         confirm(RES.getString("CMT_ERROR"),
                             RES.getString("CM_NOT_SENSACT")
-                        );                    
-                        
+                        );                                           
                     }
                 } catch (InterruptedException ex) {
                     confirm(RES.getString("CMT_ERROR"),
@@ -116,57 +82,19 @@ public class Connection implements SerialCallback {
                     );                    
                 }
                 if (!connectionSuccess) {
-                    serial.close();  // Did not get version #.  Close this port and try another.
+                    autoSelect = false;  // Automatically selected port did not work,
+                                         // so let use select from a list.
+                    close();  // Did not get version #.  Close this port and try another.
                 }
-            }
+            }            
         }
     }
     
-    private SerialPort doPortSelection(boolean auto) {
-        SerialPort[] ports = serial.get_list();
-        
-        while (ports.length == 0) {
-            confirm(RES.getString("CMT_ERROR"), RES.getString("CM_NO_PORTS"));
-            auto = false;
-            ports = serial.get_list();
-        }
-        
-        if (auto) {
-            for(SerialPort p: ports) {
-                if (p.getDescriptivePortName().contains("Leonardo")) {
-                    return p;
-                }
-            }
-        }
-        
-        PortSelectionDlg dlg = new PortSelectionDlg(ports);
-        if (dlg.wasCancelled()) {
-            System.exit(0);
-        } 
-        
-        return dlg.getPort();
-    }
-    
-    /*
-     * Ask a yes/no question.  If the answer is no - exit.
-     */
-    private void confirm(String title, String message) {
-        int val = JOptionPane.showConfirmDialog(
-            null, message, title, JOptionPane.YES_NO_OPTION);
-        if (val == JOptionPane.NO_OPTION) {
-            System.exit(0);
-        }    
-        
-    }
-
-    /*
-     * SerialCallback methods.
-     *   dispatchData - get a data packet and figures out what to do with it.
-     *   connectionLost - called when the connection is lost.
-    */
+    // dispatchData - Takes a block of newly received data and
+    // sends it to the right place.
     @Override
     public void dispatchData(List<Byte> bytes) {
-        if (bytes.size() == 0) {
+        if (bytes.isEmpty()) {
             return;
         }
         // Process Version Number
@@ -210,6 +138,10 @@ public class Connection implements SerialCallback {
         // Process Trigger Data
         } else if (bytes.get(0).equals(Model.START_OF_TRIGGERS)) {
             if (!connected) return;
+            if (shortcut != null) {
+                // Running QuickLoad.  Just pass the raw data to the handler.
+                shortcut.configDataForExport(bytes);
+            }
             InStream input = new InStream(bytes);
             try {
                 Triggers.getInstance().loadDataFromDevice(input);
@@ -221,23 +153,45 @@ public class Connection implements SerialCallback {
                         RES.getString("CMT_DATA_ERROR"),
                         JOptionPane.ERROR_MESSAGE);
             }
-        }
+        } 
     }
-
-    @Override
-    public void connectionLost() {
-        System.out.println("Connection Lost");
-        serial.close();
-        connected = false;
-        // Reconnect in a new thread??
-        confirm(RES.getString("CMT_LOST"), RES.getString("CM_RECONNECT"));
-        JOptionPane.showMessageDialog(null, 
-                RES.getString("CM_INSTRUCT"), RES.getString("CMT_RECONNECT"),
-                JOptionPane.INFORMATION_MESSAGE);
         
-        SwingUtilities.invokeLater(() -> {
-            establishConnection();
-        });
+    /*
+     * Ask a yes/no question.  If the answer is no - exit.
+     */
+    protected void confirm(String title, String message) {
+        int val;
+   
+        do {
+            val = JOptionPane.showConfirmDialog(
+                null, message, title, JOptionPane.YES_NO_OPTION);
+        } while(val == -1);  // -1 indicates message was not displayed.
+                             // due to thread interruption
+        if (val == JOptionPane.NO_OPTION) {
+            System.exit(0);
+        }            
     }
+    
+    
+    public int writeList(List<Byte> bytes) {
+        return writeData(Utils.listToArray(bytes));
+    }
+    
+    public int writeByte(Byte val) {
+        byte[] buffer = new byte[1];
+        buffer[0] = (byte) val;
+        return writeData(buffer);
+    }
+    
+    // --------------------
+    // Abstract functions
+    // --------------------
+    // Open the connection & Start the read thread.
+    abstract boolean doConnection(boolean autoSelect);
 
+    // Write data
+    abstract public int writeData(byte[] buffer);
+    
+    // Close the connection
+    abstract public void close();
 }

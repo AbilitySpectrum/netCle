@@ -32,10 +32,13 @@ import lyricom.netCleConfig.ui.ActionUI;
  * Static method for accessing the model.
  * Values here match values used in the netCle.
  * @author Andrew
- */
+ */ 
 public class Model {
     private static final ResourceBundle RES = ResourceBundle.getBundle("strings");
-
+    
+    // Version Number
+    public static final String CONFIG_VERSION = "1.02b";
+    
     // Commands sent to sensact
     public static final Byte CMD_VERSION        = (byte) 'V';
     public static final Byte CMD_RUN            = (byte) 'R';
@@ -119,9 +122,8 @@ public class Model {
     /// (e.g. control + Z) in one action
     static public final int KEY_COMBO   = 0xfd000000;
 
-    static public final String CONFIG_VERSION = "1.02b";
-    static private int VERSION_ID;
-    static public int getVersionID() { return VERSION_ID; }
+    static private int ARDUINO_VERSION_ID;
+    static public int getVersionID() { return ARDUINO_VERSION_ID; }
     
     // Lists of Sensors and Actions.
     // Created once by initModel.
@@ -131,7 +133,7 @@ public class Model {
     public static Map<ActionType,SaAction> actionMap;
     
     public static void initModel(int versionID) {
-        VERSION_ID = versionID;
+        ARDUINO_VERSION_ID = versionID;
         initSensorList(versionID);
         initActionList(versionID);
         TVInfo.getInstance().init();
@@ -143,19 +145,35 @@ public class Model {
         sensorGroups = new ArrayList<>();
         
         SensorGroup grp = new SensorGroup(GroupID.SENSOR1);
-        grp.add( new Sensor(5, MRes.getStr("SENSOR1A"), 0, 1023, true, grp) );
-        grp.add( new Sensor(6, MRes.getStr("SENSOR1B"), 0, 1023, true, grp) );
-        sensorGroups.add(grp);
+        if (versionID >= 200) {
+            grp.add( new Sensor(1, MRes.getStr("SENSOR1A"), 0, 1023, true, grp) );
+            grp.add( new Sensor(2, MRes.getStr("SENSOR1B"), 0, 1023, true, grp) );
+            sensorGroups.add(grp);
 
-        grp = new SensorGroup(GroupID.SENSOR2);
-        grp.add( new Sensor(3, MRes.getStr("SENSOR2A"), 0, 1023, true, grp) );
-        grp.add( new Sensor(4, MRes.getStr("SENSOR2B"), 0, 1023, true, grp) );
-        sensorGroups.add(grp);
-        
-        grp = new SensorGroup(GroupID.SENSOR3);
-        grp.add( new Sensor(1, MRes.getStr("SENSOR3A"), 0, 1023, true, grp) );
-        grp.add( new Sensor(2, MRes.getStr("SENSOR3B"), 0, 1023, true, grp) );
-        sensorGroups.add(grp);
+            grp = new SensorGroup(GroupID.SENSOR2);
+            grp.add( new Sensor(3, MRes.getStr("SENSOR2A"), 0, 1023, true, grp) );
+            grp.add( new Sensor(4, MRes.getStr("SENSOR2B"), 0, 1023, true, grp) );
+            sensorGroups.add(grp);
+
+            grp = new SensorGroup(GroupID.SENSOR3);
+            grp.add( new Sensor(5, MRes.getStr("SENSOR3A"), 0, 1023, true, grp) );
+            grp.add( new Sensor(6, MRes.getStr("SENSOR3B"), 0, 1023, true, grp) );
+            sensorGroups.add(grp);            
+        } else {
+            grp.add( new Sensor(5, MRes.getStr("SENSOR1A"), 0, 1023, true, grp) );
+            grp.add( new Sensor(6, MRes.getStr("SENSOR1B"), 0, 1023, true, grp) );
+            sensorGroups.add(grp);
+
+            grp = new SensorGroup(GroupID.SENSOR2);
+            grp.add( new Sensor(3, MRes.getStr("SENSOR2A"), 0, 1023, true, grp) );
+            grp.add( new Sensor(4, MRes.getStr("SENSOR2B"), 0, 1023, true, grp) );
+            sensorGroups.add(grp);
+
+            grp = new SensorGroup(GroupID.SENSOR3);
+            grp.add( new Sensor(1, MRes.getStr("SENSOR3A"), 0, 1023, true, grp) );
+            grp.add( new Sensor(2, MRes.getStr("SENSOR3B"), 0, 1023, true, grp) );
+            sensorGroups.add(grp);
+        }
         
         grp = new SensorGroup(GroupID.ACCEL);
         grp.add( new Sensor(8,  MRes.getStr("ACCELX"), -16000, 16000, true, grp) );

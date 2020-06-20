@@ -36,7 +36,7 @@ public class MouseSpeedTransfer {
     
     private Converter converter = new Converter();
     private MouseSpeedTransferInterface transfer;
-    private int[] savedValues;  // Used for miniMain - when there is no UI.
+    private int[] savedValues;  // Used for easyLoad - when there is no UI.
     
     private MouseSpeedTransfer() {
         
@@ -50,6 +50,9 @@ public class MouseSpeedTransfer {
     public void toStream(OutStream os) {
         int[] values;
         if (transfer == null) {
+            if (savedValues == null) {
+                return;   // There was no mouse speed in the data.
+            }
             values = savedValues;
         } else {
             values = transfer.getSpeeds();

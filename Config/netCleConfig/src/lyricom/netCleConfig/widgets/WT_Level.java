@@ -44,11 +44,9 @@ public class WT_Level extends W_Combo {
         String p = (String) theBox.getSelectedItem();
         if (p == LEVEL1) {
                 theTrigger.setLevel(Trigger.Level.LEVEL1);
-                theTrigger.setTriggerValue( theTrigger.getSensor().getLevel1() );
                 
         } else if (p == LEVEL2) {
                 theTrigger.setLevel(Trigger.Level.LEVEL2);
-                theTrigger.setTriggerValue( theTrigger.getSensor().getLevel2() );              
         }
     }
     
