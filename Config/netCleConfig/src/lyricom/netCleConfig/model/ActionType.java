@@ -36,7 +36,6 @@ package lyricom.netCleConfig.model;
 public enum ActionType {
     NONE(0),
     RELAY_A(1),
-    RELAY_B(2),
     BT_KEYBOARD(3),
     BT_SPECIAL(3),
     BT_MOUSE(9),

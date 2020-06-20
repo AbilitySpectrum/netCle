@@ -47,7 +47,7 @@ extern brkPoints BreakPoints;
 
 // === Protocol Values === //
 // -- Commands and Block Headers -- //
-#define VERSION         "1.02"
+#define VERSION         "1.04b"
 #define REPORT_MODE       'Q'
 #define RUN_SENSACT       'R'
 #define START_OF_SENSOR_DATA 'S'
@@ -99,13 +99,12 @@ extern brkPoints BreakPoints;
 // === Action Pins === //
 #define SENSACT_IR_OUT  9
 #define SENSACT_BUZZER  10
-#define SENSACT_RELAY_1 11
-#define SENSACT_RELAY_2 12
+#define SENSACT_RELAY 11
 
 // ==== Some Limits === //
 #define MAX_TRIGGERS 40         // Maximum number of triggers allowed - 15 bytes each.
 #define MAX_ACTIONS 10            // Maximum number of actions allowed per trigger check - 5 bytes each.
 #define MAX_SENSORS 8            // 2 bytes each
-#define MAX_ACTORS  10           // 2 bytes each
+#define MAX_ACTORS  9           // 2 bytes each
 
 #endif

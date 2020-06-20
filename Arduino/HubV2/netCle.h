@@ -55,11 +55,9 @@ extern brkPoints BreakPoints;
 
 // === Protocol Values === //
 // -- Commands and Block Headers -- //
-#ifdef HUB20
-#define VERSION         "2.00b"
-#else
-#define VERSION         "1.03b"
-#endif
+
+#define VERSION         "2.04b"
+
 #define REPORT_MODE       'Q'
 #define RUN_SENSACT       'R'
 #define START_OF_SENSOR_DATA 'S'
@@ -98,11 +96,8 @@ extern brkPoints BreakPoints;
 // === LED Values === //
 #define LED_RED    5
 #define LED_GREEN  6
-#ifdef HUB20
-#define LED_BLUE   4
-#else
-#define LED_BLUE   7
-#endif
+#define LED_BLUE   4  // Different for Hub 2.0
+
 
 // === Sensor Pins === //
 #define SENSACT_IN1A A0
@@ -115,13 +110,7 @@ extern brkPoints BreakPoints;
 // === Action Pins === //
 #define SENSACT_IR_OUT  9
 #define SENSACT_BUZZER  10
-#ifdef HUB20
-#define SENSACT_RELAY_1 12
-#define SENSACT_RELAY_2 8
-#else
-#define SENSACT_RELAY_1 11
-#define SENSACT_RELAY_2 12
-#endif
+#define SENSACT_RELAY 12
 
 // ==== Some Limits === //
 #ifdef SOFT_SERIAL
@@ -131,6 +120,6 @@ extern brkPoints BreakPoints;
 #endif
 #define MAX_ACTIONS 10            // Maximum number of actions allowed per trigger check - 5 bytes each.
 #define MAX_SENSORS 8            // 2 bytes each
-#define MAX_ACTORS  10           // 2 bytes each
+#define MAX_ACTORS  9           // 2 bytes each
 
 #endif

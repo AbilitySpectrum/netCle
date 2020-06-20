@@ -217,7 +217,6 @@ public class Model {
         
         actionList.add(new SaAction(ActionType.NONE,    0, ActionUI.NONE, null));
         actionList.add(new SaAction(ActionType.RELAY_A, 0, ActionUI.RELAY_OPTION, null));            
-        actionList.add(new SaAction(ActionType.RELAY_B, 0, ActionUI.RELAY_OPTION, null));
         
         actionList.add(new SaAction(ActionType.BT_KEYBOARD, 65, ActionUI.KEY_OPTION, (p) -> p >= 32));
         actionList.add(new SaAction(ActionType.BT_SPECIAL,  10, ActionUI.BT_SPECIAL, (p) -> p <  32));
