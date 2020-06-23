@@ -107,18 +107,18 @@ public abstract class Connection implements SerialCallback {
             // A tedious conversion to version number.
             // 'A.B' becomes A * 100 + B.
             // There is nothing here to verify the version number format.
+            int majorNum = 0;
             int versionNum = 0;
             for (int i=0; i<sub.length; i++) {
                 if (sub[i] >= (byte) '0' && sub[i] <= (byte) '9') {
                     versionNum = versionNum * 10 + (sub[i] - (byte) '0');
                 } else if (sub[i] == (byte) '.') {
                     // Save major version number.
-                    versionID = versionNum * 100;
+                    majorNum = versionNum;
                     versionNum = 0;
                 }
-                // Add on minor version number
-                versionID += versionNum;
             }
+            versionID = majorNum * 100 + versionNum;
             
             if (versionSemaphore != null) {
                 versionSemaphore.release();
