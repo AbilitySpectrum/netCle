@@ -114,7 +114,7 @@ class Actors {
 class Relay: public Actor {
   private:
     int pin;
-    long actionStartTime;
+    unsigned int actionStartTime;
   
   public:
     Relay(int i, int p) {
@@ -271,16 +271,32 @@ class SerialSend: public KeyboardControl {
     virtual void kc_write(char character);
 };
 
+#define LB_SET 0
+#define LB_ADD 0x01
+#define LB_REMOVE 0x02
+#define LB_PULSE 0x03
+
 class LightBox: public Actor {
+  private:
+    byte lb_state;
+    unsigned int pulseStart;
+    byte lb_pulse;
+
+    void setLight();
   public:
     LightBox(int i) {
       id = i;
+      lb_state = 0;
+      lb_pulse = 0;
+      pulseStart = 0;
     }
     void init() {}
     void doAction(long param);
     void reset() {
       doAction(0);  // Turn off all lights.
+      lb_pulse = pulseStart = 0;
     }
+    void checkAction();
 };
 
 /* LCD Display not in use

@@ -487,6 +487,22 @@ public class ActionUI {
     }
     
     ValueLabelPair[] LightBoxOptions = {
+        new ValueLabelPair(  1, String.format(RES.getString("LB_LIGHT_OLD"), 1)),
+        new ValueLabelPair(  2, String.format(RES.getString("LB_LIGHT_OLD"), 2)),
+        new ValueLabelPair(  4, String.format(RES.getString("LB_LIGHT_OLD"), 3)),
+        new ValueLabelPair(  8, String.format(RES.getString("LB_LIGHT_OLD"), 4)),
+        new ValueLabelPair( 16, String.format(RES.getString("LB_LIGHT_OLD"), 5)),
+        new ValueLabelPair( 32, String.format(RES.getString("LB_LIGHT_OLD"), 6)),
+        new ValueLabelPair( 64, String.format(RES.getString("LB_LIGHT_OLD"), 7)),
+        new ValueLabelPair(128, String.format(RES.getString("LB_LIGHT_OLD"), 8)),
+        new ValueLabelPair(255, RES.getString("LB_ALL_ON")),
+        new ValueLabelPair(0, RES.getString("LB_OFF"))
+    };
+   
+    ValueLabelPair[] ExtendedLightBoxOptions = {
+        new ValueLabelPair(0, RES.getString("LB_OFF")),    
+        new ValueLabelPair(255, RES.getString("LB_ALL_ON")),
+        
         new ValueLabelPair(  1, String.format(RES.getString("LB_LIGHT"), 1)),
         new ValueLabelPair(  2, String.format(RES.getString("LB_LIGHT"), 2)),
         new ValueLabelPair(  4, String.format(RES.getString("LB_LIGHT"), 3)),
@@ -495,15 +511,49 @@ public class ActionUI {
         new ValueLabelPair( 32, String.format(RES.getString("LB_LIGHT"), 6)),
         new ValueLabelPair( 64, String.format(RES.getString("LB_LIGHT"), 7)),
         new ValueLabelPair(128, String.format(RES.getString("LB_LIGHT"), 8)),
-        new ValueLabelPair(255, RES.getString("LB_ALL_ON")),
-        new ValueLabelPair(0, RES.getString("LB_OFF"))
+
+        new ValueLabelPair(  1 + Model.LBO_ADD, String.format(RES.getString("LB_ADD"), 1)),
+        new ValueLabelPair(  2 + Model.LBO_ADD, String.format(RES.getString("LB_ADD"), 2)),
+        new ValueLabelPair(  4 + Model.LBO_ADD, String.format(RES.getString("LB_ADD"), 3)),
+        new ValueLabelPair(  8 + Model.LBO_ADD, String.format(RES.getString("LB_ADD"), 4)),
+        new ValueLabelPair( 16 + Model.LBO_ADD, String.format(RES.getString("LB_ADD"), 5)),
+        new ValueLabelPair( 32 + Model.LBO_ADD, String.format(RES.getString("LB_ADD"), 6)),
+        new ValueLabelPair( 64 + Model.LBO_ADD, String.format(RES.getString("LB_ADD"), 7)),
+        new ValueLabelPair(128 + Model.LBO_ADD, String.format(RES.getString("LB_ADD"), 8)),
+
+        new ValueLabelPair(  1 + Model.LBO_REMOVE, String.format(RES.getString("LB_REMOVE"), 1)),
+        new ValueLabelPair(  2 + Model.LBO_REMOVE, String.format(RES.getString("LB_REMOVE"), 2)),
+        new ValueLabelPair(  4 + Model.LBO_REMOVE, String.format(RES.getString("LB_REMOVE"), 3)),
+        new ValueLabelPair(  8 + Model.LBO_REMOVE, String.format(RES.getString("LB_REMOVE"), 4)),
+        new ValueLabelPair( 16 + Model.LBO_REMOVE, String.format(RES.getString("LB_REMOVE"), 5)),
+        new ValueLabelPair( 32 + Model.LBO_REMOVE, String.format(RES.getString("LB_REMOVE"), 6)),
+        new ValueLabelPair( 64 + Model.LBO_REMOVE, String.format(RES.getString("LB_REMOVE"), 7)),
+        new ValueLabelPair(128 + Model.LBO_REMOVE, String.format(RES.getString("LB_REMOVE"), 8)),
+
+        new ValueLabelPair(  1 + Model.LBO_PULSE, String.format(RES.getString("LB_PULSE"), 1)),
+        new ValueLabelPair(  2 + Model.LBO_PULSE, String.format(RES.getString("LB_PULSE"), 2)),
+        new ValueLabelPair(  4 + Model.LBO_PULSE, String.format(RES.getString("LB_PULSE"), 3)),
+        new ValueLabelPair(  8 + Model.LBO_PULSE, String.format(RES.getString("LB_PULSE"), 4)),
+        new ValueLabelPair( 16 + Model.LBO_PULSE, String.format(RES.getString("LB_PULSE"), 5)),
+        new ValueLabelPair( 32 + Model.LBO_PULSE, String.format(RES.getString("LB_PULSE"), 6)),
+        new ValueLabelPair( 64 + Model.LBO_PULSE, String.format(RES.getString("LB_PULSE"), 7)),
+        new ValueLabelPair(128 + Model.LBO_PULSE, String.format(RES.getString("LB_PULSE"), 8))
     };
-    
+            
     public static class LightBoxUI extends ActionUI {
         @Override
         public W_Base createUI(Trigger t) {
-            return new WT_ValueLabelOption(
+            int versionID = Model.getVersionID();
+            if (  (versionID >= 104 && versionID < 200) 
+               || (versionID >= 204) ) {
+                // Extended Light box options for HubV1 and HubV2 with
+                // minor numbers of 4 or greater.
+                return new WT_ValueLabelOption(
+                 RES.getString("ACT_VALUE_LABEL"), t, ExtendedLightBoxOptions); 
+            } else {
+                return new WT_ValueLabelOption(
                  RES.getString("ACT_VALUE_LABEL"), t, LightBoxOptions); 
+            }
         }
     }
 

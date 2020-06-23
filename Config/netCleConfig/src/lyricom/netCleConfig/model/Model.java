@@ -37,7 +37,7 @@ public class Model {
     private static final ResourceBundle RES = ResourceBundle.getBundle("strings");
     
     // Version Number
-    public static final String CONFIG_VERSION = "1.02b";
+    public static final String CONFIG_VERSION = "1.04b";
     
     // Commands sent to sensact
     public static final Byte CMD_VERSION        = (byte) 'V';
@@ -114,6 +114,12 @@ public class Model {
     static public final int RELAY_PULSE = 0;
     static public final int RELAY_ON = 1;
     static public final int RELAY_OFF = 2;
+    
+    // Light box action options
+    static public final int LBO_ONLY = 0;
+    static public final int LBO_ADD = 0x0100;
+    static public final int LBO_REMOVE = 0x0200;
+    static public final int LBO_PULSE = 0x0300;
     
     // Press and Release values - added to key values 
     static public final int KEY_PRESS   = 0xff000000;

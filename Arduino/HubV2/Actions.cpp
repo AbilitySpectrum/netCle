@@ -149,7 +149,7 @@ void Relay::init() {
 void Relay::doAction(long param) {
   switch(param) {
     case RELAY_PULSE:
-      actionStartTime = millis();
+      actionStartTime = millis() & 0xffff;
       digitalWrite(pin, HIGH);
       break;
     case RELAY_ON:
@@ -163,7 +163,7 @@ void Relay::doAction(long param) {
 
 void Relay::checkAction() {
   if (actionStartTime) {
-    if ( (millis() - actionStartTime) > PULSE_WIDTH) {
+    if ( timeDiff ((millis() & 0xffff), actionStartTime) > RELAY_PULSE_WIDTH) {
       digitalWrite(pin, LOW);
       actionStartTime = 0;
     }
@@ -705,7 +705,28 @@ void SerialSend::kc_write(char ch) {
 
 #define MCP23008_ADDRESS 0x20
 void LightBox::doAction(long param) {
+  byte action = (param & 0xff00) >> 8;
   byte val = param &0xff;
+
+  if (action == LB_SET) {
+    lb_state = val;
+  } else if (action == LB_ADD) {
+    lb_state |= val;
+  } else if (action == LB_REMOVE) {
+    lb_state &= ~val;
+  } else if (action == LB_PULSE) {
+    pulseStart = millis() & 0xffff;
+    if (lb_pulse) {
+      // Turn off any already-active pulse
+      lb_state &= ~lb_pulse;
+    }
+    lb_pulse = val;
+    lb_state |= lb_pulse;
+  }
+  setLight();
+}
+
+void LightBox::setLight() {
   Wire.begin();
   Wire.beginTransmission(MCP23008_ADDRESS);
   Wire.write((byte)0);
@@ -714,8 +735,18 @@ void LightBox::doAction(long param) {
 
   Wire.beginTransmission(MCP23008_ADDRESS);
   Wire.write((byte)9);  // GPIO Address
-  Wire.write(val);
+  Wire.write(lb_state);
   Wire.endTransmission();  
+}
+
+void LightBox::checkAction() {
+  if (lb_pulse) {
+    if ( timeDiff(millis() & 0xffff, pulseStart) > LIGHT_BOX_PULSE_WIDTH) {
+      lb_state &= ~lb_pulse;
+      lb_pulse = pulseStart = 0;
+      setLight();
+    }
+  }
 }
 
 /* LCD Display not in use.

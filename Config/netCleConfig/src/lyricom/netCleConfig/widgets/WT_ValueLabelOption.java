@@ -76,7 +76,9 @@ public class WT_ValueLabelOption extends W_Combo {
     
     @Override
     public void update() {
-        int param = theTrigger.getActionParam() & 0xff;
+        // Note: most options are just 8 bits long (& 0xff would do)
+        // but for the lightbox they are 16 bits long.
+        int param = theTrigger.getActionParam() & 0xffff;
         for(ValueLabelPair p: actions) {
             if (p.getValue() == param) {
                 theBox.setSelectedItem(p);
