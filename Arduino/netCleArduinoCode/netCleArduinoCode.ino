@@ -69,7 +69,7 @@ void setup() {
 
   Serial.begin(9600);
 #ifdef SOFT_SERIAL
-  softSerial.begin(9600);
+  softSerial.begin(2400);
   currentInput = &serialInput;
   currentOutput = &serialOutput;
 #endif
