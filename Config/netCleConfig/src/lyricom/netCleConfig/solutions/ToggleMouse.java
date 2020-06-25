@@ -19,7 +19,6 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package lyricom.netCleConfig.solutions;
 
-import javax.swing.JOptionPane;
 import lyricom.netCleConfig.model.ActionType;
 import lyricom.netCleConfig.model.Model;
 import lyricom.netCleConfig.model.SaAction;

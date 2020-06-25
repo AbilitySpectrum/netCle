@@ -340,6 +340,7 @@ public class ActionUI {
         new ValueLabelPair( 0x7D, RES.getString("ACT_CLOSED_CURLY_BRACKET")),
         
         new ValueLabelPair( 0x20, RES.getString("ACT_KEY_SPACE")),
+        // Up- and down- arrow values are also used in Solutions.JoystickMouseSolution
         new ValueLabelPair( 0xDA, RES.getString("ACT_KEY_UP_ARROW") ),
         new ValueLabelPair( 0xD9, RES.getString("ACT_KEY_DOWN_ARROW") ),
         new ValueLabelPair( 0xD8, RES.getString("ACT_KEY_LEFT_ARROW") ),
@@ -402,6 +403,7 @@ public class ActionUI {
     
     // BT special key values - defined by BT standard.
     static final ValueLabelPair BT_Keys[] = {
+        // Up- and down- arrow values are also used in Solutions.JoystickMouseSolution
         new ValueLabelPair( 14, RES.getString("ACT_KEY_UP_ARROW") ),
         new ValueLabelPair( 12, RES.getString("ACT_KEY_DOWN_ARROW") ),
         new ValueLabelPair( 11, RES.getString("ACT_KEY_LEFT_ARROW") ),

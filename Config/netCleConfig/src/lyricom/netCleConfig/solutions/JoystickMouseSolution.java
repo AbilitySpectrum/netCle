@@ -20,6 +20,7 @@
 package lyricom.netCleConfig.solutions;
 
 import javax.swing.JOptionPane;
+import lyricom.netCleConfig.model.ActionType;
 import lyricom.netCleConfig.model.Model;
 import lyricom.netCleConfig.model.SaAction;
 import lyricom.netCleConfig.model.SensorGroup;
@@ -38,6 +39,9 @@ import lyricom.netCleConfig.ui.SensorPanel;
 //)
 
 public class JoystickMouseSolution extends SolutionBase {    
+    private static final String YES = SRes.getStr("TMW_YES");
+    private static final String NO = SRes.getStr("TMW_NO");
+    private static final String[] YES_NO = {YES, NO};
     
     public JoystickMouseSolution( SolutionsUI ui, SensorGroup sg ) {
         super(ui, sg);
@@ -138,6 +142,30 @@ public class JoystickMouseSolution extends SolutionBase {
         if (action == null) {
             return false;
         }
+        SaAction none = Model.getActionByType(ActionType.NONE);
+        
+        DetailsDlg.showDlg(SRes.getStr("JW_TAP_OPTION_EXPLAINED"));
+        String lrClick = theUI.getOption(SRes.getStr("JW_LR_OPTION"), YES_NO);
+        if (cancelling) return false;
+        
+        String upDown = theUI.getOption(SRes.getStr("JW_UD_OPTION"), YES_NO);
+        if (cancelling) return false;
+        
+        DetailsDlg.showDlg(SRes.getStr("JW_DELAY_OPTION_EXPLAINED"));
+        
+        int delay = 0;
+        SaAction resetAction = none;
+        int resetOption = 0;
+        if (lrClick == YES || upDown == YES) {
+            delay = theUI.getDelay(SRes.getStr("JW_DELAY"), 500);
+            if (delay > 0) {
+                String resetSound = theUI.getOption(SRes.getStr("JW_RESET_SOUND"), YES_NO);
+                if (resetSound == YES) {
+                    resetAction = Model.getActionByType(ActionType.BUZZER);
+                    resetOption = (200 << 16) | 50;
+                }
+            }
+        }
         
         upLocation.level = Trigger.Level.LEVEL1;
         downLocation.level = Trigger.Level.LEVEL2;
@@ -148,10 +176,59 @@ public class JoystickMouseSolution extends SolutionBase {
         trigs.deleteTriggerSet(upLocation.sensor);
         trigs.deleteTriggerSet(leftLocation.sensor);
         
-        makeTrigger(1, upLocation,    0, action, Model.MOUSE_UP,    1);
-        makeTrigger(1, downLocation,  0, action, Model.MOUSE_DOWN,  1);
-        makeTrigger(1, leftLocation,  0, action, Model.MOUSE_LEFT,  1);
-        makeTrigger(1, rightLocation, 0, action, Model.MOUSE_RIGHT, 1);
+        if (upDown == YES) {
+            Location notUp = upLocation.getReverse();
+            Location notDown = downLocation.getReverse();
+            SaAction keyboard;
+            int upKey;
+            int downKey;
+            // Hard-wired values for the arrow keys are taken from ui.ActionUI
+            if (action == Model.getActionByType(ActionType.HID_MOUSE)) {
+                keyboard = Model.getActionByType(ActionType.HID_SPECIAL);
+                upKey = 0xDA;
+                downKey = 0xD9;
+            } else {
+                keyboard = Model.getActionByType(ActionType.BT_SPECIAL);
+                upKey = 14;
+                downKey =12;
+            }
+            
+            makeTrigger(1, upLocation,  0,   none, 0,   2);
+            makeTrigger(2, notUp,       0, keyboard, upKey, 1);
+            makeTrigger(2, upLocation, 300,  none, 0,   3);
+            makeTrigger(3, upLocation,  0, action, Model.MOUSE_UP,  3);
+            makeTrigger(3, notUp,   delay, resetAction, resetOption,    1);
+            
+            makeTrigger(1, downLocation, 0,   none, 0,   5);
+            makeTrigger(5, notDown,      0, keyboard, downKey, 1);
+            makeTrigger(5, downLocation,300,  none, 0,   6);
+            makeTrigger(6, downLocation, 0, action, Model.MOUSE_DOWN,  6);
+            makeTrigger(6, notDown,  delay, resetAction, resetOption,    1);
+            
+        } else {
+            makeTrigger(1, upLocation,    0, action, Model.MOUSE_UP,    1);
+            makeTrigger(1, downLocation,  0, action, Model.MOUSE_DOWN,  1);
+        }
+        
+        if (lrClick == YES) {
+            Location notLeft = leftLocation.getReverse();
+            Location notRight = rightLocation.getReverse();
+            
+            makeTrigger(1, leftLocation,  0,   none, 0,   2);
+            makeTrigger(2, notLeft,       0, action, Model.MOUSE_CLICK, 1);
+            makeTrigger(2, leftLocation, 300,  none, 0,   3);
+            makeTrigger(3, leftLocation,  0, action, Model.MOUSE_LEFT,  3);
+            makeTrigger(3, notLeft,   delay, resetAction, resetOption,    1);
+            
+            makeTrigger(1, rightLocation, 0,   none, 0,   5);
+            makeTrigger(5, notRight,      0, action, Model.MOUSE_RIGHT_CLICK, 1);
+            makeTrigger(5, rightLocation,300,  none, 0,   6);
+            makeTrigger(6, rightLocation, 0, action, Model.MOUSE_RIGHT,  6);
+            makeTrigger(6, notRight,  delay, resetAction, resetOption,    1);
+        } else {
+            makeTrigger(1, leftLocation,  0, action, Model.MOUSE_LEFT,  1);
+            makeTrigger(1, rightLocation, 0, action, Model.MOUSE_RIGHT, 1);
+        }
 
         return true;
     }
