@@ -340,9 +340,16 @@ public class MainFrame extends JFrame implements TriggerCallback {
     
     private void doImport() {
         JFileChooser fileChooser = new JFileChooser();
+        AppProperties props = AppProperties.getInstance();
+        String lastDir = props.getProperty("last.import");
+        if (lastDir != null) {
+            fileChooser.setCurrentDirectory(new File(lastDir));
+        }
+        
         int result = fileChooser.showOpenDialog(MainFrame.this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File input = fileChooser.getSelectedFile();
+            props.setProperty("last.import", input.getParent().toString());
             try {
                 FileInputStream fis = new FileInputStream(input);
                 List<Byte> bytes = new ArrayList<>();
@@ -383,9 +390,16 @@ public class MainFrame extends JFrame implements TriggerCallback {
         if (filter == null) return;        
         
         JFileChooser fileChooser = new JFileChooser();
+        AppProperties props = AppProperties.getInstance();
+        String lastDir = props.getProperty("last.import");
+        if (lastDir != null) {
+            fileChooser.setCurrentDirectory(new File(lastDir));
+        }
+        
         int result = fileChooser.showSaveDialog(MainFrame.this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File output = fileChooser.getSelectedFile();
+            props.setProperty("last.import", output.getParent().toString());
             // Force the extension to be .txt unless an extension was already 
             // provided.
             String fileName = output.getAbsolutePath();           
