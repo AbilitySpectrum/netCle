@@ -29,6 +29,7 @@ import javax.swing.SwingUtilities;
 import lyricom.netCleConfig.comms.Connection;
 import lyricom.netCleConfig.model.Model;
 import lyricom.netCleConfig.solutions.SolutionRegister;
+import lyricom.netCleConfig.ui.AppProperties;
 
 /**
  *
@@ -47,6 +48,8 @@ public class Main {
         
         String address = null;
         int port = 0;
+        
+        AppProperties props = AppProperties.getInstance();
         
         if (args.length >= 3) {
             if (!args[0].equals("-c")) {
