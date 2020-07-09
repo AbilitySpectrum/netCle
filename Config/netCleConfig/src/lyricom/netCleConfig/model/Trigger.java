@@ -109,6 +109,11 @@ public class Trigger {
         }
     }
     
+    // Used for move and swap - move the sensor without changing anything.
+    public void assignSensor(Sensor s) {
+        sensor = s;
+    }
+    
     public void toStream(OutStream os) throws DataFormatException {
         os.putChar((byte)'\n');
         if (Model.getVersionID() < 102) { // use old format
