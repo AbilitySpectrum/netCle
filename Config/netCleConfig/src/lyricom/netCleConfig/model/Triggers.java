@@ -109,6 +109,41 @@ public class Triggers {
         return false;
     }
     
+    public void moveTriggers(Sensor from, Sensor to) {
+        DATA_IN_SYNC = false;   
+        to.setLevels(from.getLevel1(), from.getLevel2());
+        
+        List<Trigger> list = new ArrayList<>();
+        for(Trigger t: triggers) {
+            if (t.getSensor() == from) {
+                t.assignSensor(to);
+                list.add(t);
+            } else if (t.getSensor() != to) {
+                list.add(t);
+            } // else == to and is not added to list.
+        }
+        triggers = list;
+        sizeChanged();
+    }
+    
+    public void swapTriggers(Sensor from, Sensor to) {
+        DATA_IN_SYNC = false;        
+        int froml1, froml2;
+        froml1 = from.getLevel1();
+        froml2 = from.getLevel2();
+        from.setLevels(to.getLevel1(), to.getLevel2());
+        to.setLevels(froml1, froml2);
+
+        // Then swap triggers
+        for(Trigger t: triggers) {
+            if (t.getSensor() == from) {
+                t.assignSensor(to);
+            } else if (t.getSensor() == to) {
+                t.assignSensor(from);
+            }
+        }
+    }
+    
     public void deleteAll() {
         DATA_IN_SYNC = false;
         triggers = new ArrayList<>();

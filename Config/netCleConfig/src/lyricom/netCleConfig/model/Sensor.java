@@ -29,6 +29,7 @@ public class Sensor implements Comparable {
     private final int minval;
     private final int maxval;
     private final boolean continuous;
+    private final int moveGroup;
     private int currentValue;
     private int level1;
     private int level2;
@@ -36,12 +37,13 @@ public class Sensor implements Comparable {
     
     private SensorSignalLevelChangeListener listener;
     
-    public Sensor(int id, String name, int min, int max, boolean cont, SensorGroup g) {
+    public Sensor(int id, String name, int min, int max, boolean cont, int move, SensorGroup g) {
         this.id = id;
         this.name = name;
         this.minval = min;
         this.maxval = max;
         this.continuous = cont;
+        this.moveGroup = move;
         this.group = g;
         currentValue = 0;
         if (cont) {
@@ -75,6 +77,10 @@ public class Sensor implements Comparable {
 
     public boolean isContinuous() {
         return continuous;
+    }
+    
+    public int getMoveGroup() {
+        return moveGroup;
     }
 
     public int getCurrentValue() {
