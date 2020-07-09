@@ -111,6 +111,7 @@ public class Triggers {
     
     public void moveTriggers(Sensor from, Sensor to) {
         DATA_IN_SYNC = false;   
+        // Set levels
         to.setLevels(from.getLevel1(), from.getLevel2());
         
         List<Trigger> list = new ArrayList<>();
@@ -128,6 +129,7 @@ public class Triggers {
     
     public void swapTriggers(Sensor from, Sensor to) {
         DATA_IN_SYNC = false;        
+        // Swap thresholds
         int froml1, froml2;
         froml1 = from.getLevel1();
         froml2 = from.getLevel2();

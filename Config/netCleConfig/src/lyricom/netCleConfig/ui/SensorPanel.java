@@ -123,6 +123,27 @@ public class SensorPanel extends JPanel {
             revalidate();
         });
         
+        if (theSensor.getMoveGroup() > 0) {
+            JButton moveTriggers = new JButton(RES.getString("BTN_MOVE_TRIGGERS"));
+            p.add(moveTriggers);
+            moveTriggers.addActionListener(e -> {
+                MoveTriggersDlg dlg = new MoveTriggersDlg(theSensor);
+                int action = dlg.getAction();
+                switch (action) {
+                    case MoveTriggersDlg.DO_MOVE:
+                        Triggers.getInstance().moveTriggers(theSensor, dlg.getTarget());
+                        SensorPanel.reloadTriggers();
+                        break;
+                    case MoveTriggersDlg.DO_SWAP:
+                        Triggers.getInstance().swapTriggers(theSensor, dlg.getTarget());
+                        SensorPanel.reloadTriggers();
+                        break;
+                    case MoveTriggersDlg.DO_CANCEL:
+                        break;
+                }
+            });
+        }
+        
         p.add(Box.createHorizontalStrut(15));
         
         JButton deleteAll = new JButton(RES.getString("BTN_DELETE_ALL"));
