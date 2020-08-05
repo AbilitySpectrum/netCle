@@ -23,7 +23,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
+ * If overwrite is set then the incoming triggers will overwrite all
+ * of the existing triggers.
+ * 
+ * Otherwise, existing triggers with sensors in the deleteList will
+ * have their triggers deleted and then new triggers will be appended.
+ * 
+ * Triggers that are in the tmpImport that are not selected by the user
+ * are deleted from tmpImport in the ImportDlg code.
+ * 
+ * Note 'filter' is a misleading name.  Most of the filtering is 
+ * done by code in the ImportDlg.  This just holds the replacement rules.
+ * 
  * @author Andrew
  */
 public class ImportFilter {
