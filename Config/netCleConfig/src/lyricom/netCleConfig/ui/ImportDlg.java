@@ -34,17 +34,21 @@ import java.util.Set;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import lyricom.netCleConfig.model.ImportFilter;
+import lyricom.netCleConfig.model.Model;
 import lyricom.netCleConfig.model.Sensor;
 import lyricom.netCleConfig.model.TmpImport;
+import lyricom.netCleConfig.model.Trigger;
 import lyricom.netCleConfig.model.Triggers;
 
 /**
@@ -62,7 +66,7 @@ public class ImportDlg extends JDialog {
         thisDlg = this;
 
         Box theBox = Box.createVerticalBox();
-        theBox.setBorder(new EmptyBorder(10,10,10,10));
+        theBox.setBorder(new EmptyBorder(10,25,10,25));
         theBox.add(Box.createVerticalStrut(5));
         
         JLabel title = new JLabel(RES.getString("IMPORT_TITLE"));
@@ -71,18 +75,20 @@ public class ImportDlg extends JDialog {
         theBox.add(title);
         theBox.add(Box.createVerticalStrut(5));
         
-        JTextArea ta = new JTextArea(
-                RES.getString("IMPORT_MAIN_QUESTION")
+        JPanel ta = getTextArea(
+                RES.getString("IMPORT_MAIN_QUESTION"),
+                theBox.getBackground()
         );
-        ta.setEditable(false);
-        ta.setBackground(theBox.getBackground());
-        ta.setFont(Utils.STD_FONT);
-        ta.setAlignmentX(CENTER_ALIGNMENT);
         theBox.add(ta);
         theBox.add(Box.createVerticalStrut(5));
         
         theBox.add(everythingBtn());
-        theBox.add(Box.createVerticalStrut(5));       
+        theBox.add(Box.createVerticalStrut(3));     
+        
+        ta = getTextArea(RES.getString("IMPORT_OR"), theBox.getBackground());
+        theBox.add(ta);
+        theBox.add(Box.createVerticalStrut(5));  
+        
         theBox.add(selection(tmp));
         theBox.add(Box.createVerticalStrut(5));       
         theBox.add(cancelBtn());
@@ -100,6 +106,18 @@ public class ImportDlg extends JDialog {
     
     ImportFilter getFilter() {
         return filter;
+    }
+    
+    JPanel getTextArea(String txt, Color backgrnd) {
+        JTextArea ta = new JTextArea(txt);
+
+        ta.setEditable(false);
+        ta.setBackground(backgrnd);
+        ta.setFont(Utils.STD_FONT);
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        p.setAlignmentX(CENTER_ALIGNMENT);
+        p.add(ta);
+        return p;
     }
     
     JComponent everythingBtn() {
@@ -132,10 +150,12 @@ public class ImportDlg extends JDialog {
     private class CheckSensor {
         final JCheckBox box;
         final Sensor sensor;
+        final JComboBox combo;
         
-        CheckSensor(JCheckBox b, Sensor s) {
+        CheckSensor(JCheckBox b, Sensor s, JComboBox c) {
             box = b;
             sensor = s;
+            combo = c;
         }
     };
     
@@ -151,17 +171,82 @@ public class ImportDlg extends JDialog {
         box.setBorder(new LineBorder(Color.BLACK));
         box.setAlignmentX(CENTER_ALIGNMENT);
         
+        // Set up the boxes.
+        // A box for the checklist and combolist boxes.
+        Box listBox = Box.createHorizontalBox();
+        listBox.setAlignmentX(CENTER_ALIGNMENT);
+        // A box for the check list.
+        Box checkListBox = Box.createVerticalBox();
+        checkListBox.setAlignmentY(TOP_ALIGNMENT);
+        // A box for the combos
+        Box comboListBox = Box.createVerticalBox();
+        comboListBox.setAlignmentY(TOP_ALIGNMENT);
+        listBox.add(checkListBox);
+        // Spacing between checklist and combolist boxes.
+        listBox.add(Box.createHorizontalStrut(20));
+        listBox.add(comboListBox);
+        box.add(listBox);
+        
+        // Get checkbox and combo sizes
+        // and compute padding needed for alinement.
+        JCheckBox sizeTestCb = new JCheckBox("foo");
+        JComboBox sizeTestCombo = new JComboBox();
+        sizeTestCombo.addItem("foo");
+        Dimension cbdim = sizeTestCb.getPreferredSize();
+        Dimension combodim = sizeTestCombo.getPreferredSize();
+        int cbpadding, comboPadding, nullComboHeight;
+        int SPACING = 4;
+        if (cbdim.height < combodim.height) {
+            cbpadding = combodim.height - cbdim.height + SPACING;
+            comboPadding = SPACING;
+            nullComboHeight = combodim.height + SPACING;
+        } else {
+            cbpadding = SPACING;
+            comboPadding = cbdim.height - combodim.height + SPACING;
+            nullComboHeight = cbdim.height + SPACING;
+        }
+        
+        JLabel lbl = new JLabel("  " + RES.getString("IMPORT_FROM"));
+        lbl.setAlignmentX(LEFT_ALIGNMENT);
+        checkListBox.add(lbl);
+        checkListBox.add(Box.createVerticalStrut(4));
+        
+        lbl = new JLabel("  " + RES.getString("IMPORT_TO"));
+        lbl.setAlignmentX(LEFT_ALIGNMENT);
+        comboListBox.add(lbl);
+        comboListBox.add(Box.createVerticalStrut(4));
+        
         for(Sensor s: sensors) {
             JCheckBox cb = new JCheckBox(s.getName());
+            JComboBox combo = null;
             cb.setAlignmentY(LEFT_ALIGNMENT);
-            checkList.add(new CheckSensor(cb, s));
-            box.add(cb);
+            checkListBox.add(cb);
+            if (cbpadding != 0) {
+                checkListBox.add(Box.createVerticalStrut(cbpadding));
+            }
+            if (s.getMoveGroup() == 0) {
+                comboListBox.add(Box.createVerticalStrut(nullComboHeight));
+            } else {
+                combo = new JComboBox();
+                combo.setAlignmentX(LEFT_ALIGNMENT);
+                comboListBox.add(combo);
+                List<Sensor> moveGroup = Model.getSensorMoveGroup(s.getMoveGroup());
+                for(Sensor mg: moveGroup) {
+                    combo.addItem(mg);
+                }
+                combo.setSelectedItem(s);
+                if (comboPadding != 0) {
+                    comboListBox.add(Box.createVerticalStrut(comboPadding));
+                }
+            }
+            checkList.add(new CheckSensor(cb, s, combo));
         }
         
         if (tmp.getMouseSpeeds() != null) {
             mouseSpeedBox = new JCheckBox(RES.getString("EX_MOUSE_SPEED"));
             mouseSpeedBox.setAlignmentY(LEFT_ALIGNMENT);
-            box.add(mouseSpeedBox);
+            checkListBox.add(mouseSpeedBox);
+            comboListBox.add(Box.createVerticalStrut(nullComboHeight));
         }
         
         box.add(selectedItemsBtn(tmp));
@@ -172,8 +257,15 @@ public class ImportDlg extends JDialog {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton btn = new JButton(RES.getString("IMPORT_MERGE"));
         btn.addActionListener(e -> {
+            if (! inputToItemsAreUnique()) {
+                return;
+            }
+            if (! overwriteCheck()) {
+                return;
+            }
+            // OK.  We have all required information.
+            
             // Remove the items the user does not want to import.
-            filter = new ImportFilter();
             for(CheckSensor cs: checkList) {
                 if (!cs.box.isSelected()) {
                     tmp.deleteTriggerSet(cs.sensor);
@@ -183,42 +275,79 @@ public class ImportDlg extends JDialog {
                 tmp.eraseMouseSpeeds();
             }
             
-            mergeCheck(tmp);
+            // Do target sensor mapping
+            for(Trigger t: tmp.getList()) {   // for each trigger ...
+                for(CheckSensor cs: checkList) { // find the matching input ...
+                    if(cs.sensor == t.getSensor()) { 
+                                   // and set sensor to the combo box selection.
+                        t.assignSensor((Sensor) cs.combo.getSelectedItem());
+                        break;
+                    }
+                }
+            }
+            
+            // Set the filter to delete all targets
+            // Note: This will addToDeleteList even when there is
+            // nothing to delete - who cares!?  This is a wart of
+            // the previous design.
+            filter = new ImportFilter();
+            for(Sensor s: tmp.getUsedSensors()) {
+                filter.addToDeleteList(s);
+            }
+            
             thisDlg.dispose();
         });
         
         p.add(btn);
-        p.setAlignmentX(LEFT_ALIGNMENT);
+        p.setAlignmentX(CENTER_ALIGNMENT);
         return p;
     }
-
-    private void mergeCheck(TmpImport tmp) {
-        Set<Sensor> mergeItems = tmp.getUsedSensors();
-        Set<Sensor> existingItems = Triggers.getInstance().getUsedSensors();
-        Set<Sensor> conflicts = new HashSet<>(mergeItems);
+    
+    private boolean inputToItemsAreUnique() {
+        Set<Sensor> targets = new HashSet<>();
         
-        conflicts.retainAll(existingItems);
-        
-        for(Sensor s: conflicts) {
-            mergeConflictDlg dlg = new mergeConflictDlg(this, s);
-            if (dlg.getOption() == null) {
-                filter = null;
-                return;
-            } else if (dlg.getOption() == MergeOption.USE_CONFIG) {
-                tmp.deleteTriggerSet(s);
-            } else {
-                filter.addToDeleteList(s);
+        for(CheckSensor cs: checkList) {
+            if (cs.box.isSelected()) {
+                Sensor target = (Sensor) cs.combo.getSelectedItem();
+                if (targets.contains(target)) {
+                    JOptionPane.showMessageDialog(this, 
+                        String.format(RES.getString("TARGET_NOT_UNIQUE"), target.toString()),
+                        "Import Error", JOptionPane.ERROR_MESSAGE
+                    );
+                    return false;
+                }
+                targets.add((Sensor)cs.combo.getSelectedItem());
             }
         }
+        return true;
+    }
+
+    private boolean overwriteCheck() {
+        Set<Sensor> existingItems = Triggers.getInstance().getUsedSensors();
+        
+        for(CheckSensor cs: checkList) {
+            if (cs.box.isSelected()) {
+                Sensor target = (Sensor) cs.combo.getSelectedItem();
+                if (existingItems.contains(target)) {
+                    mergeConflictDlg dlg = new mergeConflictDlg(this, target);
+                    if (dlg.getOption() == MergeOption.MODIFY_IMPORT) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
     
-    private enum MergeOption {USE_CONFIG, USE_IMPORT};
+    private enum MergeOption {OVERWRITE, MODIFY_IMPORT};
     
     private class mergeConflictDlg extends JDialog {
         MergeOption option = null;
+        mergeConflictDlg mergeDlg;
         
         mergeConflictDlg(JDialog parent, Sensor s) {
             super(parent, true);
+            mergeDlg = this;
             Box theBox = Box.createVerticalBox();
             theBox.setBorder(new EmptyBorder(10,10,10,10));
             theBox.add(Box.createVerticalStrut(5));
@@ -233,11 +362,9 @@ public class ImportDlg extends JDialog {
             theBox.add(ta);
             theBox.add(Box.createVerticalStrut(5));
                 
-            theBox.add(useConfigBtn());
+            theBox.add(overwriteButton());
             theBox.add(Box.createVerticalStrut(5));
-            theBox.add(useImportData());
-            theBox.add(Box.createVerticalStrut(5));
-            theBox.add(cancelBtn());
+            theBox.add(modifyButton());
             
             add(theBox);
             
@@ -253,12 +380,12 @@ public class ImportDlg extends JDialog {
         
         MergeOption getOption() { return option; }
         
-        JComponent useConfigBtn() {
+        JComponent overwriteButton() {
             JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            JButton btn = new JButton(RES.getString("MERGE_USE_EXISTING"));
+            JButton btn = new JButton(RES.getString("IMPORT_OVERWRITE"));
             btn.addActionListener(e -> {
-                option = MergeOption.USE_CONFIG;
-                thisDlg.dispose();
+                option = MergeOption.OVERWRITE;
+                mergeDlg.dispose();
             });
 
             p.add(btn);
@@ -266,25 +393,12 @@ public class ImportDlg extends JDialog {
             return p;
         }
         
-        JComponent useImportData() {
+        JComponent modifyButton() {
             JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            JButton btn = new JButton(RES.getString("MERGE_USE_IMPORT"));
+            JButton btn = new JButton(RES.getString("IMPORT_MODIFY"));
             btn.addActionListener(e -> {
-                option = MergeOption.USE_IMPORT;
-                thisDlg.dispose();
-            });
-
-            p.add(btn);
-            p.setAlignmentX(CENTER_ALIGNMENT);
-            return p;
-        }
-        
-        JComponent cancelBtn() {
-            JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            JButton btn = new JButton(RES.getString("BTN_CANCEL"));
-            btn.addActionListener(e -> {
-                option = null;
-                thisDlg.dispose();
+                option = MergeOption.MODIFY_IMPORT;
+                mergeDlg.dispose();
             });
 
             p.add(btn);

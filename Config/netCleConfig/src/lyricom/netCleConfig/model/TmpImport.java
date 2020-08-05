@@ -55,7 +55,7 @@ public class TmpImport {
         mouseSpeeds = null;
     }
     
-    List<Trigger> getList() {
+    public List<Trigger> getList() {
         return triggers;
     }
     
