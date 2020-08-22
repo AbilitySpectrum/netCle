@@ -71,7 +71,6 @@ public abstract class Connection implements SerialCallback {
                     writeByte(Model.CMD_VERSION);
                     if (versionSemaphore.tryAcquire(1, 2000, TimeUnit.MILLISECONDS)) {
                         // We got a version number - was it a good one?
-                        System.out.println(versionID);
                         if (versionID != 0) {
                             connectionSuccess = true;
                         } else {
