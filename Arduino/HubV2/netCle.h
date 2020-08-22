@@ -25,10 +25,6 @@
 #define SENSACT_H
 #include <Arduino.h>
 
-// Comment out this #define if you are compiling for the first version 
-// of the AAC HUB
-#define HUB20 1
-
 // Uncomment this #define if you want the SoftSerial interface enabled.
 // This will also reduce max triggers to 30.
 // #define SOFT_SERIAL 1
@@ -56,7 +52,7 @@ extern brkPoints BreakPoints;
 // === Protocol Values === //
 // -- Commands and Block Headers -- //
 
-#define VERSION         "2.04b"
+#define VERSION         "2.04"
 
 #define REPORT_MODE       'Q'
 #define RUN_SENSACT       'R'

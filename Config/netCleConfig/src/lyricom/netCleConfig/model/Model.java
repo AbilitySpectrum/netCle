@@ -37,7 +37,7 @@ public class Model {
     private static final ResourceBundle RES = ResourceBundle.getBundle("strings");
     
     // Version Number
-    public static final String CONFIG_VERSION = "1.04b";
+    public static final String CONFIG_VERSION = "1.04";
     
     // Commands sent to sensact
     public static final Byte CMD_VERSION        = (byte) 'V';
