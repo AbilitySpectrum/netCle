@@ -70,8 +70,18 @@ public abstract class Connection implements SerialCallback {
                     versionSemaphore.acquire();
                     writeByte(Model.CMD_VERSION);
                     if (versionSemaphore.tryAcquire(1, 2000, TimeUnit.MILLISECONDS)) {
-                        connectionSuccess = true;
-                    } else {
+                        // We got a version number - was it a good one?
+                        System.out.println(versionID);
+                        if (versionID != 0) {
+                            connectionSuccess = true;
+                        } else {
+                            JOptionPane.showMessageDialog(null, 
+                                    String.format(RES.getString("CM_INVALID_VERSION"), versionString),
+                                    RES.getString("CMT_ERROR"),
+                                    JOptionPane.ERROR_MESSAGE);                            
+                        }
+                    }
+                    if (!connectionSuccess) {
                         confirm(RES.getString("CMT_ERROR"),
                             RES.getString("CM_NOT_SENSACT")
                         );                                           
@@ -104,22 +114,9 @@ public abstract class Connection implements SerialCallback {
                 sub[i-1] = bytes.get(i);
             }
             versionString = new String(sub, Charset.defaultCharset());
-            // A tedious conversion to version number.
-            // 'A.B' becomes A * 100 + B.
-            // There is nothing here to verify the version number format.
-            int majorNum = 0;
-            int versionNum = 0;
-            for (int i=0; i<sub.length; i++) {
-                if (sub[i] >= (byte) '0' && sub[i] <= (byte) '9') {
-                    versionNum = versionNum * 10 + (sub[i] - (byte) '0');
-                } else if (sub[i] == (byte) '.') {
-                    // Save major version number.
-                    majorNum = versionNum;
-                    versionNum = 0;
-                }
-            }
-            versionID = majorNum * 100 + versionNum;
             
+            versionID = extractVersionID(sub);
+           
             if (versionSemaphore != null) {
                 versionSemaphore.release();
             }
@@ -154,6 +151,58 @@ public abstract class Connection implements SerialCallback {
                         JOptionPane.ERROR_MESSAGE);
             }
         } 
+    }
+    
+    // Version number will be in the format: [M]M.mm[bnnn]
+    // MM is a one or two digit major version number.
+    // mm is the minor version number (always 2 digits!)
+    // b is the lette 'b' - only for a beta release.
+    // nnn is the beta-build number.
+    // The following code needs to extract the major and minor
+    // version numbers and ignore the 'b' and beta-build numbers.
+    // Then the internal version number will be set to:
+    // major-number * 100 + minor-number.
+    // If the version number format is invalid return 0.
+    // Higher levels of software will report it and
+    // mark the connection as "not a netCle device".
+    //
+    // There aught to be a cleaner way to do this, but I didn't
+    // figure it out yet.
+    private int extractVersionID(byte[] sub) {
+        int majorNumber;
+        int minorNumber;
+        int minorIndex;
+        
+        if (sub.length < 4) return 0;
+        if (sub[0] >= (byte) '1' && sub[0] <= (byte) '9') {
+            majorNumber = sub[0] - (byte) '0';
+        } else {
+            return 0;
+        }
+        
+        if (sub[1] >= (byte) '0' && sub[1] <= (byte) '9') {
+            majorNumber = majorNumber * 10 + sub[1] - (byte) '0';
+            minorIndex = 3;
+            if (sub[2] != (byte) '.') return 0;
+            if (sub.length < 5) return 0;
+            
+        } else if (sub[1] == (byte) '.') {
+            minorIndex = 2;
+            
+        } else {
+            return 0;
+        }
+        
+        if (! (sub[minorIndex] >= (byte) '0' && sub[minorIndex] <= (byte) '9') ) {
+            return 0;
+        }
+        if (! (sub[minorIndex+1] >= (byte) '0' && sub[minorIndex+1] <= (byte) '9') ) {
+            return 0;
+        }
+        
+        minorNumber = (sub[minorIndex] - (byte) '0') * 10 + sub[minorIndex+1] - (byte) '0';
+        
+        return majorNumber * 100 + minorNumber;
     }
         
     /*
