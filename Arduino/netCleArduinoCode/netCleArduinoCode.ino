@@ -39,7 +39,7 @@ char memcheck_done = 0;
 char memcheck_started = 0;
 #endif
 
-enum rMode {RUN, REPORT, IDLEX}; // IDLE seems to be a keyword - thus IDLEX.
+enum rMode{RUN, REPORT, IDLEX}; // IDLE seems to be a keyword - thus IDLEX.
 rMode runMode;
 
 extern Sensors sensors;
@@ -51,7 +51,7 @@ SerialInputStream serialInput;
 SerialOutputStream serialOutput;
 
 #ifdef SOFT_SERIAL
-SoftwareSerial softSerial(11, 7);  // Rx, Tx
+SoftwareSerial softSerial(11,7);  // Rx, Tx
 SoftSerialInputStream softInput(&softSerial);
 SoftSerialOutputStream softOutput(&softSerial);
 
@@ -69,7 +69,7 @@ void setup() {
 
   Serial.begin(9600);
 #ifdef SOFT_SERIAL
-  softSerial.begin(2400);
+  softSerial.begin(9600);
   currentInput = &serialInput;
   currentOutput = &serialOutput;
 #endif
@@ -93,8 +93,8 @@ void loop() {
   int cmd = checkForCommand();
   int val;
 
-  //  Serial.print(F("ram: ")); Serial.println(freeRam());
-  //  delay(1000);
+//  Serial.print(F("ram: ")); Serial.println(freeRam());
+//  delay(1000);
 
 #ifdef MEMCHECK
   if (runMode == IDLEX) {
@@ -106,13 +106,13 @@ void loop() {
       doMemCheck();
       memcheck_done = 1;
     }
-    //    Serial.print(F("ram: ")); Serial.println(freeRam());
+//    Serial.print(F("ram: ")); Serial.println(freeRam());
   } else {
     memcheck_done = 0;
   }
 #endif
 
-  switch (cmd) {
+  switch(cmd) {
     case START_OF_TRIGGER_BLOCK:
 #ifdef SOFT_SERIAL
       currentInput->init();
@@ -248,9 +248,9 @@ void flashLED(int led) {
 void setLED() {
   ledsOff();
   if (runMode == RUN) {
-    digitalWrite(LED_GREEN, HIGH);
+     digitalWrite(LED_GREEN, HIGH);
   } else if (runMode == REPORT) {
-    digitalWrite(LED_RED, HIGH);
+     digitalWrite(LED_RED, HIGH);
   } else { // IDLEX mode
     digitalWrite(LED_BLUE, HIGH);
   }
@@ -274,9 +274,9 @@ void sendVersionInfo() {
     Serial.print(END_OF_BLOCK); // Z
   }
 #else
-  Serial.print(GET_VERSION);  // V
-  Serial.print(VERSION);  // version #
-  Serial.print(END_OF_BLOCK); // Z
+    Serial.print(GET_VERSION);  // V
+    Serial.print(VERSION);  // version #
+    Serial.print(END_OF_BLOCK); // Z
 #endif
 }
 
@@ -287,7 +287,7 @@ void report(const SensorData *sdata) {
   currentOutput->putChar(START_OF_SENSOR_DATA);
   int len = sdata->length();
   currentOutput->putNum(len);
-  for (int i = 0; i < len; i++) {
+  for(int i=0; i<len; i++) {
     const SensorDatum *d = sdata->getValue(i);
     currentOutput->putID(d->sensorID);
     currentOutput->putNum(d->sensorValue);
