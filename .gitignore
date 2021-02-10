@@ -8,4 +8,6 @@ private.xml
 /Config/SerialFeedback/nbproject/private/
 /Config/SerialFeedback/dist/
 /Config/config2/nbproject/private/
-.DS_store
+
+.DS_Store
+.vscode/
