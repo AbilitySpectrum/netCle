@@ -1,0 +1,54 @@
+Installation Note 
+
+** how to run viz.html - a stand-alone utility
+
+1) use Chromium/Opera/Edge browser and enable chrome://flags/#enable-experimental-web-platform-features
+
+[[obsolete: run serial-port-json-server in a command line. The executable for your platform can be downloaded here
+
+  https://github.com/chilipeppr/serial-port-json-server/releases]]
+
+2) open this in a web browser  
+
+http://{server's address}/senviz/viz.html
+
+user 127.0.0.1 to test locally 
+
+Settings and press Local, then Next (until you find the right port) and Select.
+
+Menu
+
+Connect - connect to sensact hub via local USB
+Run Sensact - sends one R command to hub
+Report - sends Q
+Idle - sends V
+
+While Report is running, the dials will display the sensor readings.
+
+There are two additional plots on the right: Time Series and Histogram.
+
+They display a sensor's value over time (every 100ms) and a tabulation of the tally of the sensor values.
+
+Only one sensor is displayed here. Click on any dial to change the display to that sensor.
+
+Settings Sub-menu
+
+Move - when selected, you can press/drag any dial to move its location
+Store Arrangement - store the dials' current locations to local storage
+Restore - restore the arrangement from local storage - the setting also shows up in the Input Box below.
+Set from Input Box - the arrangement of the dials is set from the setting in Input Box
+
+Get Trigs - get the Config. Result is in Input Box
+Send Trigs - send Config that's pasted in the Input Box (normally takes a few seconds)
+
+
+*** How to run a support session
+
+run "node utilitis/rcexchange.js 127.0.0.1" -- this will be deployed on a remote server 
+tech runs java Config Tool
+  "java -jar netCleCondig.jar 127:0:0:1"
+client runs vizclient.html
+server provides 'ID' which client gives to tech
+tech runs vizsupport.html, enters ID
+tech is connected to sensact via client's web app
+
