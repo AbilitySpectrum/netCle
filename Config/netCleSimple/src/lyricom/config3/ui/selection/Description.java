@@ -1,5 +1,5 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-    Copyright (C) 2019 Andrew Hodgson
+    Copyright (C) 2021 Andrew Hodgson
 
     This file is part of the netClé Configuration software.
 
@@ -21,16 +21,12 @@ package lyricom.config3.ui.selection;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.util.ResourceBundle;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
@@ -51,7 +47,7 @@ public class Description extends JDialog {
         
         pack();
         Point loc = MouseInfo.getPointerInfo().getLocation();
-        loc.x += 150;
+        loc.x += 100;
         setLocation(loc);
         
         setVisible(true);
@@ -61,6 +57,7 @@ public class Description extends JDialog {
         JEditorPane pane = new JEditorPane();
         pane.setContentType("text/html");
         pane.setText(txt);
+        pane.setEditable(false);
         pane.setBorder(new EmptyBorder(10,10,10,10));
         return pane;
     }

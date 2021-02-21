@@ -33,6 +33,7 @@ import javax.swing.JLabel;
 public class Utils {
     private static final ResourceBundle RES = ResourceBundle.getBundle("strings");
     public static final Font STD_FONT = new Font("Dialog", Font.PLAIN, 12);
+    public static final Font ITALIC_FONT = new Font("Dialog", Font.ITALIC, 12);
     public static final Font STD_BOLD_FONT = new Font("Dialog", Font.BOLD, 12);
     public static final Font SLIDER_LABEL_FONT = new Font("Dialog", Font.PLAIN, 10);
     public static final Font STATE_FONT = new Font("Dialog", Font.PLAIN, 14);

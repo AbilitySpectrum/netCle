@@ -58,6 +58,7 @@ import lyricom.config3.solutions.SolutionsDataList;
 import lyricom.config3.solutions.SolutionsUIBase;
 import lyricom.config3.solutions.XMLSolutionsList;
 import lyricom.config3.solutions.ui.CursorSpeedDlg;
+import lyricom.config3.ui.selection.ESolution;
 import lyricom.config3.ui.selection.SelectionDlg;
 
 /**
@@ -253,12 +254,21 @@ public class MainFrame extends JFrame {
     
     private void addBtnAction() {
         new SelectionDlg(this);
+        // The dialog calls addSolutionPane when a selection is made.
 /*        SolutionSelectionDlg dlg = new SolutionSelectionDlg(this);
         ESolutionType type = dlg.getSelection();
         if (type != null) {
             addSolutionPane(type);
         }    
 */
+    }
+    
+    public void addSolutionPane(ESolution type) {
+        JPanel pp = type.createSolution(null);
+        if (pp == null) return;
+        pane.addTab(type.toString(), pp);
+        pane.setSelectedComponent(pp); 
+        repaint();       
     }
     
     private void addSolutionPane(ESolutionType type) {
