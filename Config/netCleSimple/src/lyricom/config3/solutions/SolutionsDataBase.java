@@ -30,28 +30,49 @@ import lyricom.config3.model.Trigger;
 import lyricom.config3.model.Triggers;
 import lyricom.config3.solutions.data.*;
 import lyricom.config3.ui.Utils;
+import lyricom.config3.ui.selection.ESolution;
 
 /**
  *
  * @author Andrew
  */
-@XmlSeeAlso({OneButtonSimpleData.class, GyroData.class, Joystick1Data.class,
-Joystick2Data.class,KeypressData.class,OneBtnMouseData.class,
-OneButtonMouseClicksData.class,OneButtonToggleData.class,TwoButtonCursorControlData.class,
-TwoButtonsSimpleData.class})
+@XmlSeeAlso({
+    OneBtnMouseData.class,   // ok
+    TwoBtnMouseData.class,   // ok
+    JoystickMouse1Data.class,  // ok
+    JoystickMouse2Data.class, // ok
+    GyroMouseData.class,  // ok
+    
+    OBS_LeftClick.class,  // ok
+    OBS_RightClick.class,   // ok
+
+    OBT_LPressRelease.class,  // ok
+    OBT_ScrollUpDown.class,  // ok
+
+    OBE_LeftButton.class,  // ok
+    OBE_RightButton.class,  // ok
+
+    ThreeFuncBtnData.class, // ok
+        
+    TBS_LRClick.class,  // ok
+    TBS_LPressRelease.class,  // ok
+    TBS_ScrollUpDown.class,  // ok
+    TBS_LREmulation.class  // ok
+})
+
 public abstract class SolutionsDataBase {
     protected static final ResourceBundle RES = ResourceBundle.getBundle("strings");
-    private ESolutionType type;
+    private final ESolution type;
     
     protected int sensorCount = 0;  // 1 for single-switch solutions, 2 for double-switch, 0 for others.
     protected int sensorCountB = 0; // for the rare case where a solution uses two ports.
     
-    public SolutionsDataBase(ESolutionType t) {
+    public SolutionsDataBase(ESolution t) {
         type = t;
         SolutionsDataList.getInstance().add(this);
     }
     
-    public ESolutionType getType() {
+    public ESolution getType() {
         return type;
     }
     

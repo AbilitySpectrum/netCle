@@ -65,7 +65,9 @@ public abstract class SolutionsUIBase extends JPanel {
 //        descriptionText.setLineWrap(true);
 //        descriptionText.setWrapStyleWord(true);
         descriptionArea.add(descriptionText);
-        
+
+        descriptionText.setText(data.getType().getLongDescription());
+
         setupArea = annotatedPanel(RES.getString("PN_SETTINGS"));
         vb.add(setupArea);
         

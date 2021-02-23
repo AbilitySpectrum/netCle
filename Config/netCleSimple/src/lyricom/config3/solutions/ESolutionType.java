@@ -28,27 +28,7 @@ import lyricom.config3.model.Resource;
  * @author Andrew
  */
 public enum ESolutionType {
-    SOL_ONE_BUTTON_SIMPLE(true) {
-        @Override
-        public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            if (data == null) data = new OneButtonSimpleData();
-            return new OneButtonSimpleUI((OneButtonSimpleData)data);
-        }        
-    },
-    SOL_ONE_BUTTON_TOGGLE(true) {
-        @Override
-        public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            if (data == null) data = new OneButtonToggleData();
-            return new OneButtonToggleUI((OneButtonToggleData)data);
-        }       
-    },
-    SOL_ONE_BUTTON_MOUSE_CLICKS(true) {
-        @Override
-        public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            if (data == null) data = new OneButtonMouseClicksData();
-            return new OneButtonMouseClicksUI((OneButtonMouseClicksData)data);
-        }                        
-    },
+
     SOL_ONE_BUTTON_MOUSE(true) {
         @Override
         public SolutionsUIBase createSolution(SolutionsDataBase data) {
@@ -70,46 +50,34 @@ public enum ESolutionType {
             return new KeyboardUI((KeyboardData)data);
         }                
     },
-    SOL_TWO_BUTTON_SIMPLE(true) {
-        @Override
-        public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            if (data == null) data = new TwoButtonsSimpleData();
-            return new TwoButtonsSimpleUI((TwoButtonsSimpleData)data);
-        }        
-    },
-    SOL_TWO_BUTTON_CURSOR_CONTROL(true) {
-        @Override
-        public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            if (data == null) data = new TwoButtonCursorControlData();
-            return new TwoButtonCursorControlUI((TwoButtonCursorControlData)data);
-        }                
-    },
+
+
     SOL_JOYSTICK_1(true) {
         @Override
         public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            if (data == null) data = new Joystick1Data();
-            return new Joystick1UI((Joystick1Data)data);
+            if (data == null) data = new JoystickMouse1Data();
+            return new JoystickMouse1UI((JoystickMouse1Data)data);
         }        
     },
     SOL_JOYSTICK_2(true) {
         @Override
         public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            if (data == null) data = new Joystick2Data();
-            return new Joystick2UI((Joystick2Data)data);
+            if (data == null) data = new JoystickMouse2Data();
+            return new JoystickMouse2UI((JoystickMouse2Data)data);
         }        
     },
     SOL_GYRO_MOUSE(true) {
         @Override
         public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            if (data == null) data = new GyroData();
-            return new GyroUI((GyroData)data);
+            if (data == null) data = new GyroMouseData();
+            return new GyroMouseUI((GyroMouseData)data);
         }
     };
     
-    public static SolutionsUIBase rebuildSolution(SolutionsDataBase data) {
+/*    public static SolutionsUIBase rebuildSolution(SolutionsDataBase data) {
         ESolutionType type = data.getType();
         return type.createSolution(data);
-    }
+    } */
     
     String localizedName;
     boolean worksOverBluetooth;

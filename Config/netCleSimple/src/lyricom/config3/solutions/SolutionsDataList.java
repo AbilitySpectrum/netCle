@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 import lyricom.config3.solutions.data.CursorSpeedData;
 import lyricom.config3.ui.MainFrame;
+import lyricom.config3.ui.selection.ESolution;
 
 /**
  *
@@ -174,12 +175,13 @@ public class SolutionsDataList {
     // Bluetooth check
     // If a bluetooth incompatable solution is being used
     // return its ENum type.
-    public ESolutionType bluetoothCheck() {
+    // TODO - add bluetooth check back in.
+    public ESolution bluetoothCheck() {
         for(SolutionsDataBase sdb: theList) {
-            if (!sdb.getType().worksOverBT()) {
+            if (!sdb.getType().worksOverBluetooth()) {
                 return sdb.getType();
             }
-        }
+        } 
         return null;  // OK - no bluetooth incompatabilities.
     }
 }

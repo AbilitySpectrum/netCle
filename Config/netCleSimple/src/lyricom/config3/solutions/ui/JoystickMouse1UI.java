@@ -19,45 +19,31 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package lyricom.config3.solutions.ui;
 
-import javax.swing.*;
-import lyricom.config3.calibration.CalibrationUI;
-import lyricom.config3.calibration.Calibrator;
+import javax.swing.Box;
+import javax.swing.JPanel;
 import lyricom.config3.solutions.SolutionsUIBase;
-import lyricom.config3.solutions.data.GyroData;
+import lyricom.config3.solutions.data.JoystickMouse1Data;
 
 /**
  *
  * @author Andrew
  */
-public class GyroUI extends SolutionsUIBase {
+public class JoystickMouse1UI extends SolutionsUIBase {
+
+    JoystickMouse1Data data;
     
-    GyroData data;
-    
-    public GyroUI(GyroData data) {
+    public JoystickMouse1UI(JoystickMouse1Data data) {
         super(data);
         this.data = data;
         
-        descriptionText.setText(RES.getString("GM_DESCRIPTION"));
-                
-        // Setup
         Box vb = Box.createVerticalBox();
-        JPanel whichSide = labelledItem(RES.getString("GM_LOCATION"), data.getLeftSide());
-        whichSide.add(data.getRightSide());
-        vb.add(whichSide);
-        
-        vb.add(Box.createVerticalStrut(5));
-        
-        JPanel sense = labelledItem(RES.getString("GM_SENSITIVITY"), data.getSensitivity());
-         vb.add(sense);
-        vb.add(data.getCalibrateBtn());
+        JPanel p = labelledItem(RES.getString("Q_JOYSTICK_LOCATION"), data.getPortCombo());
+        vb.add(p);
         setupArea.add(vb);
-                
-        // Options
+        
         vb = Box.createVerticalBox();
-        vb.add(data.getLeftClickOption());
-        vb.add(data.getRightClickOption());
-        vb.add(data.getHeadTiltOption());
+        vb.add(data.getLeftRightClick());
+        vb.add(data.getAudioFeedback());
         optionsArea.add(vb);
     }
-    
 }

@@ -2,9 +2,10 @@ package lyricom.config3.solutions.data;
 
 import java.io.PrintStream;
 import javax.swing.JComboBox;
+import javax.xml.bind.annotation.XmlElement;
 import lyricom.config3.solutions.EPort;
-import lyricom.config3.solutions.ESolutionType;
 import lyricom.config3.solutions.SolutionsDataBase;
+import lyricom.config3.ui.selection.ESolution;
 
 /**
  *
@@ -14,9 +15,9 @@ public class KeyboardData extends SolutionsDataBase {
 
     final private JComboBox port;
     final private JComboBox keyStroke;
-
+    
     public KeyboardData() {
-        super(ESolutionType.SOL_KEYBOARD );
+        super(ESolution.S_KEYBOARD_TEXT);
         sensorCount = 1;
         
         port = comboSelection(EPort.class);
@@ -43,4 +44,8 @@ public class KeyboardData extends SolutionsDataBase {
     public JComboBox getKeyStroke() {
         return keyStroke;
     }
+
+    // XML Support - incomplete.
+    
+
 }

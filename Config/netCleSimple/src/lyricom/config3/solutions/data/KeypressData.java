@@ -15,6 +15,7 @@ import lyricom.config3.solutions.EPort;
 import lyricom.config3.solutions.ESolutionType;
 import lyricom.config3.solutions.ESubPort;
 import lyricom.config3.solutions.SolutionsDataBase;
+import lyricom.config3.ui.selection.ESolution;
 
 /**
  *
@@ -30,7 +31,7 @@ public class KeypressData extends SolutionsDataBase {
     private ESubPort subPort = ESubPort.SubPortA;
     
     public KeypressData() {
-        super(ESolutionType.SOL_KEYPRESS);
+        super(ESolution.S_KEYBOARD_MODIFIER);
         sensorCount = 1;
         
         port = comboSelection(EPort.class);

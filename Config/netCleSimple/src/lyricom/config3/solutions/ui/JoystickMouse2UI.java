@@ -21,21 +21,19 @@ package lyricom.config3.solutions.ui;
 
 import javax.swing.Box;
 import lyricom.config3.solutions.SolutionsUIBase;
-import lyricom.config3.solutions.data.Joystick2Data;
+import lyricom.config3.solutions.data.JoystickMouse2Data;
 
 /**
  *
  * @author Andrew
  */
-public class Joystick2UI extends SolutionsUIBase {
+public class JoystickMouse2UI extends SolutionsUIBase {
 
-    Joystick2Data data;
+    JoystickMouse2Data data;
     
-    public Joystick2UI(Joystick2Data data) {
+    public JoystickMouse2UI(JoystickMouse2Data data) {
         super(data);
         this.data = data;
-        
-        descriptionText.setText(RES.getString("JS2_DESCRIPTION"));
         
         // Setup
         Box vb = Box.createVerticalBox();
@@ -46,8 +44,8 @@ public class Joystick2UI extends SolutionsUIBase {
         // Options
         vb = Box.createVerticalBox();
         vb.add(data.getLeftRightClick());
-        vb.add(data.getLrAudioSuppression());
-        vb.add(data.getToggleAudioSuppression());
+        vb.add(data.getLrAudio());
+        vb.add(data.getToggleAudio());
         optionsArea.add(vb);
     }
 }

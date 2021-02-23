@@ -17,32 +17,32 @@
     along with this netClé configuration software.  
     If not, see <https://www.gnu.org/licenses/>.   
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-package lyricom.config3.solutions.ui;
+package lyricom.config3.solutions.data;
 
-import javax.swing.Box;
-import lyricom.config3.solutions.SolutionsUIBase;
-import lyricom.config3.solutions.data.TwoButtonsSimpleData;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import lyricom.config3.model.EAction;
+import lyricom.config3.model.Model;
+import lyricom.config3.model.T_Action;
+import lyricom.config3.ui.selection.ESolution;
 
 /**
  *
  * @author Andrew
  */
-public class TwoButtonsSimpleUI extends SolutionsUIBase {
-    TwoButtonsSimpleData data;
-    
-    public TwoButtonsSimpleUI( TwoButtonsSimpleData data ) {
-        super(data);
-        this.data = data;
-        
-        descriptionText.setText(RES.getString("TBS_DESCRIPTION"));
-        
-        Box vb = Box.createVerticalBox();
-        vb.add( labelledItem( RES.getString("Q_TWO_BTN_PORT_LOCATION"), data.getPortCombo()));
-        vb.add( labelledItem( RES.getString("TBS_FUNCTION"), data.getFunction()));
-        setupArea.add(vb);
-        
-        vb = Box.createVerticalBox();
-        vb.add( data.getAudio());
-        optionsArea.add(vb);
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
+public class OBS_RightClick extends OBSimpleBase {
+
+    public OBS_RightClick() {
+        super(ESolution.S_RIGHT_CLICK);
     }
+    
+    @Override
+    protected T_Action getAction() {
+        return new T_Action(EAction.HID_MOUSE, Model.MOUSE_RIGHT_CLICK);
+    }
+
 }
+

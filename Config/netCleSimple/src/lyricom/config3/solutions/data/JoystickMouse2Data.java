@@ -34,6 +34,7 @@ import lyricom.config3.model.T_Signal;
 import lyricom.config3.solutions.EPort;
 import lyricom.config3.solutions.ESolutionType;
 import lyricom.config3.solutions.SolutionsDataBase;
+import lyricom.config3.ui.selection.ESolution;
 
 /**
  *
@@ -41,7 +42,7 @@ import lyricom.config3.solutions.SolutionsDataBase;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class Joystick2Data extends SolutionsDataBase {
+public class JoystickMouse2Data extends SolutionsDataBase {
 
     // Setup
     final private JComboBox joystickPort;
@@ -49,11 +50,11 @@ public class Joystick2Data extends SolutionsDataBase {
     
     // Options
     final private JCheckBox leftRightClick;
-    final private JCheckBox lrAudioSuppression;
-    final private JCheckBox toggleAudioSuppression;
+    final private JCheckBox lrAudio;
+    final private JCheckBox toggleAudio;
     
-     public Joystick2Data() {
-        super(ESolutionType.SOL_JOYSTICK_2);
+     public JoystickMouse2Data() {
+        super(ESolution.S_JOYSTICK_MOUSE2);
         sensorCount = 2;
         sensorCountB = 1;
         
@@ -61,8 +62,8 @@ public class Joystick2Data extends SolutionsDataBase {
         buttonPort = comboSelection(EPort.class);
         
         leftRightClick = checkBox(RES.getString("JS1_LEFT_RIGHT_OPTION"));
-        lrAudioSuppression = checkBox(RES.getString("JS2_LR_AUDIO_SUPPRESSION"));
-        toggleAudioSuppression = checkBox(RES.getString("JS2_TOGGLE_AUDIO_SUPPRESSION"));
+        lrAudio = checkBox(RES.getString("JS2_LR_AUDIO"));
+        toggleAudio = checkBox(RES.getString("JS2_TOGGLE_AUDIO"));
     }
     
     @Override
@@ -103,7 +104,7 @@ public class Joystick2Data extends SolutionsDataBase {
             makeTrigger(sensorA, 2, T_Signal.JS_LOW,    300, mouseRight, 3);
             makeTrigger(sensorA, 3, T_Signal.JS_LOW,      0, mouseRight, 3);
             makeTrigger(sensorA, 3, T_Signal.JS_NOT_LOW,  0, nothing, 1);
-            if (! lrAudioSuppression.isSelected()) {
+            if (lrAudio.isSelected()) {
                 makeTrigger(sensorA, 2, T_Signal.JS_NOT_LOW, 20, rightClick, 5);
                 makeTrigger(sensorA, 5, T_Signal.JS_NOT_LOW,  0, buzzlow, 1);
             } else {
@@ -113,7 +114,7 @@ public class Joystick2Data extends SolutionsDataBase {
             makeTrigger(sensorA, 6, T_Signal.JS_HIGH,   300, mouseLeft, 7);
             makeTrigger(sensorA, 7, T_Signal.JS_HIGH,     0, mouseLeft, 7);
             makeTrigger(sensorA, 7, T_Signal.JS_NOT_HIGH, 0, nothing, 1);
-            if (! lrAudioSuppression.isSelected()) {
+            if (lrAudio.isSelected()) {
                 makeTrigger(sensorA, 6, T_Signal.JS_NOT_HIGH, 20, leftClick, 8);
                 makeTrigger(sensorA, 8, T_Signal.JS_NOT_HIGH,  0, buzzlow, 1);
             } else {
@@ -127,12 +128,20 @@ public class Joystick2Data extends SolutionsDataBase {
         makeTrigger(sensorB, 2, T_Signal.JS_LOW,  0, scrollUp, 2); 
         
         // Toggle Button
-        makeTrigger(button, 1, T_Signal.BTN_PRESS,   0, buzzlow,  2);
-        makeTrigger(button, 2, T_Signal.BTN_PRESS,   0, light2,   3);
+        if (toggleAudio.isSelected()) {
+            makeTrigger(button, 1, T_Signal.BTN_PRESS,   0, buzzlow,  2);
+            makeTrigger(button, 2, T_Signal.BTN_PRESS,   0, light2,   3);
+        } else {
+            makeTrigger(button, 1, T_Signal.BTN_PRESS,   0, light2,   3);
+        }
         makeTrigger(button, 3, T_Signal.BTN_PRESS,   0, setState2,  4);
         makeTrigger(button, 4, T_Signal.BTN_RELEASE, 0, nothing,  5);
-        makeTrigger(button, 5, T_Signal.BTN_PRESS,   0, buzzhigh, 6);
-        makeTrigger(button, 6, T_Signal.BTN_PRESS,   0, light7,   7);
+        if (toggleAudio.isSelected()) {
+            makeTrigger(button, 5, T_Signal.BTN_PRESS,   0, buzzhigh, 6);
+            makeTrigger(button, 6, T_Signal.BTN_PRESS,   0, light7,   7);            
+        } else {
+            makeTrigger(button, 5, T_Signal.BTN_PRESS,   0, light7,   7);
+        }
         makeTrigger(button, 7, T_Signal.BTN_PRESS,   0, setState1,  8);
         makeTrigger(button, 8, T_Signal.BTN_RELEASE, 0, nothing,  1);
     }
@@ -143,8 +152,8 @@ public class Joystick2Data extends SolutionsDataBase {
         out.println(String.format("   Joystick: %s", joystickPort.getSelectedItem().toString()));
         out.println(String.format("   Button: %s", buttonPort.getSelectedItem().toString()));
         out.println(String.format("   LR-Click: %s", leftRightClick.isSelected()));
-        out.println(String.format("   LR-Audio-Suppression: %s ", lrAudioSuppression.isSelected()));
-        out.println(String.format("   Toggle-Audio-Suppression: %s ", toggleAudioSuppression.isSelected()));
+        out.println(String.format("   LR-Audio-Suppression: %s ", lrAudio.isSelected()));
+        out.println(String.format("   Toggle-Audio-Suppression: %s ", toggleAudio.isSelected()));
     }
 
     /**
@@ -171,15 +180,15 @@ public class Joystick2Data extends SolutionsDataBase {
     /**
      * @return the lrAudioSuppression
      */
-    public JCheckBox getLrAudioSuppression() {
-        return lrAudioSuppression;
+    public JCheckBox getLrAudio() {
+        return lrAudio;
     }
 
     /**
      * @return the toggleAudioSuppresion
      */
-    public JCheckBox getToggleAudioSuppression() {
-        return toggleAudioSuppression;
+    public JCheckBox getToggleAudio() {
+        return toggleAudio;
     }
 
     @Override
@@ -225,22 +234,22 @@ public class Joystick2Data extends SolutionsDataBase {
         leftRightClick.setSelected(val);
     }
     
-    @XmlElement(name = "AudioSuppression")
-    boolean getXAudioSuppression() {
-        return lrAudioSuppression.isSelected();
+    @XmlElement(name = "LRAudio")
+    boolean getXLRAudio() {
+        return lrAudio.isSelected();
     }
     
-    void setXAudioSuppression(boolean val) {
-        lrAudioSuppression.setSelected(val);
+    void setXLRAudio(boolean val) {
+        lrAudio.setSelected(val);
     }    
     
-    @XmlElement(name = "ToggleAudioSuppression")
-    boolean getXToggleAudioSuppression() {
-        return toggleAudioSuppression.isSelected();
+    @XmlElement(name = "ToggleAudio")
+    boolean getXToggleAudio() {
+        return toggleAudio.isSelected();
     }
     
-    void setXToggleAudioSuppression(boolean val) {
-        toggleAudioSuppression.setSelected(val);
+    void setXToggleAudio(boolean val) {
+        toggleAudio.setSelected(val);
     }    
 
 }

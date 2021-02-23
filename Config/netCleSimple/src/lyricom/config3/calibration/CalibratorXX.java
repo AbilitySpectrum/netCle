@@ -14,7 +14,7 @@ import lyricom.config3.comms.Serial;
 import lyricom.config3.model.ESensor;
 import lyricom.config3.model.InStream;
 import lyricom.config3.model.Model;
-import lyricom.config3.solutions.data.GyroData;
+import lyricom.config3.solutions.data.GyroMouseData;
 
 /**
  *
@@ -66,12 +66,12 @@ public class CalibratorXX implements Runnable, SensorDataCallback {
     int Tleft, Tright, Tup, Tdown, Ttilt;
     
     private final CalibrationUI ui;
-    private final GyroData data;
+    private final GyroMouseData data;
     AtomicBoolean cancelling = new AtomicBoolean();
     Thread runThread;
     Serial serial;
     
-    public CalibratorXX(CalibrationUI ui, GyroData data) {
+    public CalibratorXX(CalibrationUI ui, GyroMouseData data) {
         this.ui = ui;
         this.data = data;
         serial = Serial.getInstance();

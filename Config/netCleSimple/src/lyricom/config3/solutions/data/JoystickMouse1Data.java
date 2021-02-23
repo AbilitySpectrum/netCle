@@ -34,6 +34,7 @@ import lyricom.config3.model.T_Signal;
 import lyricom.config3.solutions.EPort;
 import lyricom.config3.solutions.ESolutionType;
 import lyricom.config3.solutions.SolutionsDataBase;
+import lyricom.config3.ui.selection.ESolution;
 
 /**
  *
@@ -41,7 +42,7 @@ import lyricom.config3.solutions.SolutionsDataBase;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class Joystick1Data extends SolutionsDataBase {
+public class JoystickMouse1Data extends SolutionsDataBase {
 
     // Setup
     final private JComboBox port;
@@ -50,8 +51,8 @@ public class Joystick1Data extends SolutionsDataBase {
     final private JCheckBox leftRightClick;
     final private JCheckBox audioFeedback;
     
-    public Joystick1Data() {
-        super(ESolutionType.SOL_JOYSTICK_1);
+    public JoystickMouse1Data() {
+        super(ESolution.S_JOYSTICK_MOUSE1);
         sensorCount = 2;
         
         port = comboSelection(EPort.class);
@@ -129,7 +130,7 @@ public class Joystick1Data extends SolutionsDataBase {
 
     
     @Override
-    public EPort getPortUsed() {
+    public EPort getPortUsed() { 
         return (EPort) port.getSelectedItem();
     }
     

@@ -57,6 +57,8 @@ import lyricom.config3.solutions.SolutionsDataBase;
 import lyricom.config3.solutions.SolutionsDataList;
 import lyricom.config3.solutions.SolutionsUIBase;
 import lyricom.config3.solutions.XMLSolutionsList;
+import lyricom.config3.solutions.data.JoystickMouse1Data;
+import lyricom.config3.solutions.data.OBS_LeftClick;
 import lyricom.config3.solutions.ui.CursorSpeedDlg;
 import lyricom.config3.ui.selection.ESolution;
 import lyricom.config3.ui.selection.SelectionDlg;
@@ -156,17 +158,17 @@ public class MainFrame extends JFrame {
         
         JMenu oneBtnMenu = new JMenu(RES.getString("M_ONE_BUTTON"));
         addMenu.add(oneBtnMenu);
-        addSolutionMenu(oneBtnMenu, ESolutionType.SOL_ONE_BUTTON_SIMPLE);
-        addSolutionMenu(oneBtnMenu, ESolutionType.SOL_ONE_BUTTON_TOGGLE);
-        addSolutionMenu(oneBtnMenu, ESolutionType.SOL_ONE_BUTTON_MOUSE_CLICKS);
+//        addSolutionMenu(oneBtnMenu, ESolutionType.SOL_ONE_BUTTON_SIMPLE);
+//        addSolutionMenu(oneBtnMenu, ESolutionType.SOL_ONE_BUTTON_TOGGLE);
+//        addSolutionMenu(oneBtnMenu, ESolutionType.SOL_ONE_BUTTON_MOUSE_CLICKS);
         addSolutionMenu(oneBtnMenu, ESolutionType.SOL_ONE_BUTTON_MOUSE);
         addSolutionMenu(oneBtnMenu, ESolutionType.SOL_KEYPRESS);
         addSolutionMenu(oneBtnMenu, ESolutionType.SOL_KEYBOARD);
         
         JMenu twoBtnMenu = new JMenu(RES.getString("M_TWO_BUTTONS"));
         addMenu.add(twoBtnMenu);
-        addSolutionMenu(twoBtnMenu, ESolutionType.SOL_TWO_BUTTON_SIMPLE);
-        addSolutionMenu(twoBtnMenu, ESolutionType.SOL_TWO_BUTTON_CURSOR_CONTROL);
+//        addSolutionMenu(twoBtnMenu, ESolutionType.SOL_TWO_BUTTON_SIMPLE);
+//        addSolutionMenu(twoBtnMenu, ESolutionType.SOL_TWO_BUTTON_CURSOR_CONTROL);
 
         JMenu joystickMenu = new JMenu(RES.getString("M_JOYSTICK"));
         addMenu.add(joystickMenu);
@@ -371,6 +373,7 @@ public class MainFrame extends JFrame {
                 try {
                     XMLWrite(output);
                 } catch (FileNotFoundException | JAXBException e) {
+                    System.out.println(e.getMessage());
                     JOptionPane.showMessageDialog(MainFrame.this, 
                         RES.getString("IO_ERROR_TEXT"),
                         RES.getString("IO_ERROR_TITLE"),
@@ -396,13 +399,14 @@ public class MainFrame extends JFrame {
                 XMLRead(input);
                               
             } catch (JAXBException ex) {
+                System.out.println(ex.getMessage());
                 JOptionPane.showMessageDialog(MainFrame.this,
                     RES.getString("IMPORT_FAILED_TEXT"),
                     RES.getString("IMPORT_FAILED_TITLE"),
                     JOptionPane.ERROR_MESSAGE);
             
             } 
-        }         
+        }          
     }
     
     public void deleteSolution(SolutionsUIBase sol) {
@@ -418,7 +422,7 @@ public class MainFrame extends JFrame {
     
     private void setBluetooth() {
         SolutionsDataList sdl = SolutionsDataList.getInstance();
-        ESolutionType nonBT = sdl.bluetoothCheck();
+        ESolution nonBT = sdl.bluetoothCheck();
         if (nonBT != null) {
             wired.setSelected(true);
             JOptionPane.showMessageDialog(MainFrame.this, 
@@ -451,8 +455,11 @@ public class MainFrame extends JFrame {
         if (target.exists() && target.canRead()) {
             try {
                 XMLRead(target);
-            } catch (JAXBException e) {
+            } catch (JAXBException | ExceptionInInitializerError e) {
                 // Fail quietly
+                System.out.println(e.getMessage());
+                System.out.println(e.getCause());
+                e.printStackTrace();
             }
         }
     }
@@ -479,6 +486,8 @@ public class MainFrame extends JFrame {
     private void XMLRead(File target) throws JAXBException {
         JAXBContext jaxbContext = getContextObj();
 
+        OBS_LeftClick xx = new OBS_LeftClick();
+        
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();    
         XMLSolutionsList list=(XMLSolutionsList) jaxbUnmarshaller.unmarshal(target);    
         SolutionsDataList.getInstance().updateFromXML(list);
@@ -486,7 +495,7 @@ public class MainFrame extends JFrame {
         pane.removeAll();
         List<SolutionsDataBase> newList = SolutionsDataList.getInstance().getList();
         for(SolutionsDataBase sdb: newList) {
-            ESolutionType type = sdb.getType();                
+            ESolution type = sdb.getType();                
             JPanel pp = type.createSolution(sdb);
             pane.addTab(type.toString(), pp);
         }

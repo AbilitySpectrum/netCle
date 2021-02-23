@@ -34,7 +34,6 @@ public class OneBtnMouseUI extends SolutionsUIBase {
     public OneBtnMouseUI(OneBtnMouseData data) {
         super(data);
         this.data = data;
-        descriptionText.setText(RES.getString("OBM_DESCRIPTION"));
         
         Box vb = Box.createVerticalBox();
         vb.add( labelledItem(RES.getString("Q_ONE_BTN_PORT_LOCATION"), data.getPortCombo()));

@@ -37,9 +37,11 @@ import lyricom.config3.model.Model;
 import lyricom.config3.model.T_Action;
 import lyricom.config3.model.T_Signal;
 import lyricom.config3.model.Trigger;
+import lyricom.config3.solutions.EPort;
 import lyricom.config3.solutions.ESolutionType;
 import lyricom.config3.solutions.Slider;
 import lyricom.config3.solutions.SolutionsDataBase;
+import lyricom.config3.ui.selection.ESolution;
 
 /**
  *
@@ -47,7 +49,7 @@ import lyricom.config3.solutions.SolutionsDataBase;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class GyroData extends SolutionsDataBase {
+public class GyroMouseData extends SolutionsDataBase {
 
     // Setup
     final private JRadioButton leftSide;
@@ -71,9 +73,8 @@ public class GyroData extends SolutionsDataBase {
     T_Action buzzHi   = new T_Action(EAction.BUZZER, (800 << 16) + 100);
     T_Action buzzVLo  = new T_Action(EAction.BUZZER, (250 << 16) + 50);
     
-    public GyroData() {
-        super(ESolutionType.SOL_GYRO_MOUSE);
-        
+    public GyroMouseData() { 
+        super(ESolution.S_GYRO_MOUSE);
         // Setup
         leftSide = radioButton(RES.getString("GM_LEFT_SIDE"));
         leftSide.setSelected(true);

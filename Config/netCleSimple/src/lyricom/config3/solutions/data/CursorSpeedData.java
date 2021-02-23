@@ -20,17 +20,18 @@
 package lyricom.config3.solutions.data;
 
 import java.io.PrintStream;
+import java.util.ResourceBundle;
 import lyricom.config3.model.CursorSpeedTransfer;
 import lyricom.config3.model.CursorSpeedTransferInterface;
 import lyricom.config3.solutions.EPort;
 import lyricom.config3.solutions.Slider;
-import lyricom.config3.solutions.SolutionsDataBase;
 
 /**
  *
  * @author Andrew
  */
-public class CursorSpeedData extends SolutionsDataBase implements CursorSpeedTransferInterface {
+public class CursorSpeedData implements CursorSpeedTransferInterface {
+    protected static final ResourceBundle RES = ResourceBundle.getBundle("strings");
     private static CursorSpeedData instance = null;
     public static CursorSpeedData getInstance() {
         if (instance == null) {
@@ -46,7 +47,6 @@ public class CursorSpeedData extends SolutionsDataBase implements CursorSpeedTra
     private final NumericField secondInterval;
         
     private CursorSpeedData() {
-        super(null);
         String slow = RES.getString("CS_SLOW");
         String fast = RES.getString("CS_FAST");
         
@@ -62,12 +62,7 @@ public class CursorSpeedData extends SolutionsDataBase implements CursorSpeedTra
         CursorSpeedTransfer.getInstance().registerUIComponent(this);
     }
 
-    @Override
-    public void compile() {
-        // Do nothing.  
-    }
     
-    @Override
     public void printDescription(PrintStream out ) {
         
     }
@@ -115,10 +110,5 @@ public class CursorSpeedData extends SolutionsDataBase implements CursorSpeedTra
 
     public EPort getPortUsed() {
         return null;
-    }
-
-    @Override
-    public int getSensorCount() {
-        return 0;
     }
 }

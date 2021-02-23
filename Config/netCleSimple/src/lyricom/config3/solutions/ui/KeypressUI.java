@@ -15,9 +15,7 @@ public class KeypressUI extends SolutionsUIBase {
     public KeypressUI(KeypressData data) {
         super(data);
         this.data = data;
-        
-        descriptionText.setText(RES.getString("KP_DESCRIPTION"));
-        
+                
         Box vb = Box.createVerticalBox();
         vb.add( labelledItem(RES.getString("KP_PORT_SELECTION"), data.getPortCombo()));
         vb.add( labelledItem(RES.getString("KP_MODIFIER"), data.getModifier()));

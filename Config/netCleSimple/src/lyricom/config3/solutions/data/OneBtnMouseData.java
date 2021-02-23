@@ -34,6 +34,7 @@ import lyricom.config3.solutions.EPort;
 import lyricom.config3.solutions.ESolutionType;
 import lyricom.config3.solutions.ESubPort;
 import lyricom.config3.solutions.SolutionsDataBase;
+import lyricom.config3.ui.selection.ESolution;
 
 /**
  *
@@ -49,7 +50,7 @@ public class OneBtnMouseData extends SolutionsDataBase {
     private ESubPort subPort = ESubPort.SubPortA;
     
     public OneBtnMouseData() {
-        super(ESolutionType.SOL_ONE_BUTTON_MOUSE );
+        super(ESolution.S_ONE_BTN_MOUSE);
         sensorCount = 1;
         
         port = comboSelection(EPort.class);

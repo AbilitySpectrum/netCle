@@ -14,7 +14,7 @@ import lyricom.config3.comms.Serial;
 import lyricom.config3.model.ESensor;
 import lyricom.config3.model.InStream;
 import lyricom.config3.model.Model;
-import lyricom.config3.solutions.data.GyroData;
+import lyricom.config3.solutions.data.GyroMouseData;
 
 /**
  *
@@ -24,7 +24,7 @@ public class Calibrator implements Runnable, SensorDataCallback {
     protected static final ResourceBundle RES = ResourceBundle.getBundle("strings");
         
     private final CalibrationUI ui;
-    private final GyroData data;
+    private final GyroMouseData data;
     AtomicBoolean cancelling = new AtomicBoolean();
     Thread runThread;
     Serial serial;
@@ -36,7 +36,7 @@ public class Calibrator implements Runnable, SensorDataCallback {
     private int tiltPoint;
     private boolean tiltIsNegative;
     
-    public Calibrator(CalibrationUI ui, GyroData data) {
+    public Calibrator(CalibrationUI ui, GyroMouseData data) {
         this.ui = ui;
         this.data = data;
         serial = Serial.getInstance();
