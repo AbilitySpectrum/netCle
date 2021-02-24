@@ -17,28 +17,29 @@
     along with this netClé configuration software.  
     If not, see <https://www.gnu.org/licenses/>.   
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-package lyricom.config3.solutions;
+package lyricom.config3.solutions.ui;
 
-import lyricom.config3.model.Resource;
+import javax.swing.Box;
+import lyricom.config3.solutions.SolutionsUIBase;
+import lyricom.config3.solutions.data.KeyboardModifierData;
 
 /**
  *
  * @author Andrew
  */
-public enum EOneButtonToggle {
-    OBT_SCROLL,
-    OBT_H_MOUSE,
-    OBT_V_MOUSE;
+public class KeyboardModifierUI extends SolutionsUIBase {
+
+    private final KeyboardModifierData data;
     
-    final private String localizedName;
-    
-    EOneButtonToggle() {
-        localizedName = Resource.getStr(this.name());        
+    public KeyboardModifierUI(KeyboardModifierData d) {
+        super(d);
+        this.data = d;
+                
+        Box vb = Box.createVerticalBox();
+        vb.add( labelledItem(RES.getString("Q_ONE_BTN_PORT_LOCATION"), data.getPortCombo()));
+        vb.add( labelledItem(RES.getString("KP_MODIFIER"), data.getModifier()));
+        vb.add( labelledItem(RES.getString("KP_KEYPRESS"), data.getKeyStroke()));
+        setupArea.add(vb);
     }
 
-    @Override
-    public String toString() {
-        return localizedName;
-    }
-    
 }

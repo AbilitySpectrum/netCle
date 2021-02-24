@@ -82,21 +82,14 @@ public enum ESolution {
     S_LEFT_PRESS_RELEASE_TOGGLE (EDevice.MOUSE_ONE_BTN, true) {  // ok
         @Override
         public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            if (data == null) data = new OBT_LPressRelease();
-            return new PortOnlyUI((PortOnlyBase)data);
+            if (data == null) data = new OBP_LPressRelease();
+            return new PortAndAudioUI((PortAndAudioBase)data);
         }
     },
     S_LEFT_EMULATION   (EDevice.MOUSE_ONE_BTN, true) {  // ok
         @Override
         public SolutionsUIBase createSolution(SolutionsDataBase data) {           
             if (data == null) data = new OBE_LeftButton();
-            return new PortOnlyUI((PortOnlyBase)data);
-        }
-    },
-    S_RIGHT_EMULATION  (EDevice.MOUSE_ONE_BTN, true) {  // ok
-        @Override
-        public SolutionsUIBase createSolution(SolutionsDataBase data) {           
-            if (data == null) data = new OBE_RightButton();
             return new PortOnlyUI((PortOnlyBase)data);
         }
     },
@@ -114,32 +107,18 @@ public enum ESolution {
             return new PortAndAudioUI((PortAndAudioBase)data);
         }
     },
-    S_LEFT_PRESS_RELEASE   (EDevice.MOUSE_TWO_BTN, true) {  // ok
-        @Override
-        public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            if (data == null) data = new TBS_LPressRelease();
-            return new PortAndAudioUI((PortAndAudioBase)data);
-        }
-    },
-    S_LEFT_RIGHT_EMULATION (EDevice.MOUSE_TWO_BTN, true) {  // ok
-        @Override
-        public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            if (data == null) data = new TBS_LREmulation();
-            return new PortAndAudioUI((PortAndAudioBase)data);
-        }
-    },
     
     S_JOYSTICK_CLICKS (EDevice.MOUSE_JOYSTICK, true) {
         @Override
         public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            // TBD - requires adjustment of another solution
+            new MessageDlg(null, "S_JOYSTICK_CLICKS", "LDS_JOYSTICK_CLICKS");
             return null;
         }
     },
     S_GYRO_CLICKS     (EDevice.MOUSE_GYRO, true) {
         @Override
         public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            // TBD - requires adjustment of another solution
+            new MessageDlg(null, "S_GYRO_CLICKS", "LDS_GYRO_CLICKS");
             return null;
         }
     },
@@ -157,10 +136,10 @@ public enum ESolution {
             return new PortAndAudioUI((PortAndAudioBase)data);
         }
     },
-    S_JOYSTICK       (EDevice.SCROLL_JOYSTICK, true) {
+    S_JOYSTICK_SCROLL (EDevice.SCROLL_JOYSTICK, true) {
         @Override
         public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            // TBD - requires adjustment of another solution
+            new MessageDlg(null, "S_JOYSTICK_SCROLL", "LDS_JOYSTICK_SCROLL");
             return null;
         }
     },
@@ -168,42 +147,43 @@ public enum ESolution {
     S_KEYBOARD_TEXT    (EDevice.KEYBOARD_BTN, true) {
         @Override
         public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            return null;
+            if (data == null) data = new KeyboardTextData();
+            return new KeyboardTextUI ((KeyboardTextData)data);
         }
     },
     S_KEYBOARD_SPECIAL (EDevice.KEYBOARD_BTN, true) {
         @Override
         public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            // TBD - Keyboard
-            return null;
+            if (data == null) data = new KeyboardSpecialData();
+            return new KeyboardSpecialUI ((KeyboardSpecialData)data);
         }
     },
     S_KEYBOARD_MODIFIER(EDevice.KEYBOARD_BTN, false) {
         @Override
         public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            // TBD - Keyboard
-            return null;
+            if (data == null) data = new KeyboardModifierData();
+            return new KeyboardModifierUI ((KeyboardModifierData)data);
         }
     },
     S_UP_DOWN_ARROW_TOGGLE   (EDevice.KEYBOARD_BTN, true) {
         @Override
         public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            // TBD - Keyboard
-            return null;
+            if (data == null) data = new OBT_UpDownArrow();
+            return new PortOnlyUI ((PortOnlyBase)data);
         }
     },
     S_KEYBOARD_SHIFT   (EDevice.KEYBOARD_BTN, false) {
         @Override
         public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            // TBD - Keyboard
-            return null;
+            if (data == null) data = new OBP_ShiftKey();
+            return new PortAndAudioUI ((PortAndAudioBase)data);
         }
     },
     S_KEYBOARD_CONTROL (EDevice.KEYBOARD_BTN, false) {
         @Override
         public SolutionsUIBase createSolution(SolutionsDataBase data) {
-            // TBD - Keyboard
-            return null;
+            if (data == null) data = new OBP_ControlKey();
+            return new PortAndAudioUI ((PortAndAudioBase)data);
         }
     };
     
@@ -224,13 +204,6 @@ public enum ESolution {
     }
     
     abstract public SolutionsUIBase createSolution(SolutionsDataBase data);
-    
-    public static SolutionsUIBase rebuildSolution(SolutionsDataBase data) {
-//        ESolution type = data.getType();
- //       return type.createSolution(data);
- return null;
-    }
-    
     
     public EDevice getDevice() {
         return device;

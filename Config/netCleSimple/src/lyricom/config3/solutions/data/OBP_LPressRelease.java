@@ -4,30 +4,34 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import lyricom.config3.model.EAction;
+import lyricom.config3.model.ESensor;
 import lyricom.config3.model.Model;
 import lyricom.config3.model.T_Action;
+import lyricom.config3.model.T_Signal;
+import lyricom.config3.solutions.EPort;
 import lyricom.config3.ui.selection.ESolution;
 
 /**
  *
  * @author Andrew
  */
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class TBS_LPressRelease extends TBSimpleBase {
+public class OBP_LPressRelease extends OBPressReleaseBase {
 
-    public TBS_LPressRelease() {
-        super(ESolution.S_LEFT_PRESS_RELEASE);
+    public OBP_LPressRelease() {
+        super(ESolution.S_LEFT_PRESS_RELEASE_TOGGLE);
     }
 
     @Override
-    T_Action getAction1() {
+    T_Action getPressAction() {
         return new T_Action(EAction.HID_MOUSE, Model.MOUSE_PRESS);
     }
 
     @Override
-    T_Action getAction2() {
+    T_Action getReleaseAction() {
         return new T_Action(EAction.HID_MOUSE, Model.MOUSE_RELEASE);
     }
+    
+
 }

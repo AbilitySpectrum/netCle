@@ -29,6 +29,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import lyricom.config3.ui.MainFrame;
 
 /**
  *
@@ -71,6 +72,8 @@ public class Device extends JPanel implements MouseListener {
     }
     
     final JDialog getSolutionsContainer() {
+        boolean Bluetooth = MainFrame.getInstance().getBluetooth();
+
         if (solutionsContainer != null) {
             return solutionsContainer;
         }
@@ -85,9 +88,11 @@ public class Device extends JPanel implements MouseListener {
         vb.setBorder(new LineBorder(Color.black, 1));
         for(ESolution sol: ESolution.values()) {
             if (sol.getDevice() == type) {
-                Solution s = new Solution(this, sol);
-                vb.add(s);
-                solutions.add(s);
+                if (!Bluetooth || sol.worksOverBluetooth()) {
+                    Solution s = new Solution(this, sol);
+                    vb.add(s);
+                    solutions.add(s);
+                }
             }
         }
         solutionsContainer.add(vb);

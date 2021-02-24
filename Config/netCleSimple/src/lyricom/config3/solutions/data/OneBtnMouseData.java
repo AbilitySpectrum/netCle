@@ -31,7 +31,6 @@ import lyricom.config3.model.Model;
 import lyricom.config3.model.T_Action;
 import lyricom.config3.model.T_Signal;
 import lyricom.config3.solutions.EPort;
-import lyricom.config3.solutions.ESolutionType;
 import lyricom.config3.solutions.ESubPort;
 import lyricom.config3.solutions.SolutionsDataBase;
 import lyricom.config3.ui.selection.ESolution;

@@ -45,7 +45,7 @@ public abstract class PortAndAudioBase extends SolutionsDataBase {
         super(t);
         
         port = comboSelection(EPort.class);
-        audioFeedback = checkBox(RES.getString("OBS_AUDIO"));
+        audioFeedback = checkBox(RES.getString("Q_AUDIO_FEEDBACK"));
     }
        
     @Override

@@ -17,22 +17,22 @@ import lyricom.config3.ui.selection.ESolution;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class OBT_LPressRelease extends OBToggleBase {
+public class OBT_UpDownArrow extends OBToggleBase {
 
-    public OBT_LPressRelease() {
-        super(ESolution.S_LEFT_PRESS_RELEASE_TOGGLE);
+    public OBT_UpDownArrow() {
+        super(ESolution.S_UP_DOWN_ARROW_TOGGLE);
     }
 
     @Override
     T_Action getAction1() {
-        return new T_Action(EAction.HID_MOUSE, Model.MOUSE_PRESS);
+        return new T_Action(EAction.HID_KEYBOARD, EKeyCode.ACT_KEY_UP_ARROW.getCode());
     }
 
     @Override
     T_Action getAction2() {
-        return new T_Action(EAction.HID_MOUSE, Model.MOUSE_RELEASE);
+        return new T_Action(EAction.HID_KEYBOARD, EKeyCode.ACT_KEY_DOWN_ARROW.getCode());
     }
-    
+
     @Override
     public void compile() {
         EPort portItem = (EPort)port.getSelectedItem();
@@ -44,11 +44,12 @@ public class OBT_LPressRelease extends OBToggleBase {
         T_Action buzz    = new T_Action(EAction.BUZZER, (200 << 16) + 100);
         T_Action hibuzz    = new T_Action(EAction.BUZZER, (800 << 16) + 100);
         
-        makeTrigger(sensor, 1, T_Signal.BTN_PRESS,     0, buzz,      1);
-        makeTrigger(sensor, 1, T_Signal.BTN_PRESS,     0, action1,   2);
-        makeTrigger(sensor, 2, T_Signal.BTN_RELEASE,   0, nothing,   3);
-        makeTrigger(sensor, 3, T_Signal.BTN_PRESS,     0, hibuzz ,   3);
-        makeTrigger(sensor, 3, T_Signal.BTN_PRESS,     0, action2,   4);
-        makeTrigger(sensor, 4, T_Signal.BTN_RELEASE,   0, nothing,   1);
+        makeTrigger(sensor, 1, T_Signal.BTN_PRESS,     0, nothing,   2);
+        makeTriggerWRepeat(sensor, 2, T_Signal.BTN_PRESS,     0, action1,   2);
+        makeTrigger(sensor, 2, T_Signal.BTN_RELEASE, 800, buzz,      3);
+        makeTrigger(sensor, 3, T_Signal.BTN_RELEASE, 3000, hibuzz,   1);
+        makeTrigger(sensor, 3, T_Signal.BTN_PRESS,     0, nothing,   4);
+        makeTriggerWRepeat(sensor, 4, T_Signal.BTN_PRESS,     0, action2,   4);
+        makeTrigger(sensor, 4, T_Signal.BTN_RELEASE, 800, buzz,      1);
     }
-}
+ }

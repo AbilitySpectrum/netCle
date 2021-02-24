@@ -32,7 +32,6 @@ import lyricom.config3.model.Model;
 import lyricom.config3.model.T_Action;
 import lyricom.config3.model.T_Signal;
 import lyricom.config3.solutions.EPort;
-import lyricom.config3.solutions.ESolutionType;
 import lyricom.config3.solutions.SolutionsDataBase;
 import lyricom.config3.ui.selection.ESolution;
 
@@ -62,7 +61,7 @@ public class JoystickMouse2Data extends SolutionsDataBase {
         buttonPort = comboSelection(EPort.class);
         
         leftRightClick = checkBox(RES.getString("JS1_LEFT_RIGHT_OPTION"));
-        lrAudio = checkBox(RES.getString("JS2_LR_AUDIO"));
+        lrAudio = checkBox(RES.getString("Q_AUDIO_FEEDBACK"));
         toggleAudio = checkBox(RES.getString("JS2_TOGGLE_AUDIO"));
     }
     

@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
  */
 public class SelectionResource {
 
-    private static final ResourceBundle RES = ResourceBundle.getBundle("selection");    
+    private static final ResourceBundle RES = ResourceBundle.getBundle("strings");    
 
     static public String getStr(String key) {
         return RES.getString(key);

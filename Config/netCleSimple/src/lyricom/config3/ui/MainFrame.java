@@ -27,11 +27,8 @@ import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -52,12 +49,10 @@ import lyricom.config3.comms.Serial;
 import lyricom.config3.model.Model;
 import lyricom.config3.model.OutStream;
 import lyricom.config3.model.Triggers;
-import lyricom.config3.solutions.ESolutionType;
 import lyricom.config3.solutions.SolutionsDataBase;
 import lyricom.config3.solutions.SolutionsDataList;
 import lyricom.config3.solutions.SolutionsUIBase;
 import lyricom.config3.solutions.XMLSolutionsList;
-import lyricom.config3.solutions.data.JoystickMouse1Data;
 import lyricom.config3.solutions.data.OBS_LeftClick;
 import lyricom.config3.solutions.ui.CursorSpeedDlg;
 import lyricom.config3.ui.selection.ESolution;
@@ -95,8 +90,6 @@ public class MainFrame extends JFrame {
         }
     }
     
-    private final List<JMenuItem> BT_INCAPABLE_MENU_ITEMS = new ArrayList<>();
-
     private static final ResourceBundle RES = ResourceBundle.getBundle("strings");
     private JTabbedPane pane = new JTabbedPane(); 
     
@@ -134,7 +127,11 @@ public class MainFrame extends JFrame {
         JMenuBar bar = new JMenuBar();
         JMenu fileMenu = new JMenu(RES.getString("M_FILE"));
         bar.add(fileMenu);
-        JMenuItem item = new JMenuItem(RES.getString("M_DOWNLOAD"));
+        JMenuItem item = new JMenuItem(RES.getString("M_ADD_SOLUTION"));
+        item.addActionListener((e) -> addBtnAction() );
+        fileMenu.add(item);
+        
+        item = new JMenuItem(RES.getString("M_DOWNLOAD"));
         item.addActionListener((e) -> downloadBtnAction() );
         fileMenu.add(item);
         
@@ -152,33 +149,7 @@ public class MainFrame extends JFrame {
         item = new JMenuItem(RES.getString("M_EXIT"));
         item.addActionListener((e) -> System.exit(0) );
         fileMenu.add(item);
-        
-        JMenu addMenu = new JMenu("Add Solution");
-        bar.add(addMenu);
-        
-        JMenu oneBtnMenu = new JMenu(RES.getString("M_ONE_BUTTON"));
-        addMenu.add(oneBtnMenu);
-//        addSolutionMenu(oneBtnMenu, ESolutionType.SOL_ONE_BUTTON_SIMPLE);
-//        addSolutionMenu(oneBtnMenu, ESolutionType.SOL_ONE_BUTTON_TOGGLE);
-//        addSolutionMenu(oneBtnMenu, ESolutionType.SOL_ONE_BUTTON_MOUSE_CLICKS);
-        addSolutionMenu(oneBtnMenu, ESolutionType.SOL_ONE_BUTTON_MOUSE);
-        addSolutionMenu(oneBtnMenu, ESolutionType.SOL_KEYPRESS);
-        addSolutionMenu(oneBtnMenu, ESolutionType.SOL_KEYBOARD);
-        
-        JMenu twoBtnMenu = new JMenu(RES.getString("M_TWO_BUTTONS"));
-        addMenu.add(twoBtnMenu);
-//        addSolutionMenu(twoBtnMenu, ESolutionType.SOL_TWO_BUTTON_SIMPLE);
-//        addSolutionMenu(twoBtnMenu, ESolutionType.SOL_TWO_BUTTON_CURSOR_CONTROL);
-
-        JMenu joystickMenu = new JMenu(RES.getString("M_JOYSTICK"));
-        addMenu.add(joystickMenu);
-        addSolutionMenu(joystickMenu, ESolutionType.SOL_JOYSTICK_1);
-        addSolutionMenu(joystickMenu, ESolutionType.SOL_JOYSTICK_2);
-        
-        JMenu gyroMenu = new JMenu(RES.getString("M_GYRO"));
-        addMenu.add(gyroMenu);
-        addSolutionMenu(gyroMenu, ESolutionType.SOL_GYRO_MOUSE);
-        
+               
         JMenu connectionType = new JMenu(RES.getString("M_CONNECTION_TYPE"));
         bar.add(connectionType);
         wired = new JRadioButtonMenuItem(RES.getString("M_WIRED"));
@@ -193,18 +164,6 @@ public class MainFrame extends JFrame {
         bluetooth.addActionListener((e) -> setBluetooth());
         
         return bar;
-    }
-    
-    // Called during menu creation - once for each solution type.
-    // Creates the menu item and links to solution panel creation.
-    // As a side effect - creates a list of BT incapable solutions.
-    private void addSolutionMenu(JMenu parent, ESolutionType type) {
-        JMenuItem menu = new JMenuItem(type.toString());
-        menu.addActionListener((a) -> addSolutionPane(type));
-        if (!type.worksOverBT()) {
-            BT_INCAPABLE_MENU_ITEMS.add(menu); 
-        }
-        parent.add(menu);
     }
     
     JPanel buttons() {
@@ -256,25 +215,16 @@ public class MainFrame extends JFrame {
     
     private void addBtnAction() {
         new SelectionDlg(this);
-        // The dialog calls addSolutionPane when a selection is made.
-/*        SolutionSelectionDlg dlg = new SolutionSelectionDlg(this);
-        ESolutionType type = dlg.getSelection();
-        if (type != null) {
-            addSolutionPane(type);
-        }    
-*/
+        // Due to the cascading dialogs created by SelectionDlg
+        // SelectionDlg is not modal.  As a result we do not hang
+        // here until the dialog closes as is the case with most dialogs.
+        // The SelectionDlg dialog itself calls addSolutionPane 
+        // when a selection is made.
     }
     
     public void addSolutionPane(ESolution type) {
         JPanel pp = type.createSolution(null);
         if (pp == null) return;
-        pane.addTab(type.toString(), pp);
-        pane.setSelectedComponent(pp); 
-        repaint();       
-    }
-    
-    private void addSolutionPane(ESolutionType type) {
-        JPanel pp = type.createSolution(null);
         pane.addTab(type.toString(), pp);
         pane.setSelectedComponent(pp); 
         repaint();       
@@ -415,9 +365,6 @@ public class MainFrame extends JFrame {
    
     private void setWired() {
         BLUETOOTH = false;   
-        for(JMenuItem mi: BT_INCAPABLE_MENU_ITEMS) {
-            mi.setEnabled(true);
-        }
     }
     
     private void setBluetooth() {
@@ -433,9 +380,6 @@ public class MainFrame extends JFrame {
             return;
         }
         BLUETOOTH = true;
-        for(JMenuItem mi: BT_INCAPABLE_MENU_ITEMS) {
-            mi.setEnabled(false);
-        }
     }
     
     // ---------------------------------------

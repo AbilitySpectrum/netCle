@@ -46,18 +46,22 @@ import lyricom.config3.ui.selection.ESolution;
     OBS_LeftClick.class,  // ok
     OBS_RightClick.class,   // ok
 
-    OBT_LPressRelease.class,  // ok
+    OBP_LPressRelease.class,  // ok
     OBT_ScrollUpDown.class,  // ok
 
     OBE_LeftButton.class,  // ok
-    OBE_RightButton.class,  // ok
 
     ThreeFuncBtnData.class, // ok
         
     TBS_LRClick.class,  // ok
-    TBS_LPressRelease.class,  // ok
     TBS_ScrollUpDown.class,  // ok
-    TBS_LREmulation.class  // ok
+        
+    KeyboardTextData.class,
+    KeyboardSpecialData.class,
+    KeyboardModifierData.class,
+    OBT_UpDownArrow.class,
+    OBP_ShiftKey.class,
+    OBP_ControlKey.class
 })
 
 public abstract class SolutionsDataBase {
@@ -121,6 +125,19 @@ public abstract class SolutionsDataBase {
         t.setActionState(finalState);
     }
     
+    protected void makeTriggerWRepeat(ESensor sensor, int startState, T_Signal sig, int delay, 
+            T_Action action, int finalState) {
+                
+        Trigger t = Triggers.getInstance().newTrigger();
+        t.setSensor(sensor);
+        t.setReqdState(startState);
+        t.setSignal( sig );
+        t.setDelay(delay);
+        t.setAction(action);
+        t.setActionState(finalState);
+        t.setRepeat(true);
+    }
+     
     // Routines used to check for port over-usage
     
     public EPort getPortUsed() {

@@ -1,3 +1,22 @@
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+    Copyright (C) 2021 Andrew Hodgson
+
+    This file is part of the netClé Configuration software.
+
+    netClé Configuration software is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    netClé Configuration software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this netClé configuration software.  
+    If not, see <https://www.gnu.org/licenses/>.   
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package lyricom.config3.solutions.data;
 
 import java.io.PrintStream;
@@ -10,9 +29,7 @@ import lyricom.config3.model.EAction;
 import lyricom.config3.model.ESensor;
 import lyricom.config3.model.T_Action;
 import lyricom.config3.model.T_Signal;
-import lyricom.config3.solutions.EOneButtonSimple;
 import lyricom.config3.solutions.EPort;
-import lyricom.config3.solutions.ESolutionType;
 import lyricom.config3.solutions.ESubPort;
 import lyricom.config3.solutions.SolutionsDataBase;
 import lyricom.config3.ui.selection.ESolution;
@@ -23,14 +40,14 @@ import lyricom.config3.ui.selection.ESolution;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-public class KeypressData extends SolutionsDataBase {
+public class KeyboardModifierData extends SolutionsDataBase {
     
     final private JComboBox port;
     final private JComboBox keyStroke;
     final private JComboBox modifier;
     private ESubPort subPort = ESubPort.SubPortA;
     
-    public KeypressData() {
+    public KeyboardModifierData() {
         super(ESolution.S_KEYBOARD_MODIFIER);
         sensorCount = 1;
         
