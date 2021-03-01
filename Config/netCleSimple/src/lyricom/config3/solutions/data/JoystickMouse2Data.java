@@ -88,7 +88,7 @@ public class JoystickMouse2Data extends SolutionsDataBase {
         T_Action nothing = new T_Action(EAction.NONE, 0);
         T_Action buzzlow = new T_Action(EAction.BUZZER, (400 << 16) + 250);
         T_Action buzzhigh = new T_Action(EAction.BUZZER, (800 << 16) + 250);
-        T_Action light2 = new T_Action(EAction.LIGHT_BOX, Model.LBO_ONLY + 2);
+        T_Action light6 = new T_Action(EAction.LIGHT_BOX, Model.LBO_ONLY + 32);
         T_Action light7 = new T_Action(EAction.LIGHT_BOX, Model.LBO_ONLY + 64);
         T_Action setState1 = new T_Action(EAction.SET_STATE, (sensorB.getId() << 8) + 1);
         T_Action setState2 = new T_Action(EAction.SET_STATE, (sensorB.getId() << 8) + 2);
@@ -129,9 +129,9 @@ public class JoystickMouse2Data extends SolutionsDataBase {
         // Toggle Button
         if (toggleAudio.isSelected()) {
             makeTrigger(button, 1, T_Signal.BTN_PRESS,   0, buzzlow,  2);
-            makeTrigger(button, 2, T_Signal.BTN_PRESS,   0, light2,   3);
+            makeTrigger(button, 2, T_Signal.BTN_PRESS,   0, light6,   3);
         } else {
-            makeTrigger(button, 1, T_Signal.BTN_PRESS,   0, light2,   3);
+            makeTrigger(button, 1, T_Signal.BTN_PRESS,   0, light6,   3);
         }
         makeTrigger(button, 3, T_Signal.BTN_PRESS,   0, setState2,  4);
         makeTrigger(button, 4, T_Signal.BTN_RELEASE, 0, nothing,  5);

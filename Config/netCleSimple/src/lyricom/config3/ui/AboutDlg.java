@@ -29,8 +29,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import lyricom.config3.comms.Connection;
-import lyricom.config3.model.Model;
 
 /**
  *
@@ -43,7 +41,7 @@ public class AboutDlg extends JDialog {
     public AboutDlg() {
         super(MainFrame.getInstance(), true);
         thisDlg = this;
-        String CONFIG_VERSION = "1.04b3";
+        String CONFIG_VERSION = "1.04b5";
         Box b = Box.createVerticalBox();
         
         JLabel top = new JLabel(RES.getString("PRODUCT_NAME")); 
