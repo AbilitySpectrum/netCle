@@ -84,7 +84,7 @@ extern brkPoints BreakPoints;
 #define BOOL_FALSE  'q'
 
 // === Timing Constants - all in ms === //
-#define REPORTING_INTERVAL  200  // Interval between reports of signal levels
+#define REPORTING_INTERVAL  50  // Interval between reports of signal levels
 #define READING_INTERVAL     10  // Interval between reading signals in run mode
 #define REFRACTORY          800  // Interval within which the output will not re-trigger. (unused in this version)
 #define PULSE_WIDTH         500  // Output pulse width - for relays

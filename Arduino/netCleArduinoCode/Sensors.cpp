@@ -21,7 +21,7 @@
     If not, see <https://www.gnu.org/licenses/>.   
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */ 
  
-#include "netCle.h"
+//#include "netCle.h"
 #include "Sensors.h"
 #include "Wire.h"
 
@@ -166,5 +166,3 @@ void GyroSensor::getValues(SensorData *pData) {
   // which is about sqrt(32676 ^ 2 * 3) / 2
   pData->addValue(gyroAny, (int)anyMotion);
 }
-
-

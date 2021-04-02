@@ -175,10 +175,42 @@ void loop() {
       //      pcInput->setNextCmd(cmd);
 
       // test mouse code
-      if ( cmd == 'U') Mouse.move(0, -10);
-      else if ( cmd == 'D') Mouse.move(0, 10);
-      else if ( cmd == 'L') Mouse.move(-10, 0);
-      else if ( cmd == 'R') Mouse.move(10, 0);
+      if ( cmd == 'U' || cmd == 'D' || cmd == 'L' || cmd == 'R') {
+        //*
+#ifdef SOFT_SERIAL
+        unsigned int jmp = currentInput->_getChar();
+#else
+        int jmp = Serial.read() - '!';
+#endif
+        int x = 0, y = 0;
+        if (cmd == 'U') {
+          y = -jmp;
+        }
+        else if ( cmd == 'D') {
+          y = jmp;
+        }
+        else if ( cmd == 'L') {
+          x = -jmp;
+        }
+        else if ( cmd == 'R') {
+          x = jmp;
+        }
+        Mouse.move(x, y);
+        //*/
+        /*
+          if (cmd == 'U') {
+          Mouse.move(0, -10);
+          }
+          else if ( cmd == 'D') {
+          Mouse.move(0, 10);
+          }
+          else if ( cmd == 'L') {
+          Mouse.move(-10, 0);
+          }
+          else if ( cmd == 'R') {
+          Mouse.move(10, 0);
+          }//*/
+      }
       else
 
         if (cmd == '?') { // tmp debug messgage
@@ -291,7 +323,7 @@ void sendVersionInfo() {
 }
 
 // Report sensor values
-void report(const SensorData *sdata) {
+void report(const SensorData * sdata) {
 #ifdef SOFT_SERIAL
   currentOutput->init();
   currentOutput->putChar(START_OF_SENSOR_DATA);

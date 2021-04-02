@@ -25,7 +25,7 @@ extern bool debug_out;
 
 #ifndef SensorData_H
 #define SensorData_H
-#include "netCle.h"
+//#include "netCle.h"
 
 // SensorDatum - Holds data from a single logical sensor
 struct SensorDatum {  
@@ -83,6 +83,7 @@ class Sensor {
     virtual int nDataUnits() = 0;
 };
 
+/*
 // AnalogSensor - A analog read from a single pin.
 class AnalogSensor: public Sensor {
   protected:
@@ -187,6 +188,7 @@ class GyroSensor: public Sensor {
     void getValues(SensorData *pData);
     int nDataUnits() { return 7; }
 };
+*/
   
 // Sensors - a container for all sensors.
 class Sensors {
