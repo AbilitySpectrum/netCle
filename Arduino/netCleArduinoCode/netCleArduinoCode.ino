@@ -176,7 +176,7 @@ void loop() {
 
       // test mouse code
       if ( cmd == 'U' || cmd == 'D' || cmd == 'L' || cmd == 'R') {
-        //*
+        /*
 #ifdef SOFT_SERIAL
         unsigned int jmp = currentInput->_getChar();
 #else
@@ -197,7 +197,7 @@ void loop() {
         }
         Mouse.move(x, y);
         //*/
-        /*
+        //*
           if (cmd == 'U') {
           Mouse.move(0, -10);
           }
