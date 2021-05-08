@@ -19,6 +19,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package lyricom.config3.solutions.data;
 
+import lyricom.config3.model.EKeyCode;
 import java.io.PrintStream;
 import javax.swing.JComboBox;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -68,9 +69,8 @@ public class KeyboardSpecialData extends SolutionsDataBase {
     public void compile() {
         EPort portItem = (EPort)port.getSelectedItem();
         ESensor sensor = subPort.getSensor(portItem);
-        int key = ((EKeyCode) keyStroke.getSelectedItem()).getCode();
         
-        T_Action action = new T_Action(EAction.HID_KEYBOARD, key);
+        T_Action action = T_Action.createKeyboardAction((EKeyCode)keyStroke.getSelectedItem());
         
         makeTrigger(sensor, 1, T_Signal.BTN_PRESS, 0, action, 1);         
     }

@@ -19,6 +19,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package lyricom.config3.solutions.data;
 
+import lyricom.config3.model.EKeyCode;
 import java.io.PrintStream;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -76,7 +77,7 @@ public class KeyboardTextData extends SolutionsDataBase {
             int end = i + 4;
             if (end > (text.length())) end = text.length();
             String data = text.substring(i, end);
-            T_Action keys = new T_Action(EAction.HID_KEYBOARD, convertString(data));
+            T_Action keys = T_Action.createKeyboardAction(convertString(data));
             i = end;
             makeTrigger(sensor, 1, T_Signal.BTN_PRESS, 0, keys, 1);
         }

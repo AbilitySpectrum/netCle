@@ -75,23 +75,23 @@ public class JoystickMouse2Data extends SolutionsDataBase {
         ESensor button = ESensor.getSensorA(portNum);
         
         // Mouse actions
-        T_Action mouseUp    = new T_Action(EAction.HID_MOUSE, Model.MOUSE_UP);
-        T_Action mouseDown  = new T_Action(EAction.HID_MOUSE, Model.MOUSE_DOWN);
-        T_Action mouseRight = new T_Action(EAction.HID_MOUSE, Model.MOUSE_RIGHT);
-        T_Action mouseLeft  = new T_Action(EAction.HID_MOUSE, Model.MOUSE_LEFT);
-        T_Action leftClick  = new T_Action(EAction.HID_MOUSE, Model.MOUSE_CLICK);
-        T_Action rightClick  = new T_Action(EAction.HID_MOUSE, Model.MOUSE_RIGHT_CLICK);
+        T_Action mouseUp =    T_Action.MOUSE_UP;
+        T_Action mouseDown =  T_Action.MOUSE_DOWN;
+        T_Action mouseLeft =  T_Action.MOUSE_LEFT;
+        T_Action mouseRight = T_Action.MOUSE_RIGHT;
+        T_Action leftClick =  T_Action.MOUSE_LCLICK;
+        T_Action rightClick = T_Action.MOUSE_RCLICK;
         T_Action scrollUp   = new T_Action(EAction.HID_MOUSE, Model.MOUSE_WHEEL_UP);
         T_Action scrollDown = new T_Action(EAction.HID_MOUSE, Model.MOUSE_WHEEL_DOWN);
                 
         // Other actions
-        T_Action nothing = new T_Action(EAction.NONE, 0);
-        T_Action buzzlow = new T_Action(EAction.BUZZER, (400 << 16) + 250);
-        T_Action buzzhigh = new T_Action(EAction.BUZZER, (800 << 16) + 250);
-        T_Action light6 = new T_Action(EAction.LIGHT_BOX, Model.LBO_ONLY + 32);
-        T_Action light7 = new T_Action(EAction.LIGHT_BOX, Model.LBO_ONLY + 64);
-        T_Action setState1 = new T_Action(EAction.SET_STATE, (sensorB.getId() << 8) + 1);
-        T_Action setState2 = new T_Action(EAction.SET_STATE, (sensorB.getId() << 8) + 2);
+        T_Action nothing = T_Action.NONE;
+        T_Action buzzlow =  T_Action.createBuzzerAction(400, 250);
+        T_Action buzzhigh = T_Action.createBuzzerAction(800, 250);
+        T_Action light6 = T_Action.createLightBoxAction(Model.LBO_ONLY, 6);
+        T_Action light7 = T_Action.createLightBoxAction(Model.LBO_ONLY, 7);
+        T_Action setState1 = T_Action.createSetStateAction(sensorB, 1);
+        T_Action setState2 = T_Action.createSetStateAction(sensorB, 2);
         
         if (leftRightClick.isSelected() == false) {
             // Simple Joystick

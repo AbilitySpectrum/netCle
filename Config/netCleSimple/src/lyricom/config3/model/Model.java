@@ -100,5 +100,6 @@ public class Model {
     // Press and Release values - added to key values
     static public final int KEY_PRESS = 0xff000000;
     static public final int KEY_RELEASE = 0xfe000000;
+    static public final int KEY_MODIFIER = 0xfd000000;
 
 }

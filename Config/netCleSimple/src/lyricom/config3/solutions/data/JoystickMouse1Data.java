@@ -65,15 +65,15 @@ public class JoystickMouse1Data extends SolutionsDataBase {
         ESensor sensorA = ESensor.getSensorA(portNum);
         ESensor sensorB = ESensor.getSensorB(portNum);
         
-        T_Action mouseUp    = new T_Action(EAction.HID_MOUSE, Model.MOUSE_UP);
-        T_Action mouseDown  = new T_Action(EAction.HID_MOUSE, Model.MOUSE_DOWN);
-        T_Action mouseRight = new T_Action(EAction.HID_MOUSE, Model.MOUSE_RIGHT);
-        T_Action mouseLeft  = new T_Action(EAction.HID_MOUSE, Model.MOUSE_LEFT);
-        T_Action leftClick  = new T_Action(EAction.HID_MOUSE, Model.MOUSE_CLICK);
-        T_Action rightClick  = new T_Action(EAction.HID_MOUSE, Model.MOUSE_RIGHT_CLICK);
+        T_Action mouseUp =    T_Action.MOUSE_UP;
+        T_Action mouseDown =  T_Action.MOUSE_DOWN;
+        T_Action mouseLeft =  T_Action.MOUSE_LEFT;
+        T_Action mouseRight = T_Action.MOUSE_RIGHT;
+        T_Action leftClick =  T_Action.MOUSE_LCLICK;
+        T_Action rightClick = T_Action.MOUSE_RCLICK;
                 
-        T_Action nothing = new T_Action(EAction.NONE, 0);
-        T_Action buzz = new T_Action(EAction.BUZZER, (400 << 16) + 250);
+        T_Action nothing = T_Action.NONE;
+        T_Action buzz = T_Action.createBuzzerAction(400, 250);
         
         if (leftRightClick.isSelected() == false) {
             // Simple Joystick

@@ -1,4 +1,4 @@
-package lyricom.config3.solutions.data;
+package lyricom.config3.model;
 
 import lyricom.config3.model.Resource;
 import lyricom.config3.ui.MainFrame;

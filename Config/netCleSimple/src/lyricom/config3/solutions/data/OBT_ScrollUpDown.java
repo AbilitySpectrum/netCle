@@ -22,11 +22,11 @@ public class OBT_ScrollUpDown extends OBToggleBase {
 
     @Override
     T_Action getAction1() {
-        return new T_Action(EAction.HID_MOUSE, Model.MOUSE_WHEEL_DOWN);
+        return T_Action.MOUSE_WHEEL_DOWN;
     }
 
     @Override
     T_Action getAction2() {
-        return new T_Action(EAction.HID_MOUSE, Model.MOUSE_WHEEL_UP);
+        return T_Action.MOUSE_WHEEL_UP;
     }
 }

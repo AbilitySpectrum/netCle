@@ -49,7 +49,7 @@ public abstract class TBSimpleBase extends PortAndAudioBase {
         
         T_Action action1 = getAction1();
         T_Action action2 = getAction2();
-        T_Action buzz    = new T_Action(EAction.BUZZER, (200 << 16) + 100);
+        T_Action buzz    = T_Action.createBuzzerAction(200, 100);
         
         makeTrigger(sensorA, 1, T_Signal.BTN_PRESS, 0, action1, 1);
         makeTrigger(sensorB, 1, T_Signal.BTN_PRESS, 0, action2, 1);

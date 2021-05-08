@@ -28,7 +28,54 @@ import lyricom.config3.ui.MainFrame;
  * @author Andrew
  */
 public class T_Action {
+    // Commonly used actions
+    public static final T_Action NONE = new T_Action(EAction.NONE, 0);
+    public static final T_Action MOUSE_UP = new T_Action(EAction.HID_MOUSE, Model.MOUSE_UP);
+    public static final T_Action MOUSE_DOWN = new T_Action(EAction.HID_MOUSE, Model.MOUSE_DOWN);
+    public static final T_Action MOUSE_LEFT = new T_Action(EAction.HID_MOUSE, Model.MOUSE_LEFT);
+    public static final T_Action MOUSE_RIGHT = new T_Action(EAction.HID_MOUSE, Model.MOUSE_RIGHT);
+    public static final T_Action MOUSE_LCLICK = new T_Action(EAction.HID_MOUSE, Model.MOUSE_CLICK);
+    public static final T_Action MOUSE_RCLICK = new T_Action(EAction.HID_MOUSE, Model.MOUSE_RIGHT_CLICK);
+    public static final T_Action MOUSE_PRESS = new T_Action(EAction.HID_MOUSE, Model.MOUSE_PRESS);
+    public static final T_Action MOUSE_RELEASE = new T_Action(EAction.HID_MOUSE, Model.MOUSE_RELEASE);
+    public static final T_Action MOUSE_WHEEL_UP = new T_Action(EAction.HID_MOUSE, Model.MOUSE_WHEEL_UP);
+    public static final T_Action MOUSE_WHEEL_DOWN = new T_Action(EAction.HID_MOUSE, Model.MOUSE_WHEEL_DOWN);
     
+    // Useful action constructors
+    public static T_Action createSetStateAction(ESensor sens, int state) {
+        return new T_Action(EAction.SET_STATE, (sens.getId() << 8) + state);
+    }
+    
+    public static T_Action createBuzzerAction(int frequency, int duration) {
+        return new T_Action(EAction.BUZZER, (frequency << 16) + duration);
+    }
+    
+    public static T_Action createLightBoxAction(int type, int light) {
+        return new T_Action(EAction.LIGHT_BOX, type + (1 << (light-1)));
+    }
+    
+    public static T_Action createKeyboardAction(int values) {
+        return new T_Action(EAction.HID_KEYBOARD, values);
+    }
+    
+    public static T_Action createKeyboardAction(EKeyCode key) {
+        return new T_Action(EAction.HID_KEYBOARD, key.getCode());
+    }
+    
+    public static T_Action createModifiedKeyAction(EKeyCode key, EKeyCode modifier) {
+        return new T_Action(EAction.HID_KEYBOARD, 
+                Model.KEY_MODIFIER + (modifier.getCode() << 8) + key.getCode());
+    }
+    
+    public static T_Action createKeyPressAction(EKeyCode code) {
+        return new T_Action(EAction.HID_KEYBOARD, Model.KEY_PRESS + code.getCode());
+    }
+    public static T_Action createKeyReleaseAction(EKeyCode code) {
+        return new T_Action(EAction.HID_KEYBOARD, Model.KEY_RELEASE + code.getCode());
+    }
+    
+    // -----------------------------------------------------------------
+    // The simple POJO under it all.
     private final EAction action;
     private final int actionParam;
 
@@ -65,6 +112,7 @@ public class T_Action {
         return actionParam;
     }
     
+    // A list of things which automatically get the repeat option.
     public boolean isRepeat() {
         if (action == EAction.BT_MOUSE || action == EAction.HID_MOUSE) {
             if (actionParam == Model.MOUSE_DOWN 

@@ -117,6 +117,14 @@ public class SolutionsDataList {
                 JOptionPane.INFORMATION_MESSAGE);           
         }
         
+        // Make sure single-user ports are assigned to subPort A
+        for(EPort port: portMap.keySet()) {
+            PortUsage pu = portMap.get(port);
+            if (pu.usageCount == 1) {
+                pu.firstUser.setSubPort(ESubPort.SubPortA);
+            }
+        }
+        
         return true;
     }
     

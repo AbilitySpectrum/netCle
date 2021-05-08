@@ -35,7 +35,7 @@ import lyricom.config3.model.EAction;
 import lyricom.config3.model.ESensor;
 import lyricom.config3.model.Model;
 import lyricom.config3.model.T_Action;
-import lyricom.config3.model.T_Signal;
+import lyricom.config3.model.T_Signal; 
 import lyricom.config3.model.Trigger;
 import lyricom.config3.solutions.Slider;
 import lyricom.config3.solutions.SolutionsDataBase;
@@ -66,10 +66,10 @@ public class GyroMouseData extends SolutionsDataBase {
     private int tiltThreshold = -2000;
     private boolean tiltIsNegative = false;
     
-    T_Action nothing  = new T_Action(EAction.NONE, 0);
-    T_Action buzzLo   = new T_Action(EAction.BUZZER, (400 << 16) + 250);
-    T_Action buzzHi   = new T_Action(EAction.BUZZER, (800 << 16) + 100);
-    T_Action buzzVLo  = new T_Action(EAction.BUZZER, (250 << 16) + 50);
+    T_Action nothing  = T_Action.NONE;
+    T_Action buzzLo   = T_Action.createBuzzerAction(400, 250);
+    T_Action buzzHi   = T_Action.createBuzzerAction(800, 100);
+    T_Action buzzVLo  = T_Action.createBuzzerAction(250,  50);
     
     public GyroMouseData() { 
         super(ESolution.S_GYRO_MOUSE);
@@ -117,12 +117,12 @@ public class GyroMouseData extends SolutionsDataBase {
         int z_threshold = 2500 - (sens-50) * 30;
         int y_threshold = 3500 - (sens-50) * 30;
 //        System.out.println( String.format("Y: %d, Z: %d", y_threshold, z_threshold));
-        T_Action mouseUp = new T_Action(EAction.HID_MOUSE, Model.MOUSE_UP);
-        T_Action mouseDown = new T_Action(EAction.HID_MOUSE, Model.MOUSE_DOWN);
-        T_Action mouseLeft = new T_Action(EAction.HID_MOUSE, Model.MOUSE_LEFT);
-        T_Action mouseRight = new T_Action(EAction.HID_MOUSE, Model.MOUSE_RIGHT);
-        T_Action mouseLClick = new T_Action(EAction.HID_MOUSE, Model.MOUSE_CLICK);
-        T_Action mouseRClick = new T_Action(EAction.HID_MOUSE, Model.MOUSE_RIGHT_CLICK);
+        T_Action mouseUp = T_Action.MOUSE_UP;
+        T_Action mouseDown = T_Action.MOUSE_DOWN;
+        T_Action mouseLeft = T_Action.MOUSE_LEFT;
+        T_Action mouseRight = T_Action.MOUSE_RIGHT;
+        T_Action mouseLClick = T_Action.MOUSE_LCLICK;
+        T_Action mouseRClick = T_Action.MOUSE_RCLICK;
         
         // ------------------------------
         // Left-Right
@@ -154,13 +154,13 @@ public class GyroMouseData extends SolutionsDataBase {
         // ------------------------------------------
         // Left tilt to turn the gyro on and off.
         if (headTiltOption.isSelected()) {
-            T_Action gyroYOff = new T_Action(EAction.SET_STATE, (ESensor.GYRO_Y.getId() << 8) + 9);
-            T_Action gyroZOff = new T_Action(EAction.SET_STATE, (ESensor.GYRO_Z.getId() << 8) + 9);
-            T_Action gyroYOn = new T_Action(EAction.SET_STATE, (ESensor.GYRO_Y.getId() << 8) + 1);
-            T_Action gyroZOn = new T_Action(EAction.SET_STATE, (ESensor.GYRO_Z.getId() << 8) + 1);
-            T_Action offBeep = new T_Action(EAction.BUZZER, (200<<16) + 500);
-            T_Action readyBeep = new T_Action(EAction.BUZZER, (800<<16) + 100);
-            T_Action onBeep = new T_Action(EAction.BUZZER, (1200<<16) + 100);
+            T_Action gyroYOff = T_Action.createSetStateAction(ESensor.GYRO_Y, 9);
+            T_Action gyroZOff = T_Action.createSetStateAction(ESensor.GYRO_Z, 9);
+            T_Action gyroYOn  = T_Action.createSetStateAction(ESensor.GYRO_Y, 1);
+            T_Action gyroZOn  = T_Action.createSetStateAction(ESensor.GYRO_Z, 1);
+            T_Action offBeep   = T_Action.createBuzzerAction(200, 500);
+            T_Action readyBeep = T_Action.createBuzzerAction(800, 100);
+            T_Action onBeep    = T_Action.createBuzzerAction(1200, 100);
 
             T_Signal low, high;
             if (tiltIsNegative) {

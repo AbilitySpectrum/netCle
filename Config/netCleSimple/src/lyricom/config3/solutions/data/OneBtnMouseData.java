@@ -70,21 +70,21 @@ public class OneBtnMouseData extends SolutionsDataBase {
         EPort portItem = (EPort)port.getSelectedItem();
         ESensor sensor = subPort.getSensor(portItem);
         
-        T_Action mouseUp    = new T_Action(EAction.HID_MOUSE, Model.MOUSE_UP);
-        T_Action mouseDown  = new T_Action(EAction.HID_MOUSE, Model.MOUSE_DOWN);
-        T_Action mouseRight = new T_Action(EAction.HID_MOUSE, Model.MOUSE_RIGHT);
-        T_Action mouseLeft  = new T_Action(EAction.HID_MOUSE, Model.MOUSE_LEFT);
-        T_Action leftClick  = new T_Action(EAction.HID_MOUSE, Model.MOUSE_CLICK);
+        T_Action mouseUp    = T_Action.MOUSE_UP;
+        T_Action mouseDown  = T_Action.MOUSE_DOWN;
+        T_Action mouseRight = T_Action.MOUSE_RIGHT;
+        T_Action mouseLeft  = T_Action.MOUSE_LEFT;
+        T_Action leftClick  = T_Action.MOUSE_LCLICK;
                 
         T_Action nothing = new T_Action(EAction.NONE, 0);
         int buzzDuration = buzzerDuration.getValue();
         int lowDur = buzzDuration * 2 / 3;
         if (lowDur < 50) lowDur = 50;
-        T_Action upBuzz    = new T_Action(EAction.BUZZER, (800 << 16) + buzzDuration);
-        T_Action downBuzz  = new T_Action(EAction.BUZZER, (400 << 16) + buzzDuration);
-        T_Action leftBuzz  = new T_Action(EAction.BUZZER, (600 << 16) + buzzDuration);
-        T_Action rightBuzz = new T_Action(EAction.BUZZER, (500 << 16) + buzzDuration);
-        T_Action resetBuzz = new T_Action(EAction.BUZZER, (200 << 16) + lowDur);
+        T_Action upBuzz    = T_Action.createBuzzerAction(800, buzzDuration);
+        T_Action downBuzz  = T_Action.createBuzzerAction(400, buzzDuration);
+        T_Action leftBuzz  = T_Action.createBuzzerAction(600, buzzDuration);
+        T_Action rightBuzz = T_Action.createBuzzerAction(500, buzzDuration);
+        T_Action resetBuzz = T_Action.createBuzzerAction(200, lowDur);
         int delay = delayBetweenStates.getValue();
         
         makeTrigger(sensor, 1, T_Signal.BTN_PRESS,     0, nothing,   2);

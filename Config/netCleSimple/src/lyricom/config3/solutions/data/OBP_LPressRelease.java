@@ -25,12 +25,12 @@ public class OBP_LPressRelease extends OBPressReleaseBase {
 
     @Override
     T_Action getPressAction() {
-        return new T_Action(EAction.HID_MOUSE, Model.MOUSE_PRESS);
+        return T_Action.MOUSE_PRESS;
     }
 
     @Override
     T_Action getReleaseAction() {
-        return new T_Action(EAction.HID_MOUSE, Model.MOUSE_RELEASE);
+        return T_Action.MOUSE_RELEASE;
     }
     
 

@@ -1,5 +1,6 @@
 package lyricom.config3.solutions.data;
 
+import lyricom.config3.model.EKeyCode;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -22,11 +23,11 @@ public class OBP_ShiftKey extends OBPressReleaseBase {
 
     @Override
     T_Action getPressAction() {
-        return new T_Action(EAction.HID_KEYPRESS, 0xff000000 + EKeyCode.ACT_LSHIFT.getCode());
+        return T_Action.createKeyPressAction(EKeyCode.ACT_LSHIFT);
     }
 
     @Override
     T_Action getReleaseAction() {
-        return new T_Action(EAction.HID_KEYRELEASE, 0xfe000000 + EKeyCode.ACT_LSHIFT.getCode());
+        return T_Action.createKeyReleaseAction(EKeyCode.ACT_LSHIFT);
     } 
 }

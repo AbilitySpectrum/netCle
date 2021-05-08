@@ -30,12 +30,12 @@ public class ThreeFuncBtnData extends PortOnlyBase
         EPort portItem = (EPort)port.getSelectedItem();
         ESensor sensor = subPort.getSensor(portItem);
         
-        T_Action mouseLClick = new T_Action(EAction.HID_MOUSE, Model.MOUSE_CLICK);
-        T_Action mouseRClick = new T_Action(EAction.HID_MOUSE, Model.MOUSE_RIGHT_CLICK);
-        T_Action mouseLPress = new T_Action(EAction.HID_MOUSE, Model.MOUSE_PRESS);
-        T_Action nothing = new T_Action(EAction.NONE, 0);
-        T_Action buzz    = new T_Action(EAction.BUZZER, (200 << 16) + 100);
-        T_Action hibuzz    = new T_Action(EAction.BUZZER, (400 << 16) + 100);
+        T_Action mouseLClick = T_Action.MOUSE_LCLICK;
+        T_Action mouseRClick = T_Action.MOUSE_RCLICK;
+        T_Action mouseLPress = T_Action.MOUSE_PRESS;
+        T_Action nothing = T_Action.NONE;
+        T_Action buzz    = T_Action.createBuzzerAction(200, 100);
+        T_Action hibuzz    = T_Action.createBuzzerAction(400, 100);
         
         makeTrigger(sensor, 1, T_Signal.BTN_PRESS,     0, nothing,     2);
         makeTrigger(sensor, 2, T_Signal.BTN_RELEASE,   0, mouseLClick, 1);

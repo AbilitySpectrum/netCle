@@ -1,14 +1,10 @@
 package lyricom.config3.solutions.data;
 
 import java.io.PrintStream;
-import javax.swing.JComboBox;
-import javax.xml.bind.annotation.XmlElement;
 import lyricom.config3.model.ESensor;
 import lyricom.config3.model.T_Action;
 import lyricom.config3.model.T_Signal;
 import lyricom.config3.solutions.EPort;
-import lyricom.config3.solutions.ESubPort;
-import lyricom.config3.solutions.SolutionsDataBase;
 import lyricom.config3.ui.selection.ESolution;
 
 /**

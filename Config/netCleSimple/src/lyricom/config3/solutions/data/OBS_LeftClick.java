@@ -41,7 +41,7 @@ public class OBS_LeftClick extends OBSimpleBase {
     
     @Override
     protected T_Action getAction() {
-        return new T_Action(EAction.HID_MOUSE, Model.MOUSE_CLICK);
+        return T_Action.MOUSE_LCLICK;
     }
 
 }

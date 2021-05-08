@@ -49,9 +49,9 @@ public abstract class OBToggleBase extends PortOnlyBase {
                 
         T_Action action1 = getAction1();
         T_Action action2 = getAction2();
-        T_Action nothing = new T_Action(EAction.NONE, 256);
-        T_Action buzz    = new T_Action(EAction.BUZZER, (200 << 16) + 100);
-        T_Action hibuzz    = new T_Action(EAction.BUZZER, (800 << 16) + 100);
+        T_Action nothing = T_Action.NONE;
+        T_Action buzz    = T_Action.createBuzzerAction(200, 100);
+        T_Action hibuzz    = T_Action.createBuzzerAction(800, 100);
         
         makeTrigger(sensor, 1, T_Signal.BTN_PRESS,     0, nothing,   2);
         makeTrigger(sensor, 2, T_Signal.BTN_PRESS,     0, action1,   2);

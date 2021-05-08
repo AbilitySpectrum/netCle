@@ -31,12 +31,12 @@ public class TwoBtnMouseData extends PortOnlyBase {
         ESensor sensorA = ESensor.getSensorA(portNum);
         ESensor sensorB = ESensor.getSensorB(portNum);
         
-        T_Action mouseup = new T_Action(EAction.HID_MOUSE, Model.MOUSE_UP);
-        T_Action mousedown = new T_Action(EAction.HID_MOUSE, Model.MOUSE_DOWN);
-        T_Action mouseleft = new T_Action(EAction.HID_MOUSE, Model.MOUSE_LEFT);
-        T_Action mouseright = new T_Action(EAction.HID_MOUSE, Model.MOUSE_RIGHT);
-        T_Action nothing = new T_Action(EAction.NONE, 0);
-        T_Action buzz    = new T_Action(EAction.BUZZER, (200 << 16) + 100);
+        T_Action mouseup = T_Action.MOUSE_UP;
+        T_Action mousedown = T_Action.MOUSE_DOWN;
+        T_Action mouseleft = T_Action.MOUSE_LEFT;
+        T_Action mouseright = T_Action.MOUSE_RIGHT;
+        T_Action nothing = T_Action.NONE;
+        T_Action buzz    = T_Action.createBuzzerAction(200, 100);
         
         makeTrigger(sensorA, 1, T_Signal.BTN_PRESS,     0, nothing,   2);
         makeTrigger(sensorA, 2, T_Signal.BTN_PRESS,     0, mouseup,   2);
